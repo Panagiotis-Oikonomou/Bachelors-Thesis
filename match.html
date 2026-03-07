@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles/match.css?v1.1">
+        <script src="scripts/changeUp.js" defer></script>
+        <script src="scripts/checkCriteria.js" defer></script>
+        <script src="scripts/criteriaSend.js" defer></script>
+        <script src="scripts/hideMain.js" defer></script>
+        <title>Match</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <img src="media/photos/menu.png" class="menu">
+            <div class="up">
+                <a href="checkmatchings.html"><img src="media/photos/mymatchings.png"></a>
+                <a href="myareas.html"><img src="media/photos/myareas.png"></a>
+                <a href="criteria.html"><img src="media/photos/criteria.png"></a>
+                <a href="match.html"><img src="media/photos/match.png" id="chats"></a>
+                <a href="mychats.html"><img src="media/photos/chats.png"></a>
+                <a href="notifications.html"><img src="media/photos/notifications.png"></a>
+                <a href="profile.html"><img src="media/photos/profile.png"></a>
+            </div>
+
+            <div class="search-area">
+                <div class="search">
+                    <form onsubmit="return displayMessage();">
+                        Έκταση(σε km<sup>2</sup>):<br><input type="number" value="0" id="area1" min="0"> &nbsp;&nbsp;&nbsp; <input type="number" value="132" id="area2" max="132"><br>
+                        Δεν θέλω <input type="checkbox" id="charea"><br><br>
+
+                        Ποσοστό ηλίου:<br><input type="number" value="0" id="sun1" min="0"> &nbsp;&nbsp;&nbsp; <input type="number" value="100" id="sun2" max="100"><br>
+                        Δεν θέλω <input type="checkbox" id="chsun"><br><br>
+
+                        Ποσοστό που θα έχεις:<br><input type="number" value="0" id="per1" min="0"> &nbsp;&nbsp;&nbsp; <input type="number" value="100" id="per2" max="100"><br>
+                        Δεν θέλω <input type="checkbox" id="chper"><br><br>
+
+                        <div id="msg"> </div><br>
+                        <input type="submit" value="Αναζήτηση">
+                    </form>
+                </div>
+            </div>
+            <div class="larrow">Πάτα για απόρριψη έκτασης<img src="media/photos/leftArrowBlack.png"></div>
+            <div class="match">
+                <div class="area">
+                    Όνομα: Κάτι <br><br>
+
+                    Έκταση(σε km<sup>2</sup>): 23 <br><br>
+
+                    Ποσοστό ηλειοφάνειας: 23% <br><br>                    
+
+                    Τοποθεσία:               
+                </div>
+            </div>
+            <div class="rarrow">Πάτα για αποδοχή έκτασης<img src="media/photos/rightArrowBlack.png"></div>
+        </div>
+        
+    </body>
+</html>

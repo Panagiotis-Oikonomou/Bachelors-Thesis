@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles/manageparoxous.css?v1.1">
+        <script src="scripts/checkParoxos.js" defer></script>
+        <script src="scripts/hideMain.js" defer></script>
+        <title>newParoxos</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <img src="media/photos/menu.png" class="menu">
+            <div class="up">
+                <a href="paroxoi.html"><img src="media/photos/paroxoi.png"></a>
+                <a href="users.html"><img src="media/photos/users.png"></a>
+                <a href="notifications.html"><img src="media/photos/notifications.png"></a>
+                <a href="profile.html"><img src="media/photos/profile.png"></a>
+            </div>
+
+            <div class="paroxos">
+                <p class="titlee">Δημιουργία καινούργιας περιοχής</p><br>
+                <form onsubmit="return checkParoxo();">
+                    Όνομα Παρόχου Ενέργειας:<br><input type="text" id="paroxos" required>
+                    <div id="error_msg1"></div><br>
+                    
+                    <div id="error_msg2"></div><br>    
+
+                    <input type="submit" value="Δημιουργία">
+                </form>
+            </div>
+
+        </div>
+        
+    </body>
+</html>

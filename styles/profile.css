@@ -1,0 +1,227 @@
+body {
+    margin: 0;
+    padding: 0px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    background-color: salmon;
+    grid-template-rows: auto;
+    /* grid-auto-rows: min-content;
+    align-content: start;
+    width: 100%;
+    height: 100dvh; */
+}
+
+.up, .map {
+    display: none;
+}
+
+.profile, .addarea {
+    grid-column: 1 / 7;
+    /* grid-row: 4 / auto; */
+    width: 100%;
+    height: 100%;
+    outline-style: groove;
+    outline-color: rgb(194, 186, 186);
+    background-color: rgb(209, 205, 205);
+    padding-bottom: 10px;
+    display: block;
+    overflow-x:auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #1b2632;
+    text-align: center;
+}
+
+.main-hidden .profile {
+    display: none;
+}
+
+.main-hidden .addarea {
+    display: none;
+}
+
+.main-hidden .map {
+    display: none;
+}
+
+.main-hidden .up {
+    grid-column: 1 / 7;
+    grid-row: 2 / auto;
+    text-align: center;
+    display: block;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+    overflow-y:auto;
+    flex: left;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #1b2632;
+}
+
+.main-move .addarea {
+    grid-column: 1 / 7;
+    grid-row: 2 / auto;
+}
+
+.main-move .map {
+    grid-column: 1 / 7;
+    grid-row: 3 / auto;
+    display: block;
+    height: 300px;
+    width: 300px;
+}
+
+.main-hidden .map {
+    display: none;
+}
+
+img:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+}
+
+.menu {
+    grid-column: 6;
+}
+
+.map-button {
+    width: 30px;
+    height: 30px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.logout {
+    color: white;
+    background-color: red;
+    float: right;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.delete {
+    color: white;
+    background-color: red;
+}
+
+.titlee {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.must {
+    color:rgb(187, 6, 6);
+}
+
+#error_msg1, #error_msg2, #error_msg3, #error_msg4, #error_msg5, #error_msg6, #not_send {
+    color: red;
+}
+
+#pswmatch {
+    color: green;
+}
+
+@media screen and (min-width: 350px){
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        background-color: rgb(207, 25, 5);
+        grid-gap: 20px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+        width: 150px;
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .up {
+        grid-column: 1 / 9;
+        grid-row: 1 / auto;
+        display: flex;
+        overflow-x:auto;
+        padding: 0px;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #888 #1b2632;
+        max-width: 100%;
+    }
+
+    .profile, .addarea {
+        grid-column: 2 / 8;
+        width: 100%;
+        outline-style: groove;
+        outline-color: rgb(194, 186, 186);
+        background-color: rgb(209, 205, 205);
+        padding: 10px 5px 5px 10px;
+        font-weight: 100;
+        height: 75vh;
+        text-align: center;
+        display: block;
+    }
+
+    .main-move .addarea {
+        grid-column: 1 / 5;
+        grid-row: 2 / auto;
+    }
+
+    .main-move .map {
+        grid-column: 5 / 9;
+        grid-row: 2 / auto;
+        height: auto;
+        width: auto;
+    }
+
+    .map-button {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media  screen and (min-width: 768px) {
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        background-color: rgb(78, 42, 132);
+    }   
+
+    .up {
+        grid-column: 2 / 13;
+    }
+
+    .profile {
+        grid-column: 3 / 10;
+        height: 75vh;
+    }
+
+    .addarea {
+        grid-column: 4 / 9;
+        grid-row: 3 / 10;
+    }
+
+    .map-button {
+        width: 30px;
+        height: 30px;
+    }
+
+    .main-move .addarea {
+        grid-column: 2 / 7;
+        grid-row: 3 / auto;
+    }
+
+    .main-move .map {
+        grid-column: 7 / 12;
+        grid-row: 3 / auto;
+    }
+}

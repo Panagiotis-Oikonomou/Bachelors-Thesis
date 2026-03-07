@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles/profile.css?v1.1">
+        <script src="scripts/checkArea.js" defer></script>
+        <script src="scripts/hideMain.js" defer></script>
+        <title>manageArea</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <img src="media/photos/menu.png" class="menu">
+            <div class="up">
+                <a href="checkmatchings.html"><img src="media/photos/mymatchings.png"></a>
+                <a href="myareas.html"><img src="media/photos/myareas.png"></a>
+                <a href="criteria.html"><img src="media/photos/criteria.png"></a>
+                <a href="match.html"><img src="media/photos/match.png"></a>
+                <a href="mychats.html"><img src="media/photos/chats.png"></a>
+                <a href="notifications.html"><img src="media/photos/notifications.png"></a>
+                <a href="profile.html"><img src="media/photos/profile.png"></a>
+            </div>
+
+            <div class="addarea">
+                <form onsubmit="return checkArea();">
+                    Όνομα περιοχής:<br><input type="text" id="area-name" value="kati">
+                    <div id="error_msg1"></div><br>
+
+                    Έκταση περιοχής (σε km<sup>2</sup>):<br><input type="number" id="size" max="131" value="23">
+
+                    <div id="error_msg2"></div><br>
+
+                    <input type="submit" value="Αποθήκευση αλλαγών">
+                </form><br>
+                <button class="delete">Διαγραδή έκτασης</button>
+            </div>
+
+
+        </div>
+        
+    </body>
+</html>

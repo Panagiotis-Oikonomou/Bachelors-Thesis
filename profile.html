@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles/profile.css?v1.2">
+        <script src="scripts/profile.js" defer></script>
+        <script src="scripts/registerSend.js" defer></script>
+        <script src="scripts/changeUp.js" defer></script>
+        <script src="scripts/showpsw.js" defer></script>
+        <script src="scripts/hideMain.js" defer></script>
+        <title>Profile</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <img src="media/photos/menu.png" class="menu">
+            <div class="up">
+                <a href="checkmatchings.html"><img src="media/photos/mymatchings.png"></a>
+                <a href="myareas.html"><img src="media/photos/myareas.png"></a>
+                <a href="criteria.html"><img src="media/photos/criteria.png"></a>
+                <a href="match.html"><img src="media/photos/match.png"></a>
+                <a href="mychats.html"><img src="media/photos/chats.png"></a>
+                <a href="notifications.html"><img src="media/photos/notifications.png"></a>
+                <a href="profile.html"><img src="media/photos/profile.png" id="chats"></a>
+            </div>
+
+            <div class="profile">
+                <form autocomplete="off" onsubmit="return checkForm();">
+                    Όνομα:<br><input type="text" id="fname">
+                    <div id = "error_msg1"> </div><br>
+
+                    Επώνυμο:<br><input type="text" id="lname">
+                    <div id = "error_msg2"> </div><br>
+
+                    Αριθμός ρολογιού:<br><input type="text" id="clock">
+                    <div id = "error_msg3"> </div><br>
+
+                    Πάροχος ενέργειας:<br>
+                    <select id="id_power" required>
+                        <option value="some">SOMDSO</option>
+                        <option value="zeniu">ZENIU</option>
+                        <option value="protergia">PROTERGIA</option>
+                        <option value="other">PROTERGIA</option>
+                    </select><br><br>
+
+                    Email:<br><input type="email" id="mail" pattern = "'/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'"><br><br>
+
+                    Username:<br><input type="text" id="usr">
+                    <div id = "error_msg4"> </div><br>
+
+                    Password:<br><input type="password" id="psw"><br>
+                    <input type="checkbox" id="pswshow"> Εμφάνιση κωδικού<br>
+                    <div id = "error_msg5"> </div><br>
+
+                    Confirm Password:<br><input type="password" id="cpsw"><br>
+                    <input type="checkbox" id="cpswshow"> Εμφάνιση κωδικού<br>
+                    <div id = "error_msg6"> </div>
+                    <div id = "pswmatch"> </div><br>
+
+                    <div id="not_send"> </div>
+                    <input type="submit" value="Αποθήκευση αλλαγών">
+                </form><br>
+                <button class="logout" id="logout">Logout</button>
+            </div>
+
+        </div>
+        
+    </body>
+</html>

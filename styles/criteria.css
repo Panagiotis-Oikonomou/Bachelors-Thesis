@@ -1,0 +1,127 @@
+body {
+    margin: 0;
+    padding: 0px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    background-color: salmon;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+    /* grid-auto-rows: min-content;
+    align-content: start;
+    width: 100%;
+    height: 100dvh; */
+}
+
+.up {
+    display: none;
+}
+
+.criteria {
+    grid-column: 1 / 7;
+    grid-row: 4 / auto;
+    width: 100%;
+    height: 100%;
+    outline-style: groove;
+    outline-color: rgb(194, 186, 186);
+    background-color: rgb(209, 205, 205);
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.main-hidden .criteria {
+    display: none;
+}
+
+.main-hidden .up {
+    grid-column: 1 / 7;
+    grid-row: 2 / auto;
+    text-align: center;
+    display: block;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+    overflow-y:auto;
+    flex: left;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #1b2632;
+}
+
+img:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+}
+
+.menu {
+    grid-column: 6;
+}
+
+input[type="number"] {
+    font-size: 12px;
+    width: 50px;
+}
+
+.titlee {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+#msg {
+    color: red;
+}
+
+
+@media screen and (min-width: 350px){
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        background-color: rgb(207, 25, 5);
+    }
+
+    input[type="number"] {
+        width: 50px;
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .up {
+        grid-column: 1 / 9;
+        display: flex;
+        overflow-x:auto;
+        padding: 0px;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #888 #1b2632;
+        width: 100%;
+    }
+
+    .criteria {
+        grid-column: 2 / 8;
+        width: 100%;
+        padding: 10px 5px 5px 10px;
+        font-weight: 100;
+    }
+}
+
+@media  screen and (min-width: 768px) {
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        background-color: rgb(78, 42, 132);
+    }   
+
+    .up {
+        grid-column: 2 / 13;
+    }
+
+    .criteria {
+        grid-column: 3 / 10;
+    }
+}

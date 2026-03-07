@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        <link rel="stylesheet" href="styles/profile.css?v1.1">
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="scripts/checkArea.js" defer></script>
+        <script src="scripts/getCordinates.js" defer></script>
+        <script src="scripts/hideMain.js" defer></script>
+        <script src="scripts/openMap.js" defer></script>
+        <title>newArea</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <img src="media/photos/menu.png" class="menu">
+            <div class="up">
+                <a href="checkmatchings.html"><img src="media/photos/mymatchings.png"></a>
+                <a href="myareas.html"><img src="media/photos/myareas.png"></a>
+                <a href="criteria.html"><img src="media/photos/criteria.png"></a>
+                <a href="match.html"><img src="media/photos/match.png"></a>
+                <a href="mychats.html"><img src="media/photos/chats.png"></a>
+                <a href="notifications.html"><img src="media/photos/notifications.png"></a>
+                <a href="profile.html"><img src="media/photos/profile.png"></a>
+            </div>
+
+            <div class="addarea">
+                <p class="titlee">Δημιουργία καινούργιας περιοχής</p><br>
+                <form autocomplete="off" onsubmit="return checkArea();">
+                    Όνομα περιοχής:<br><input type="text" id="area-name" required>
+                    <div id="error_msg1"></div><br>
+
+                    Μέγεθος έκτασης (σε km<sup>2</sup>):<br><input type="number" id="size" max="131" required><br><br>
+
+                    Ποσοστό ηληοφάνειας:<br><input type="text" id="sun" readonly required><br><br>
+
+                    Cordinates:<br><input type="text" id="cordinates" readonly required><br><br>
+                    <div>Map&nbsp;&nbsp;&nbsp;<img src="media/photos/map.png" class="map-button"></div><br>
+                    
+                    <div id="error_msg2"></div><br>
+
+                    <input type="submit" value="Δημιουργία">
+                </form>
+            </div>
+            <div  id="map" class="map"></div>
+
+        </div>
+        
+    </body>
+</html>
