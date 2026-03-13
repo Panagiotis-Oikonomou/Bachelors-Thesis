@@ -36,23 +36,25 @@
 
 import React from "react";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import Home from './elements/Home';
-import Create from './elements/Create';
-import Edit from './elements/Edit';
-import Read from './elements/Read';
+// import Home from './elements/Home';
+// import Create from './elements/Create';
+// import Edit from './elements/Edit';
+// import Read from './elements/Read';
+
+import AddArea from "./elements/AddArea";
 function App(){
   return(
     <BrowserRouter>
       <Routes>
-        <Route path="/students" element={<Home />}/>
+        {/* <Route path="/students" element={<Home />}/>
         <Route path="/create" element={<Create />} />
         <Route path="/edit/:id" element={<Edit />}/>
-        <Route path="/read/:id" element={<Read />}/>
+        <Route path="/read/:id" element={<Read />}/> */}
+        <Route path="/add_area" element={<AddArea />}/>
       </Routes>
     </BrowserRouter>
   )
 }
-
 export default App;
 
 // VALIDATION
