@@ -42,6 +42,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 // import Read from './elements/Read';
 
 import AddArea from "./elements/AddArea";
+import Profile from "./elements/Profile";
 function App(){
   return(
     <BrowserRouter>
@@ -51,6 +52,7 @@ function App(){
         <Route path="/edit/:id" element={<Edit />}/>
         <Route path="/read/:id" element={<Read />}/> */}
         <Route path="/add_area" element={<AddArea />}/>
+        <Route path="/profile" element={<Profile />}/>
       </Routes>
     </BrowserRouter>
   )
