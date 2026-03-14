@@ -11,8 +11,6 @@ import chats from '../assets/images/chats.png';
 import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profile.png';
 import menu from '../assets/images/menu.png';
-import map from '../assets/images/map.png';
-import AddArea from "./addarea";
 
 function Profile() {
     return (
@@ -20,12 +18,12 @@ function Profile() {
             <img src={menu} className="menu" />
             <div className="up">
                 <a href="checkmatchings.html"><img src={matchings} /></a>
-                <Link to='/add_area'><a href="AddArea.jsx"><img src={myareas} /></a></Link>
+                <Link to='/add_area'><img src={myareas} /></Link>
                 <a href="criteria.html"><img src={criteria} /></a>
                 <a href="match.html"><img src={match} /></a>
-                <a href="mychats.html"><img src={chats} /></a>
+                <Link to='/my_chats'><img src={chats} /></Link>
                 <a href="notifications.html"><img src={notifications} /></a>
-                <Link to='/profile'><a href="profile.html"><img src={profile} /></a></Link>
+                <Link to='/profile'><img src={profile} /></Link>
             </div>
 
             <div className="profile">
@@ -64,7 +62,7 @@ function Profile() {
                     <div id="not_send"> </div>
                     <input type="submit" value="Αποθήκευση αλλαγών" />
                 </form><br />
-                <button class="logout" id="logout">Logout</button>
+                <button className="logout" id="logout">Logout</button>
             </div>
         </div>
     )

@@ -73,10 +73,10 @@ img:hover {
     cursor: pointer;
 }
 
-/* .alink:link, .alink:visited, .alink:hover {
+.alink:link, .alink:visited, .alink:hover {
     color: black;
     text-decoration: none;
-} */
+}
 
 
 @media screen and (min-width: 350px){
