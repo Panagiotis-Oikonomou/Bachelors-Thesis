@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
-// import './ChatRoom.css';
 import styles from './ChatRoom.module.css'
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -18,7 +17,7 @@ function ChatRoom() {
             <img src={menu} className={styles.menu} />
             <div className={styles.up}>
                 <a href="checkmatchings.html"><img src={matchings} /></a>
-                <Link to='/add_area'><img src={myareas} /></Link>
+                <Link to='/my_areas'><img src={myareas} /></Link>
                 <a href="criteria.html"><img src={criteria} /></a>
                 <a href="match.html"><img src={match} /></a>
                 <Link to='/my_chats'><img src={chats} /></Link>
@@ -30,7 +29,7 @@ function ChatRoom() {
             <div className={styles.otherChats}>
                 <div className={styles.insideOtherChats}>
                     <Link to='/chatroom' className={styles.alink}>
-                    {/* className="chat-data" */}
+                        {/* className="chat-data" */}
                         <div >
                             Username1 Username2 Username3 Username4 Username5 Username6 Username7
                         </div>

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
-import './MyChats.module.css';
-import styles from './MyChats.module.css';
+import styles from './MyAreas.module.css'
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
 import criteria from '../assets/images/criteria.png';
@@ -11,8 +10,9 @@ import chats from '../assets/images/chats.png';
 import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profile.png';
 import menu from '../assets/images/menu.png';
+import plus from '../assets/images/plus.png';
 
-function MyChats() {
+function MyAreas() {
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -25,33 +25,25 @@ function MyChats() {
                 <a href="notifications.html"><img src={notifications} /></a>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
-            <div className={styles.chats}>
-                <div className={styles.chat}>
-                    <Link to='/chatroom' className={styles.alink}>
-                        <div className={styles.chatData}>
-                            Username1 Username2 Username3 Username4 Username5 Username6 Username7
-                        </div>
-                    </Link>
-                </div>
 
-                <div className={styles.chat}>
-                    <Link to='/chatroom' className={styles.alink}>
-                        <div className={styles.chatData}>
-                            Username1 Username2 Username3 Username4 Username5 Username6 Username7
-                        </div>
-                    </Link>
-                </div>
+            <div className={styles.searchBar}>
+                {/* <form> */}
+                    <input type="search" placeholder="search"/>
+                    <button>Go</button>
+                 {/* </form> */}
+            </div>
 
-                <div className={styles.chat}>
-                    <Link to='/chatroom' className={styles.alink}>
-                        <div className={styles.chatData}>
-                            Username1 Username2 Username3 Username4 Username5 Username6 Username7
-                        </div>
-                    </Link>
-                </div>                
+            <div className={styles.areas}>
+                <p>Δημιουργία νέας έκτασης <Link to='/add_area'><img src={plus} className={styles.plus}/></Link></p>
+                <div className={styles.area}>
+                    {/* href="managearea.html" */}
+                    <Link to='/profile'  className={styles.alink}><div className={styles.areaData}>
+                    Όνομα περιοχής: Κάτι<br/><br/>
+
+                    Έκταση περιοχής: Κάτι άλλο<br/><br/></div></Link>
+                </div><br/><br/>
             </div>
         </div>
     )
 }
-
-export default MyChats;
+export default MyAreas;
