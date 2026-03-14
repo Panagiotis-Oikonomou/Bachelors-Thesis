@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
-import styles from './MyAreas.module.css'
+import styles from './ManageArea.module.css';
+
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
 import criteria from '../assets/images/criteria.png';
@@ -10,9 +11,9 @@ import chats from '../assets/images/chats.png';
 import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profile.png';
 import menu from '../assets/images/menu.png';
-import plus from '../assets/images/plus.png';
 
-function MyAreas() {
+
+function ManageArea() {
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -26,24 +27,24 @@ function MyAreas() {
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 
-            <div className={styles.searchBar}>
-                {/* <form> */}
-                    <input type="search" placeholder="search"/>
-                    <button>Go</button>
-                 {/* </form> */}
-            </div>
+            <div class={styles.addArea}>
+                <div className={styles.deleteContainer}>
+                    <button class={styles.delete}>Διαγραδή έκτασης</button>
+                </div>
+                <form>
+                    Όνομα περιοχής:<br/><input type="text" id="area-name" value="kati"/>
+                    <div id="error_msg1"></div><br/>
 
-            <div className={styles.areas}>
-                <p>Δημιουργία νέας έκτασης <Link to='/manage_area'><img src={plus} className={styles.plus}/></Link></p>
-                <div className={styles.area}>
-                    {/* href="managearea.html" */}
-                    <Link to='/manage_area'  className={styles.alink}><div className={styles.areaData}>
-                    Όνομα περιοχής: Κάτι<br/><br/>
+                    Έκταση περιοχής (σε km<sup>2</sup>):<br/><input type="number" id="size" max="131" value="23"/>
 
-                    Έκταση περιοχής: Κάτι άλλο<br/><br/></div></Link>
-                </div><br/><br/>
+                    <div id="error_msg2"></div><br/>
+
+                    <input type="submit" value="Αποθήκευση αλλαγών"/>
+                </form><br/>
+                
             </div>
         </div>
     )
 }
-export default MyAreas;
+
+export default ManageArea;

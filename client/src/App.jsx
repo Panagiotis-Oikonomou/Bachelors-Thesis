@@ -3,6 +3,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 import MyAreas from "./elements/MyAreas";
 import AddArea from "./elements/AddArea";
+import ManageArea from "./elements/ManageArea";
 import Profile from "./elements/Profile";
 import MyChats from "./elements/MyChats";
 import ChatRoom from "./elements/ChatRoom";
@@ -12,6 +13,7 @@ function App(){
       <Routes>
           <Route path="/profile" element={<Profile />} />
           <Route path="/my_areas" element={<MyAreas />} />
+          <Route path="/manage_area" element={<ManageArea />} />
           <Route path="/add_area" element={<AddArea />}/>
           <Route path="/my_chats" element={<MyChats />}/>
         <Route path="/chatroom" element={<ChatRoom />}/>
