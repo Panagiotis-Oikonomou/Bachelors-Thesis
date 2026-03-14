@@ -1,6 +1,7 @@
 import React from "react";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
+import MyAreas from "./elements/MyAreas";
 import AddArea from "./elements/AddArea";
 import Profile from "./elements/Profile";
 import MyChats from "./elements/MyChats";
@@ -9,9 +10,10 @@ function App(){
   return(
     <BrowserRouter>
       <Routes>
-        <Route path="/add_area" element={<AddArea />}/>
-        <Route path="/profile" element={<Profile />}/>
-        <Route path="/my_chats" element={<MyChats />}/>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/my_areas" element={<MyAreas />} />
+          <Route path="/add_area" element={<AddArea />}/>
+          <Route path="/my_chats" element={<MyChats />}/>
         <Route path="/chatroom" element={<ChatRoom />}/>
       </Routes>
     </BrowserRouter>

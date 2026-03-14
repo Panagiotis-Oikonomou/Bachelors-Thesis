@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
-import '../assets/css/profile.css';
+import styles from './Profile.module.css';
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
 import criteria from '../assets/images/criteria.png';
@@ -14,11 +14,11 @@ import menu from '../assets/images/menu.png';
 
 function Profile() {
     return (
-        <div className="container">
-            <img src={menu} className="menu" />
-            <div className="up">
+        <div className={styles.container}>
+            <img src={menu} className={styles.menu} />
+            <div className={styles.up}>
                 <a href="checkmatchings.html"><img src={matchings} /></a>
-                <Link to='/add_area'><img src={myareas} /></Link>
+                <Link to='/my_areas'><img src={myareas} /></Link>
                 <a href="criteria.html"><img src={criteria} /></a>
                 <a href="match.html"><img src={match} /></a>
                 <Link to='/my_chats'><img src={chats} /></Link>
@@ -26,8 +26,11 @@ function Profile() {
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 
-            <div className="profile">
-                <form autoComplete="off" onSubmit="">
+            <div className={styles.profile}>
+                <div className={styles.logoutContainer}>
+                    <button className={styles.logout} id="logout">Logout</button>
+                </div>
+                <form autoComplete="off">
                     Όνομα:<br /><input type="text" id="fname" />
                     <div id="error_msg1"> </div><br />
 
@@ -62,7 +65,6 @@ function Profile() {
                     <div id="not_send"> </div>
                     <input type="submit" value="Αποθήκευση αλλαγών" />
                 </form><br />
-                <button className="logout" id="logout">Logout</button>
             </div>
         </div>
     )

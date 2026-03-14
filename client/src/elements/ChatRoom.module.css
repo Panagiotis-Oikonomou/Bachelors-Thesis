@@ -2,11 +2,12 @@
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     background-color: salmon;
+    min-height: 100vh;
     /* grid-auto-rows: min-content; */
     /* grid-template-rows: auto; */
     /* display: flex;
     flex-direction: column; */
-    min-height: 100vh;
+
     /* height: 100vh; */
     /* grid-auto-rows: min-content;
     align-content: start;

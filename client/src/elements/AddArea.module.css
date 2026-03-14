@@ -1,13 +1,11 @@
-body {
-    margin: 0;
-    padding: 0px;
-}
-
 .container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     background-color: salmon;
-    grid-template-rows: auto;
+    grid-auto-rows: auto;
+    height: 100dvh;
+    /* width: 100%; */
+    /* min-height: 100dvh; */
     /* grid-auto-rows: min-content;
     align-content: start;
     width: 100%;
@@ -18,16 +16,17 @@ body {
     display: none;
 }
 
-.profile, .addarea {
+.addArea {
     grid-column: 1 / 7;
     /* grid-row: 4 / auto; */
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
     outline-style: groove;
     outline-color: rgb(194, 186, 186);
     background-color: rgb(209, 205, 205);
     padding-bottom: 10px;
     display: block;
+    height: 100dvh;
     overflow-x:auto;
     overflow-y: auto;
     scrollbar-width: thin;
@@ -35,7 +34,7 @@ body {
     text-align: center;
 }
 
-.main-hidden .profile {
+/* .main-hidden .profile {
     display: none;
 }
 
@@ -52,17 +51,14 @@ body {
     grid-row: 2 / auto;
     text-align: center;
     display: block;
-    /* display: flex;
-    flex-direction: column;
-    align-items: center; */
     overflow-y:auto;
     flex: left;
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: #888 #1b2632;
-}
+} */
 
-.main-move .addarea {
+/* .main-move .addarea {
     grid-column: 1 / 7;
     grid-row: 2 / auto;
 }
@@ -77,18 +73,13 @@ body {
 
 .main-hidden .map {
     display: none;
-}
-
-img:hover {
-    transform: scale(1.03);
-    cursor: pointer;
-}
+} */
 
 .menu {
     grid-column: 6;
 }
 
-.map-button {
+.mapButton {
     width: 30px;
     height: 30px;
 }
@@ -96,14 +87,6 @@ img:hover {
 input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
     font-size: 12px;
     box-sizing: border-box;
-}
-
-.logout {
-    color: white;
-    background-color: red;
-    float: right;
-    padding-right: 20px;
-    margin-right: 20px;
 }
 
 .delete {
@@ -120,13 +103,13 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     color:rgb(187, 6, 6);
 }
 
-#error_msg1, #error_msg2, #error_msg3, #error_msg4, #error_msg5, #error_msg6, #not_send {
+/* #error_msg1, #error_msg2, #error_msg3, #error_msg4, #error_msg5, #error_msg6, #not_send {
     color: red;
 }
 
 #pswmatch {
     color: green;
-}
+} */
 
 @media screen and (min-width: 350px){
 
@@ -147,17 +130,18 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
 
     .up {
         grid-column: 1 / 9;
-        grid-row: 1 / auto;
+        grid-row: 1;
         display: flex;
+        height: auto;
         overflow-x:auto;
-        padding: 0px;
+        /* padding: 0px; */
         overflow-y: hidden;
         scrollbar-width: thin;
         scrollbar-color: #888 #1b2632;
-        max-width: 100%;
+        /* max-width: 100%; */
     }
 
-    .profile, .addarea {
+    .addarea {
         grid-column: 2 / 8;
         width: 100%;
         outline-style: groove;
@@ -165,12 +149,12 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
         background-color: rgb(209, 205, 205);
         padding: 10px 5px 5px 10px;
         font-weight: 100;
-        height: 75vh;
+        height: 75dvh;
         text-align: center;
         display: block;
     }
 
-    .main-move .addarea {
+    /* .main-move .addArea {
         grid-column: 1 / 5;
         grid-row: 2 / auto;
     }
@@ -180,9 +164,9 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
         grid-row: 2 / auto;
         height: auto;
         width: auto;
-    }
+    } */
 
-    .map-button {
+    .mapButton {
         width: 30px;
         height: 30px;
     }
@@ -200,22 +184,19 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
         grid-column: 2 / 13;
     }
 
-    .profile {
-        grid-column: 3 / 8;
-        height: 75vh;
-    }
-
-    .addarea {
-        grid-column: 3 / 8;
+    .addArea {
+        grid-column: 4 / 9;
         grid-row: 3 / 10;
+        padding: 20px;
+        height: 80dvh;
     }
 
-    .map-button {
+    .mapButton {
         width: 30px;
         height: 30px;
     }
 
-    .main-move .addarea {
+    /* .main-move .addarea {
         grid-column: 2 / 7;
         grid-row: 3 / auto;
     }
@@ -223,5 +204,5 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     .main-move .map {
         grid-column: 7 / 12;
         grid-row: 3 / auto;
-    }
+    } */
 }
