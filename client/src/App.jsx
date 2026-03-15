@@ -7,6 +7,8 @@ import ManageArea from "./elements/ManageArea";
 import Profile from "./elements/Profile";
 import MyChats from "./elements/MyChats";
 import ChatRoom from "./elements/ChatRoom";
+import Matchings from "./elements/Matchings";
+
 function App(){
   return(
     <BrowserRouter>
@@ -17,6 +19,7 @@ function App(){
           <Route path="/add_area" element={<AddArea />}/>
           <Route path="/my_chats" element={<MyChats />}/>
         <Route path="/chatroom" element={<ChatRoom />}/>
+        <Route path="/matchings" element={<Matchings />}/>
       </Routes>
     </BrowserRouter>
   )
