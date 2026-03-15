@@ -11,6 +11,9 @@ import Matchings from "./elements/Matchings";
 import Criteria from "./elements/Criteria";
 import Match from "./elements/Match";
 import Notifications from "./elements/Notifications";
+import Index from "./elements/Index";
+import Login from './elements/Login';
+import Register from './elements/Register';
 
 function App() {
   return (
@@ -26,6 +29,9 @@ function App() {
         <Route path="/criteria" element={<Criteria />} />
         <Route path="/match" element={<Match />} />
         <Route path="/notifications" element={<Notifications />} />
+        <Route path="/index" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   )

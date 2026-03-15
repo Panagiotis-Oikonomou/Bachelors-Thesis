@@ -28,7 +28,7 @@ function Profile() {
 
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
-                    <button className={styles.logout} id="logout">Logout</button>
+                    <button className={styles.logout} id="logout"><Link to='/index'>Logout</Link></button>
                 </div>
                 <form autoComplete="off">
                     Όνομα:<br /><input type="text" id="fname" />
