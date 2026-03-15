@@ -5,21 +5,25 @@ import MyAreas from "./elements/MyAreas";
 import AddArea from "./elements/AddArea";
 import ManageArea from "./elements/ManageArea";
 import Profile from "./elements/Profile";
+import ProfileAdmin from "./elements/ProfileAdmin";
 import MyChats from "./elements/MyChats";
 import ChatRoom from "./elements/ChatRoom";
 import Matchings from "./elements/Matchings";
 import Criteria from "./elements/Criteria";
 import Match from "./elements/Match";
 import Notifications from "./elements/Notifications";
+import NotificationsAdmin from "./elements/NotificationsAdmin";
 import Index from "./elements/Index";
 import Login from './elements/Login';
 import Register from './elements/Register';
+import Users from './elements/Users';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/admin" element={<ProfileAdmin />} />
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
         <Route path="/add_area" element={<AddArea />} />
@@ -29,9 +33,11 @@ function App() {
         <Route path="/criteria" element={<Criteria />} />
         <Route path="/match" element={<Match />} />
         <Route path="/notifications" element={<Notifications />} />
+        <Route path="/notifications/admin" element={<NotificationsAdmin />} />
         <Route path="/index" element={<Index />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/users" element={<Users />} />
       </Routes>
     </BrowserRouter>
   )

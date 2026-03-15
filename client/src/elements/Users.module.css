@@ -1,0 +1,158 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    background-color: salmon;
+    grid-gap: 20px;
+    grid-auto-rows: min-content;
+    height: 100dvh;
+}
+
+.up {
+    display: none;
+}
+
+.main {
+    grid-column: 1 / 7;
+    grid-row: auto;
+    outline-style: groove;
+    outline-color: rgb(194, 186, 186);
+    background-color: rgb(209, 205, 205);
+    padding-top: 10px;
+}
+
+.users {
+    height: 55vh;   
+    display: block;
+    overflow-x:auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #1b2632;
+}
+
+/* .main-hidden .main {
+    display: none;
+}
+
+.main-hidden .search-bar {
+    display: none;
+}
+
+.main-hidden .up {
+    grid-column: 1 / 7;
+    grid-row: 2 / auto;
+    text-align: center;
+    display: block;
+    overflow-y:auto;
+    flex: left;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #1b2632;
+} */
+
+input[type="search"] {
+    font-size: 10px;
+    width: 70%;
+    height: 30px;
+}
+
+button {
+    height: 100%;
+}
+
+.searchBar {
+    grid-column: 1 / 7;
+    grid-row: 2;
+}
+
+table, td, th{
+    margin-left: auto;
+    margin-right: auto;
+    background-color: lightyellow;
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px 10px 5px 10px;
+}
+
+.delete {
+    margin-top: 5%;
+    margin-left: 50%;
+    color: white;
+    background-color: red;
+}
+
+.menu {
+    grid-column: 6;
+}
+
+@media screen and (min-width: 350px){
+
+    .container {
+        grid-template-columns: repeat(8, 1fr);
+        background-color: rgb(207, 25, 5);
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .up {
+        grid-column: 1 / 9;
+        grid-row: auto;
+        display: flex;
+        overflow-x:auto;
+        padding: 0px;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #888 #1b2632;
+        max-width: 100%;
+    }
+
+    .main {
+        grid-column: 1 / 9;
+        grid-row: 3 / auto;
+        padding: 20px;
+    }
+
+    .users {
+        height: 70vh;
+    }
+
+    input[type="search"] {
+        width: 60%;
+    }
+
+    .searchBar {
+        grid-column: 3 / 9;
+        grid-row: 2;
+    }
+
+    table, td, th{
+        padding: 20px 25px 20px 25px;
+    }
+}
+
+@media  screen and (min-width: 768px) {
+
+    .container {
+        grid-template-columns: repeat(12, 1fr);
+        background-color: rgb(78, 42, 132);
+    }   
+
+    .up {
+        grid-column: 2 / 13;
+    }
+
+    .main {
+        grid-column: 2 / 12;
+        height: 78vh;
+    }
+
+    .users {
+        height: 70vh;
+    }
+
+    .searchBar {
+        grid-column: 2 / 12;
+        width: 50%;
+    }
+}
