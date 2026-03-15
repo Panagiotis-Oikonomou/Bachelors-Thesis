@@ -23,21 +23,24 @@ function Paroxoi() {
             </div>
 
             <div className={styles.searchBar}>
-                    <input type="search" placeholder="search"/>
-                    <button>Go</button>
+                <input type="search" placeholder="search" />
+                <button>Go</button>
             </div>
 
             <div className={styles.main}>
-                <p>Προσθήκη νέου Πάροχου Ενέργειας <Link to='/add_paroxo'><img src={plus} className={styles.plus}/></Link></p>
+                <p>Προσθήκη νέου Πάροχου Ενέργειας <Link to='/add_paroxo'><img src={plus} className={styles.plus} /></Link></p>
                 <div className={styles.area}>
                     <Link to='/manage_paroxo' className={styles.alink}><div className={styles.paroxos}>
-                    Όνομα Πάροχου Ενέργειας: Κάτι<br/><br/></div></Link>
-                </div><br/><br/>
+                        Όνομα Πάροχου Ενέργειας: Κάτι
+                    </div></Link>
+                    <button className={styles.delete}>Διαγραδή παρόχου</button>
+                </div>
 
                 <div className={styles.area}>
                     <Link to='/manage_paroxo' className={styles.alink}><div className={styles.paroxos}>
-                    Όνομα Πάροχου Ενέργειας: Κάτι<br/><br/></div></Link>
-                </div><br/><br/>
+                        Όνομα Πάροχου Ενέργειας: Κάτι</div></Link>
+                    <button className={styles.delete}>Διαγραδή παρόχου</button>
+                </div>
             </div>
         </div>
     )
