@@ -10,6 +10,7 @@ import ChatRoom from "./elements/ChatRoom";
 import Matchings from "./elements/Matchings";
 import Criteria from "./elements/Criteria";
 import Match from "./elements/Match";
+import Notifications from "./elements/Notifications";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/matchings" element={<Matchings />} />
         <Route path="/criteria" element={<Criteria />} />
         <Route path="/match" element={<Match />} />
+        <Route path="/notifications" element={<Notifications />} />
       </Routes>
     </BrowserRouter>
   )
