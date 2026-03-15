@@ -17,6 +17,9 @@ import Index from "./elements/Index";
 import Login from './elements/Login';
 import Register from './elements/Register';
 import Users from './elements/Users';
+import Paroxoi from './elements/Paroxoi';
+import ManageParoxo from './elements/ManageParoxo';
+import AddParoxo from './elements/AddParoxo';
 
 function App() {
   return (
@@ -38,6 +41,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/paroxoi" element={<Paroxoi />} />
+        <Route path="/manage_paroxo" element={<ManageParoxo />} />
+        <Route path="/add_paroxo" element={<AddParoxo />} />
       </Routes>
     </BrowserRouter>
   )
