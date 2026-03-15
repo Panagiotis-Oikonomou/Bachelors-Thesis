@@ -8,6 +8,7 @@ import Profile from "./elements/Profile";
 import MyChats from "./elements/MyChats";
 import ChatRoom from "./elements/ChatRoom";
 import Matchings from "./elements/Matchings";
+import Criteria from "./elements/Criteria";
 
 function App(){
   return(
@@ -20,6 +21,7 @@ function App(){
           <Route path="/my_chats" element={<MyChats />}/>
         <Route path="/chatroom" element={<ChatRoom />}/>
         <Route path="/matchings" element={<Matchings />}/>
+        <Route path="/criteria" element={<Criteria />}/>
       </Routes>
     </BrowserRouter>
   )
