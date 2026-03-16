@@ -36,10 +36,10 @@ function Match() {
                         Δεν θέλω <input type="checkbox" id="charea"/><br/><br/>
 
                         Ποσοστό ηλίου:<br/><input type="number" value="0" id="sun1" min="0"/> &nbsp;&nbsp;&nbsp; <input type="number" value="100" id="sun2" max="100"/><br/>
-                        Δεν θέλω <input type="checkbox" id="chsun"/><br/><br/>
+                        Δεν θέλω <input type="checkbox" id="chsun" readOnly/><br/><br/>
 
                         Ποσοστό που θα έχεις:<br/><input type="number" value="0" id="per1" min="0"/> &nbsp;&nbsp;&nbsp; <input type="number" value="100" id="per2" max="100"/><br/>
-                        Δεν θέλω <input type="checkbox" id="chper"/><br/><br/>
+                        Δεν θέλω <input type="checkbox" id="chper" readOnly/><br/><br/>
 
                         <div id="msg"> </div><br/>
                         <input type="submit" value="Αναζήτηση"/>
