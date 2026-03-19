@@ -18,12 +18,12 @@ function ManageArea() {
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
             <div className={styles.up}>
-                <a href="checkmatchings.html"><img src={matchings} /></a>
+                <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
-                <a href="criteria.html"><img src={criteria} /></a>
-                <a href="match.html"><img src={match} /></a>
+                <Link to='/criteria'><img src={criteria} /></Link>
+                <Link to='/match'><img src={match} /></Link>
                 <Link to='/my_chats'><img src={chats} /></Link>
-                <a href="notifications.html"><img src={notifications} /></a>
+                <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 
@@ -32,16 +32,16 @@ function ManageArea() {
                     <button class={styles.delete}>Διαγραδή έκτασης</button>
                 </div>
                 <form>
-                    Όνομα περιοχής:<br/><input type="text" id="area-name" value="kati"/>
-                    <div id="error_msg1"></div><br/>
+                    Όνομα περιοχής:<br /><input type="text" id="area-name" value="kati" />
+                    <div id="error_msg1"></div><br />
 
-                    Έκταση περιοχής (σε km<sup>2</sup>):<br/><input type="number" id="size" max="131" value="23"/>
+                    Έκταση περιοχής (σε km<sup>2</sup>):<br /><input type="number" id="size" max="131" value="23" />
 
-                    <div id="error_msg2"></div><br/>
+                    <div id="error_msg2"></div><br />
 
-                    <input type="submit" value="Αποθήκευση αλλαγών"/>
-                </form><br/>
-                
+                    <input type="submit" value="Αποθήκευση αλλαγών" />
+                </form><br />
+
             </div>
         </div>
     )

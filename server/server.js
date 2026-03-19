@@ -85,7 +85,43 @@ app.get('/get_providers', (req, res)=>{
             console.log(err.message);
             return res.status(500).json({message:"Server error"});
         }
-        console.log(result);
+        res.json(result);
+    });
+});
+
+
+app.post('/edit_user/:id', (req, res)=>{
+    // , email=?, username=?, password=?
+    const sql = `UPDATE userss SET fname=?, lname=?, clock=?, provider=? WHERE userid=?`;
+    const values = [
+        req.params.id,
+        req.body.fname,
+        req.body.lname,
+        req.body.clock,
+        req.body.provider
+        // req.body.email,
+        // req.body.username,
+        // req.body.password
+    ];
+    db.query(sql, values, (err, result)=>{
+        if(err){
+            console.log(err.message);
+            return res.json({message:"Something happend with MySQL"});
+        }
+        // console.log(values);
+        return res.json({success:"Success"});
+    });
+});
+
+app.get(('/user_profile/:id'), (req, res)=>{
+    const sql = "SELECT * FROM userss WHERE userid = ?";
+    const user_id = req.params.id;
+
+    db.query(sql, [user_id], (err, result)=>{
+        if(err){
+            console.log(err.message);
+            return res.status(500).json({message:"Server error"});
+        }
         res.json(result);
     });
 });

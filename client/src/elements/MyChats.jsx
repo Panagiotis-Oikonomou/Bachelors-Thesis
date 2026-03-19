@@ -7,7 +7,7 @@ import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
 import criteria from '../assets/images/criteria.png';
 import match from '../assets/images/match.png';
-import chats from '../assets/images/chats.png';
+import chats from '../assets/images/chatsVisit.png';
 import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profile.png';
 import menu from '../assets/images/menu.png';
@@ -17,12 +17,12 @@ function MyChats() {
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
             <div className={styles.up}>
-                <a href="checkmatchings.html"><img src={matchings} /></a>
+                <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
-                <a href="criteria.html"><img src={criteria} /></a>
-                <a href="match.html"><img src={match} /></a>
+                <Link to='/criteria'><img src={criteria} /></Link>
+                <Link to='/match'><img src={match} /></Link>
                 <Link to='/my_chats'><img src={chats} /></Link>
-                <a href="notifications.html"><img src={notifications} /></a>
+                <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
             <div className={styles.chats}>

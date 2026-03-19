@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './Paroxoi.module.css';
 
-import paroxoi from '../assets/images/paroxoi.png';
+import paroxoi from '../assets/images/paroxoiVisit.png';
 import users from '../assets/images/users.png';
 import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profile.png';

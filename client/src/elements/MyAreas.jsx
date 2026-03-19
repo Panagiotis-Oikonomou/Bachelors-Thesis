@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import styles from './MyAreas.module.css'
 import matchings from '../assets/images/mymatchings.png';
-import myareas from '../assets/images/myareas.png';
+import myareas from '../assets/images/myareasVisit.png';
 import criteria from '../assets/images/criteria.png';
 import match from '../assets/images/match.png';
 import chats from '../assets/images/chats.png';
@@ -17,12 +17,12 @@ function MyAreas() {
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
             <div className={styles.up}>
-                <a href="checkmatchings.html"><img src={matchings} /></a>
+                <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
-                <a href="criteria.html"><img src={criteria} /></a>
-                <a href="match.html"><img src={match} /></a>
+                <Link to='/criteria'><img src={criteria} /></Link>
+                <Link to='/match'><img src={match} /></Link>
                 <Link to='/my_chats'><img src={chats} /></Link>
-                <a href="notifications.html"><img src={notifications} /></a>
+                <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 

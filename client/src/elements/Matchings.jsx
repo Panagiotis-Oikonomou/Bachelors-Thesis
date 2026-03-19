@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './Matchings.module.css';
 
-import matchings from '../assets/images/mymatchings.png';
+import matchings from '../assets/images/mymatchingsVisit.png';
 import myareas from '../assets/images/myareas.png';
 import criteria from '../assets/images/criteria.png';
 import match from '../assets/images/match.png';
@@ -21,10 +21,10 @@ function Matchings() {
             <div className={styles.up}>
                 <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
-                <a href="criteria.html"><img src={criteria} /></a>
-                <a href="match.html"><img src={match} /></a>
+                <Link to='/criteria'><img src={criteria} /></Link>
+                <Link to='/match'><img src={match} /></Link>
                 <Link to='/my_chats'><img src={chats} /></Link>
-                <a href="notifications.html"><img src={notifications} /></a>
+                <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 

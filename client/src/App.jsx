@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Layout from "./elements/Layout";
 
 import MyAreas from "./elements/MyAreas";
 import AddArea from "./elements/AddArea";
@@ -25,7 +26,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile"  element={<Profile/>}/>
         <Route path="/profile/admin" element={<ProfileAdmin />} />
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />

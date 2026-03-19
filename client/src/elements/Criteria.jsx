@@ -5,7 +5,7 @@ import styles from './Criteria.module.css';
 
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
-import criteria from '../assets/images/criteria.png';
+import criteria from '../assets/images/criteriaVisit.png';
 import match from '../assets/images/match.png';
 import chats from '../assets/images/chats.png';
 import notifications from '../assets/images/notifications.png';
@@ -21,9 +21,9 @@ function Criteria() {
                 <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
                 <Link to='/criteria'><img src={criteria} /></Link>
-                <a href="match.html"><img src={match} /></a>
+                <Link to='/match'><img src={match} /></Link>
                 <Link to='/my_chats'><img src={chats} /></Link>
-                <a href="notifications.html"><img src={notifications} /></a>
+                <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 
