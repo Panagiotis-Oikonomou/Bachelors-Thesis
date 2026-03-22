@@ -25,7 +25,7 @@ app.get('/', (req, res)=>{
 });
 
 app.post('/register', (req, res)=>{
-    const sql = "INSERT INTO userss (fname, lname, clock, provider, email, username,  password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const sql = "INSERT INTO users (fname, lname, clock, provider, email, username,  password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     const values = [
         req.body.fname,
         req.body.lname,
@@ -46,7 +46,7 @@ app.post('/register', (req, res)=>{
 });
 
 app.get('/check_username/:username', (req, res) => {
-    const sql = "SELECT username FROM userss WHERE `username` = ?";
+    const sql = "SELECT username FROM users WHERE `username` = ?";
 
     const username = req.params.username;
 
@@ -58,7 +58,7 @@ app.get('/check_username/:username', (req, res) => {
 });
 
 app.get('/check_email/:email', (req, res)=>{
-    const sql = "SELECT email FROM userss WHERE `email` = ?";
+    const sql = "SELECT email FROM users WHERE `email` = ?";
     const email = req.params.email;
 
     db.query(sql, [email], (err, result) => {
@@ -68,7 +68,7 @@ app.get('/check_email/:email', (req, res)=>{
 })
 
 app.get('/check_clock/:clock', (req, res) => {
-    const sql = "SELECT clock FROM userss WHERE `clock` = ?";
+    const sql = "SELECT clock FROM users WHERE `clock` = ?";
     const clock = req.params.clock;
 
     db.query(sql, [clock], (err, result) => {
@@ -91,7 +91,7 @@ app.get('/get_providers', (req, res)=>{
 
 
 app.put('/edit_user/:id', (req, res)=>{
-    const sql = "UPDATE userss SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
+    const sql = "UPDATE users SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
     const values = [
         req.body.fname,
         req.body.lname,
@@ -109,7 +109,7 @@ app.put('/edit_user/:id', (req, res)=>{
 });
 
 app.get(('/user_profile/:id'), (req, res)=>{
-    const sql = "SELECT * FROM userss WHERE `userid` = ?";
+    const sql = "SELECT * FROM users WHERE `userid` = ?";
     const user_id = req.params.id;
 
     db.query(sql, [user_id], (err, result)=>{
