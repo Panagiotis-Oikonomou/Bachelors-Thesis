@@ -46,7 +46,7 @@ app.post('/register', (req, res)=>{
 });
 
 app.get('/check_username/:username', (req, res) => {
-    const sql = "SELECT username FROM userss WHERE username = ?";
+    const sql = "SELECT username FROM userss WHERE `username` = ?";
 
     const username = req.params.username;
 
@@ -58,7 +58,7 @@ app.get('/check_username/:username', (req, res) => {
 });
 
 app.get('/check_email/:email', (req, res)=>{
-    const sql = "SELECT email FROM userss WHERE email = ?";
+    const sql = "SELECT email FROM userss WHERE `email` = ?";
     const email = req.params.email;
 
     db.query(sql, [email], (err, result) => {
@@ -68,7 +68,7 @@ app.get('/check_email/:email', (req, res)=>{
 })
 
 app.get('/check_clock/:clock', (req, res) => {
-    const sql = "SELECT clock FROM userss WHERE clock = ?";
+    const sql = "SELECT clock FROM userss WHERE `clock` = ?";
     const clock = req.params.clock;
 
     db.query(sql, [clock], (err, result) => {
@@ -90,38 +90,30 @@ app.get('/get_providers', (req, res)=>{
 });
 
 
-app.post('/edit_user/:id', (req, res)=>{
-    // , email=?, username=?, password=?
-    const sql = `UPDATE userss SET fname=?, lname=?, clock=?, provider=? WHERE userid=?`;
+app.put('/edit_user/:id', (req, res)=>{
+    const sql = "UPDATE userss SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
     const values = [
-        req.params.id,
         req.body.fname,
         req.body.lname,
         req.body.clock,
-        req.body.provider
-        // req.body.email,
-        // req.body.username,
-        // req.body.password
+        req.body.provider,
+        req.body.email,
+        req.body.username,
+        req.body.password,
+        req.params.id
     ];
     db.query(sql, values, (err, result)=>{
-        if(err){
-            console.log(err.message);
-            return res.json({message:"Something happend with MySQL"});
-        }
-        // console.log(values);
-        return res.json({success:"Success"});
+        if(err) return res.json({message:"Something happend with MySQL"});
+        return res.json({values});
     });
 });
 
 app.get(('/user_profile/:id'), (req, res)=>{
-    const sql = "SELECT * FROM userss WHERE userid = ?";
+    const sql = "SELECT * FROM userss WHERE `userid` = ?";
     const user_id = req.params.id;
 
     db.query(sql, [user_id], (err, result)=>{
-        if(err){
-            console.log(err.message);
-            return res.status(500).json({message:"Server error"});
-        }
+        if(err) return res.status(500).json({message:"Server error"});
         res.json(result);
     });
 });

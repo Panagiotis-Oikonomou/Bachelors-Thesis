@@ -11,7 +11,7 @@ function Register() {
         fname: '',
         lname: '',
         clock: '',
-        provider: 'SOME',
+        provider: '',
         email: '',
         username: '',
         password: ''
@@ -73,7 +73,7 @@ function Register() {
             let regex = /\d/;
             if (len === 0) error = "";
 
-            else if (len <= 3 || len >= 16) error = "Το όνομά σας πρέπει να αποτελείται από 4 μέχρι 15 γράμματα";
+            else if (len < 4 || len > 15) error = "Το όνομά σας πρέπει να αποτελείται από 4 μέχρι 15 γράμματα";
 
             else if (value.includes(" ")) error = "Το όνομά σας δεν μπορεί να περιέχει κενά";
 

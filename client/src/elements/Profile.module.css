@@ -10,9 +10,7 @@
     height: 100dvh; */
 }
 
-.up {
-    display: none;
-}
+.up {display: none;}
 
 .profile {
     grid-column: 1 / 7;
@@ -40,6 +38,8 @@
 
     text-align: center;
 }
+
+.profileData {margin-bottom: 20px;}
 /* .up img {
     height: 50px;
     width: auto;
@@ -62,9 +62,7 @@
 } */
 
 
-.menu {
-    grid-column: 6;
-}
+.menu {grid-column: 6;}
 
 input[type="text"],
 input[type="email"],
@@ -89,19 +87,9 @@ input[type="number"] {
     justify-content: flex-end;
 }
 
-#error_msg1,
-#error_msg2,
-#error_msg3,
-#error_msg4,
-#error_msg5,
-#error_msg6,
-#not_send {
-    color: red;
-}
+.errorMsg {color: red;}
 
-#pswmatch {
-    color: green;
-}
+.pswmatch {color: green;}
 
 @media screen and (min-width: 350px) {
 
@@ -112,16 +100,9 @@ input[type="number"] {
         /* grid-gap: 20px; */
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="number"] {
-        width: 150px;
-    }
+    input[type="text"], input[type="email"], input[type="password"], input[type="number"] {width: 150px;}
 
-    .menu {
-        display: none;
-    }
+    .menu {display: none;}
 
     .up {
         /* grid-column: 1 / 9; */
@@ -163,17 +144,12 @@ input[type="number"] {
         background-color: rgb(78, 42, 132);
     }
 
-    .up {
-        grid-column: 2 / 13;
-    }
+    .up {grid-column: 2 / 13;}
 
     .profile {
         grid-column: 4 / 9;
         margin-top: 30px;
         height: 80dvh;
-
-         
-
         padding: 20px;
     }
 }
