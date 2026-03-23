@@ -141,6 +141,26 @@ app.get('/check_email_profile/', async (req, res) => {
     }
 });
 
+app.get('/get_password_profile/', async (req, res) => {
+    try {
+        const sql = "SELECT userid FROM users WHERE `password` = ?";
+        const password = req.query.password;
+        const id = req.query.id;
+
+        const [rows] = await db.query(sql, [password]);
+
+        // if (rows.length === 0) return res.json({ exists: false });
+        if(rows.length != 0) return res.json({exists: rows[0].userid == id})
+        // if (rows[0].userid == id) return res.json({ exists: true });
+
+        // return res.json({ exists: true });
+    }
+    catch (err) {
+        // return res.json(err);
+        return res.status(500).json({ error: "Wrong password profile" });
+    }
+});
+
 app.get('/get_providers', async (req, res) => {
     try {
         const sql = "SELECT * FROM providers";

@@ -161,8 +161,48 @@ function Profile() {
                 })
                 .catch((err) => console.log(err));
         }
-        else if (name === "password") {
 
+        let password = data.password;
+        // let confirm = conPass.cpsw;
+
+        if (name === "password") {
+            password = value;
+            let len = password.length;
+            // let cpswlen = confirm.length;
+            let specialRegex = /[!@#$%^&*()_\-+=\[\]{};:'"\\|,.<>\/?]/;
+            // if (password === confirm && len != 0) {
+            //     cpswerror = "";
+            //     cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
+            // }
+            // else if (password !== confirm && cpswlen === 0) {
+            //     cpswerror = "";
+            //     cpswmatch = "";
+            // }
+            // else if (password !== confirm && len !== 0) {
+            //     cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
+            //     cpswmatch = "";
+            // }
+
+            if (len === 0) error = "Ο κωδικός σας είναι κενός";
+
+            else if (len < 5 || len > 15) error = "Ο κωδικός σας πρέπει να αποτελείται απο 5 μέχρι 15 χαρακτήρες";
+
+            else if (password.includes(" ")) error = "Ο κωδικός σας δεν μπορεί να περιέχει κενά";
+
+            else if (!specialRegex.test(password)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
+
+            axios.get("http://localhost:5000/get_password_profile/", {
+                params: {
+                    id: 10,
+                    password: value
+                }
+            })
+                .then((res) => {
+                    if (res.data.exists) {
+                        setErrors(prev => ({ ...prev, password: "Edv eimaste einaia oi kvdikoi eiidoi." }));
+                    }
+                })
+                .catch((err) => console.log(err));
         }
 
         setErrors(prev => ({ ...prev, [name]: error }));
@@ -246,13 +286,7 @@ function Profile() {
                                     </option>);
                             })}
                         </select>
-                        {/* <input
-                            type="text"
-                            name="provider"
-                            value={data.provider}
-                            onChange={handleChange}
-                        /> */}
-                        </div>
+                    </div>
 
                     <div className={styles.profileData}><label>Email</label><br />
                         <input
