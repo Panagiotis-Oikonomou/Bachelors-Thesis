@@ -103,6 +103,44 @@ app.get('/check_clock_profile/', async (req, res) => {
     }
 });
 
+app.get('/check_username_profile/', async (req, res) => {
+    try {
+        const sql = "SELECT userid FROM users WHERE `username` = ?";
+        const username = req.query.username;
+        const id = req.query.id;
+
+        const [rows] = await db.query(sql, [username]);
+
+        if (rows.length === 0) return res.json({ exists: false });
+        if (rows[0].userid == id) return res.json({ exists: false });
+
+        return res.json({ exists: true });
+    }
+    catch (err) {
+        // return res.json(err);
+        return res.status(500).json({ error: "Wrong username profile" });
+    }
+});
+
+app.get('/check_email_profile/', async (req, res) => {
+    try {
+        const sql = "SELECT userid FROM users WHERE `email` = ?";
+        const email = req.query.email;
+        const id = req.query.id;
+
+        const [rows] = await db.query(sql, [email]);
+
+        if (rows.length === 0) return res.json({ exists: false });
+        if (rows[0].userid == id) return res.json({ exists: false });
+
+        return res.json({ exists: true });
+    }
+    catch (err) {
+        // return res.json(err);
+        return res.status(500).json({ error: "Wrong email profile" });
+    }
+});
+
 app.get('/get_providers', async (req, res) => {
     try {
         const sql = "SELECT * FROM providers";
@@ -114,7 +152,6 @@ app.get('/get_providers', async (req, res) => {
         return res.status(500).json({ error: "Wrong get providers" });
     }
 });
-
 
 app.put('/edit_user/:id', async (req, res) => {
     try {
