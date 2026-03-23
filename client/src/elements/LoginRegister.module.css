@@ -48,9 +48,6 @@
     font-size: 1.2em;
 }
 
-/* #error_msg1, #error_msg2, #error_msg3, #error_msg4, #error_msg5, #error_msg6, #not_send {
-    color: red;
-} */
 .inputError{
   border: 2px solid red;
 }

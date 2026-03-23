@@ -191,7 +191,7 @@ function Register() {
         }
 
         if (name !== "provider") {
-            setErrors(prev => ({ ...prev, [name]: error}));
+            setErrors(prev => ({ ...prev, [name]: error }));
 
             setCpswError(prev => ({ ...prev, cpsw: cpswerror }));
 

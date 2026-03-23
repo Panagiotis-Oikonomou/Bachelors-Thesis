@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios, { all } from 'axios';
 import { Link } from "react-router-dom";
 import styles from './Profile.module.css';
 import matchings from '../assets/images/mymatchings.png';
@@ -33,6 +33,14 @@ function Profile() {
         pswmatch: ""
     });
 
+    const [providers, setProviders] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:5000/get_providers')
+            .then((res) => { setProviders(res.data); })
+            .catch((err) => { console.log(err); });
+    }, []);
+
     const [allError, setAllError] = useState({ all: "" });
     const [saved, setSaved] = useState({ saved: "" });
 
@@ -44,14 +52,21 @@ function Profile() {
 
             return () => clearTimeout(timer);
         }
-    }, [saved.saved]);
 
+        if (allError.all !== "") {
+            const timer = setTimeout(() => {
+                setAllError(prev => ({ ...prev, all: "" }));
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [saved.saved, allError.all]);
 
     // const [conPass, setConPass] = useState({ cpsw: "" });
 
     useEffect(() => {
         axios.get(`http://localhost:5000/user_profile/${10}`)
-            .then((res) => {  if(res.data) setData(res.data) })
+            .then((res) => { if (res.data) setData(res.data) })
             .catch((err) => { console.log(err); });
     }, []);
 
@@ -66,7 +81,7 @@ function Profile() {
     };
 
     function validateField(name, value) {
-        let error = "h";
+        let error = "";
         let len = value.length;
         if (name === "fname") {
             let regex = /\d/;
@@ -98,8 +113,8 @@ function Profile() {
 
             axios.get("http://localhost:5000/check_clock_profile/", {
                 params: {
-                    id:10,
-                    clock:value
+                    id: 10,
+                    clock: value
                 }
             })
                 .then((res) => {
@@ -112,14 +127,19 @@ function Profile() {
         else if (name === "email") {
             if (len === 0) error = "Το email σας είναι κενό";
             else error = "";
+            axios.get("http://localhost:5000/check_email_profile/", {
+                params: {
+                    id: 10,
+                    email: value
+                }
+            })
+                .then((res) => {
+                    if (res.data.exists) {
+                        setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
+                    }
+                })
+                .catch((err) => console.log(err));
 
-            // axios.get(`http://localhost:5000/check_email/${value}`)
-            //     .then((res) => {
-            //         if (res.data.exists) {
-            //             setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
-            //         }
-            //     })
-            //     .catch((err) => console.log(err));
         }
         else if (name === "username") {
             if (len === 0) error = "Το username σας είναι κενό";
@@ -128,13 +148,18 @@ function Profile() {
 
             else if (value.includes(" ")) error = "Το username σας δεν μπορεί να περιέχει κενά";
 
-            // axios.get(`http://localhost:5000/check_username/${value}`)
-            //     .then((res) => {
-            //         if (res.data.exists) {
-            //             setErrors(prev => ({ ...prev, username: "Υπάρχει χρήστης με αυτό το username." }));
-            //         }
-            //     })
-            //     .catch((err) => console.log(err.message));
+            axios.get("http://localhost:5000/check_username_profile/", {
+                params: {
+                    id: 10,
+                    username: value
+                }
+            })
+                .then((res) => {
+                    if (res.data.exists) {
+                        setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
+                    }
+                })
+                .catch((err) => console.log(err));
         }
         else if (name === "password") {
 
@@ -184,6 +209,7 @@ function Profile() {
                             name="fname"
                             value={data.fname}
                             onChange={handleChange}
+                            className={errors.fname ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.fname}</div>
                     </div>
@@ -194,6 +220,7 @@ function Profile() {
                             name="lname"
                             value={data.lname}
                             onChange={handleChange}
+                            className={errors.lname ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.lname}</div>
                     </div>
@@ -204,17 +231,28 @@ function Profile() {
                             name="clock"
                             value={data.clock}
                             onChange={handleChange}
+                            className={errors.clock ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.clock}</div>
                     </div>
 
                     <div className={styles.profileData}><label>Πάροχος</label><br />
-                        <input
+                        <select name="provider" onChange={handleChange} value={data.provider}>
+                            <option defaultValue={data.provider} key={10}>{data.provider}</option>
+                            {providers.map((provider) => {
+                                return (
+                                    <option key={provider.providerid} value={provider.providername}>
+                                        {provider.providername}
+                                    </option>);
+                            })}
+                        </select>
+                        {/* <input
                             type="text"
                             name="provider"
                             value={data.provider}
                             onChange={handleChange}
-                        /></div>
+                        /> */}
+                        </div>
 
                     <div className={styles.profileData}><label>Email</label><br />
                         <input
@@ -222,6 +260,7 @@ function Profile() {
                             name="email"
                             value={data.email}
                             onChange={handleChange}
+                            className={errors.email ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.email}</div>
                     </div>
@@ -232,6 +271,7 @@ function Profile() {
                             name="username"
                             value={data.username}
                             onChange={handleChange}
+                            className={errors.username ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.username}</div>
                     </div>
@@ -242,7 +282,9 @@ function Profile() {
                             name="password"
                             value={data.password}
                             onChange={handleChange}
-                        /><div className={styles.errorMsg}>{errors.fname}</div>
+                            className={errors.password ? styles.inputError : ""}
+                        />
+                        <div className={styles.errorMsg}>{errors.password}</div>
                         <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
                     </div>
 

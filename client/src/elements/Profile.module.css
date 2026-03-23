@@ -91,6 +91,8 @@ input[type="number"] {
 
 .pswmatch {color: green;}
 
+.inputError{border: 2px solid red;}
+
 @media screen and (min-width: 350px) {
 
     .container {
