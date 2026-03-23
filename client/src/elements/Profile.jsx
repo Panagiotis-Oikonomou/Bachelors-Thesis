@@ -154,9 +154,9 @@ function Profile() {
         axios.put(`http://localhost:5000/edit_user/${10}`, data)
             .then((res) => console.log(res))
             .catch((err) => console.log(err))
+
         setAllError(prev => ({ ...prev, all: "" }))
         setSaved(prev => ({ ...prev, saved: "Οι αλλαγές ήταν επιτυχής" }));
-        // setIsActive(true);
     }
 
     const [showPassword, setShowPassword] = useState(false);

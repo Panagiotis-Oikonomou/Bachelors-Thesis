@@ -220,6 +220,7 @@ function Register() {
                 console.log("Form submitted:", formData);
             })
             .catch((err) => console.log(err));
+        navigate('/profile');
     }
 
     const [showPassword, setShowPassword] = useState(false);
