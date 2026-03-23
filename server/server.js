@@ -1,8 +1,10 @@
 // npm run dev to start the development
 const express = require('express');
+// const promise = require('promises');
 const path = require('path');
 const cors = require('cors');
-const mysql = require('mysql');
+const mysql = require('mysql2');
+const { exists } = require('fs');
 
 app = express();
 // to serve static files, to handle client side assets like css and javascript
@@ -14,110 +16,139 @@ app.use(express.json());
 const port = 5000;
 
 const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"",
-    database:"energy_community"
-});
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "energy_community"
+}).promise();
 
-app.get('/', (req, res)=>{
-    res.send("Hello");
-});
 
-app.post('/register', (req, res)=>{
-    const sql = "INSERT INTO users (fname, lname, clock, provider, email, username,  password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const values = [
-        req.body.fname,
-        req.body.lname,
-        req.body.clock,
-        req.body.provider,
-        req.body.email,
-        req.body.username,
-        req.body.password
-    ];
-    db.query(sql, values, (err, result)=>{
-        if(err){
-            console.log(err.message);
-            return res.json({message:"Something happend with MySQL"});
-        }
-        // console.log(values);
-        return res.json({success:"Success"});
-    });
-});
+// app.post('/register', (req, res) => {
+//     const sql = "INSERT INTO users (fname, lname, clock, provider, email, username,  password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//     const values = [
+//         req.body.fname,
+//         req.body.lname,
+//         req.body.clock,
+//         req.body.provider,
+//         req.body.email,
+//         req.body.username,
+//         req.body.password
+//     ];
+//     db.query(sql, values, (err, result) => {
+//         if (err) {
+//             console.log(err.message);
+//             return res.json({ message: "Something happend with MySQL" });
+//         }
+//         // console.log(values);
+//         return res.json({ success: "Success" });
+//     });
+// });
 
-app.get('/check_username/:username', (req, res) => {
-    const sql = "SELECT username FROM users WHERE `username` = ?";
+// app.get('/check_username/:username', (req, res) => {
+//     const sql = "SELECT username FROM users WHERE `username` = ?";
 
-    const username = req.params.username;
+//     const username = req.params.username;
 
-    db.query(sql, [username], (err, result) => {
-        if(err) return res.json(err);
+//     db.query(sql, [username], (err, result) => {
+//         if (err) return res.json(err);
 
-        return res.json({exists: result.length > 0});
-    });
-});
+//         return res.json({ exists: result.length > 0 });
+//     });
+// });
 
-app.get('/check_email/:email', (req, res)=>{
-    const sql = "SELECT email FROM users WHERE `email` = ?";
-    const email = req.params.email;
+app.get('/check_email/:email', async (req, res) => {
+    try{
+        const sql = "SELECT 1 FROM users WHERE `email`=? LIMIT 1";
+        const email = req.params.email;
 
-    db.query(sql, [email], (err, result) => {
-        if(err) return res.json(err);
-        return res.json({exists: result.length > 0});
-    });
+        const [rows] = await db.query(sql, [email]);
+        res.json({exists: rows.length > 0});
+    }
+    catch(err){
+        return res.status(500).json({error: err.message});
+    }
 })
 
-app.get('/check_clock/:clock', (req, res) => {
-    const sql = "SELECT clock FROM users WHERE `clock` = ?";
-    const clock = req.params.clock;
+app.get('/check_clock/:clock', async (req, res) => {
+    try{
+        const sql = "SELECT 1 FROM users WHERE `clock`=? LIMIT 1";
+        const clock = req.params.clock;
 
-    db.query(sql, [clock], (err, result) => {
-        if(err) return res.json(err);
-        return res.json({exists: result.length > 0});
-    });
+        const [rows] = await db.query(sql, [clock]);
+
+        res.json({exists: rows.length > 0});
+    }
+    catch(err){
+        return res.status(500).json({error: err.message});
+    }
 });
 
-app.get('/get_providers', (req, res)=>{
-    const sql = "SELECT * FROM providers";
+app.get('/check_clock_profile/', async (req, res) => {
+    try {
+        const sql = "SELECT userid FROM users WHERE `clock` = ?";
+        const clock = req.query.clock;
+        const id = req.query.id;
 
-    db.query(sql, (err, result)=>{
-        if(err){
-            console.log(err.message);
-            return res.status(500).json({message:"Server error"});
-        }
-        res.json(result);
-    });
+        const [rows] = await db.query(sql, [clock]);
+
+        console.log(rows.length);
+        if(rows.length === 0) {
+            
+            return res.json({exists: false});}
+
+        if(rows[0].userid === id) {console.log(rows[0].userid);return res.json({exists: false});}
+
+        return res.json({exists: true});
+    }
+    catch (err) {
+        return res.json(err);
+    }
 });
 
+// app.get('/get_providers', (req, res) => {
+//     const sql = "SELECT * FROM providers";
 
-app.put('/edit_user/:id', (req, res)=>{
-    const sql = "UPDATE users SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
-    const values = [
-        req.body.fname,
-        req.body.lname,
-        req.body.clock,
-        req.body.provider,
-        req.body.email,
-        req.body.username,
-        req.body.password,
-        req.params.id
-    ];
-    db.query(sql, values, (err, result)=>{
-        if(err) return res.json({message:"Something happend with MySQL"});
-        return res.json({values});
-    });
+//     db.query(sql, (err, result) => {
+//         if (err) {
+//             console.log(err.message);
+//             return res.status(500).json({ message: "Server error" });
+//         }
+//         res.json(result);
+//     });
+// });
+
+
+// app.put('/edit_user/:id', (req, res) => {
+//     const sql = "UPDATE users SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
+//     const values = [
+//         req.body.fname,
+//         req.body.lname,
+//         req.body.clock,
+//         req.body.provider,
+//         req.body.email,
+//         req.body.username,
+//         req.body.password,
+//         req.params.id
+//     ];
+//     db.query(sql, values, (err, result) => {
+//         if (err) return res.json({ message: "Something happend with MySQL" });
+//         return res.json({ values });
+//     });
+// });
+
+app.get('/user_profile/:id', async (req, res) => {
+    try{
+        const sql = "SELECT * FROM users WHERE `userid`=?";
+        const id = req.params.id;
+
+        const [rows] = await db.query(sql, [id]);
+        res.json(rows[0] || null);
+    }
+    catch(err){
+        return res.status(500).json({error:err.message});
+    }
 });
 
-app.get(('/user_profile/:id'), (req, res)=>{
-    const sql = "SELECT * FROM users WHERE `userid` = ?";
-    const user_id = req.params.id;
-
-    db.query(sql, [user_id], (err, result)=>{
-        if(err) return res.status(500).json({message:"Server error"});
-        res.json(result);
-    });
-});
-
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`Listening to port ${port}`);
 });
