@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import axios, { all } from 'axios';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import debounce from "lodash/debounce";
 import styles from './Profile.module.css';
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -13,6 +13,46 @@ import profile from '../assets/images/profileVisit.png';
 import menu from '../assets/images/menu.png';
 
 function Profile() {
+    const navigate = useNavigate();
+
+    const checkEmail = debounce((value) => {
+        axios.get("http://localhost:5000/check_email_profile/", {
+            params: { id: 10, email: value }
+        })
+            .then((res) => {
+                if (res.data.exists) {
+                    setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
+                }
+            })
+            .catch((err) => console.log(err));
+    }, 500);
+
+    const checkClock = debounce((value) => {
+        axios.get("http://localhost:5000/check_clock_profile/", {
+            params: { id: 10, clock: value }
+        })
+            .then((res) => {
+                if (res.data.exists) {
+                    setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
+                }
+            })
+            .catch((err) => console.log(err));
+    }, 500);
+
+    const checkUsername = debounce((value) => {
+        axios.get("http://localhost:5000/check_username_profile/", {
+            params: {
+                id: 10,
+                username: value
+            }
+        })
+            .then((res) => {
+                if (res.data.exists) {
+                    setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
+                }
+            })
+            .catch((err) => console.log(err));
+    }, 500);
     const [data, setData] = useState({
         fname: '',
         lname: '',
@@ -22,6 +62,9 @@ function Profile() {
         username: '',
         password: ''
     });
+
+    const [conPass, setConPass] = useState({ cpsw: "" });
+    const [originalPassword, setOriginalPassword] = useState("");
 
     const [errors, setErrors] = useState({
         fname: "",
@@ -41,9 +84,15 @@ function Profile() {
             .catch((err) => { console.log(err); });
     }, []);
 
+    const [cpswError, setCpswError] = useState({ cpsw: "" });
+    const [cpswMatch, setCpswMatch] = useState({ cpsw: "" });
+    const [cpswRequired, setCpswRequired] = useState(false);
     const [allError, setAllError] = useState({ all: "" });
     const [saved, setSaved] = useState({ saved: "" });
 
+    const [loading, setLoading] = useState(false);
+
+    // timer
     useEffect(() => {
         if (saved.saved !== "") {
             const timer = setTimeout(() => {
@@ -62,26 +111,39 @@ function Profile() {
         }
     }, [saved.saved, allError.all]);
 
-    // const [conPass, setConPass] = useState({ cpsw: "" });
-
     useEffect(() => {
         axios.get(`http://localhost:5000/user_profile/${10}`)
-            .then((res) => { if (res.data) setData(res.data) })
+            .then((res) => {
+                if (res.data) {
+                    setData(res.data)
+                    setOriginalPassword(res.data.password);
+                }
+            })
             .catch((err) => { console.log(err); });
     }, []);
 
     function handleChange(e) {
         const { name, value } = e.target;
-        setData({
-            ...data,
-            [name]: value
-        });
+        // alert(originalPassword);
+        if (name === "cpsw") {
+            setConPass({
+                ...conPass,
+                [name]: value
+            });
+        }
+        else {
+            setData({
+                ...data,
+                [name]: value
+            });
+        }
 
         validateField(name, value);
     };
-
     function validateField(name, value) {
         let error = "";
+        let cpswerror = "";
+        let cpswmatch = "";
         let len = value.length;
         if (name === "fname") {
             let regex = /\d/;
@@ -111,35 +173,12 @@ function Profile() {
 
             else error = "Ο αριθμός πρέπει να είναι αυτής της μορφής χ-χχχχχχχχ-χχ";
 
-            axios.get("http://localhost:5000/check_clock_profile/", {
-                params: {
-                    id: 10,
-                    clock: value
-                }
-            })
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
-                    }
-                })
-                .catch((err) => console.log(err));
+            checkClock(value);
         }
         else if (name === "email") {
             if (len === 0) error = "Το email σας είναι κενό";
             else error = "";
-            axios.get("http://localhost:5000/check_email_profile/", {
-                params: {
-                    id: 10,
-                    email: value
-                }
-            })
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
-                    }
-                })
-                .catch((err) => console.log(err));
-
+            checkEmail(value);
         }
         else if (name === "username") {
             if (len === 0) error = "Το username σας είναι κενό";
@@ -148,26 +187,15 @@ function Profile() {
 
             else if (value.includes(" ")) error = "Το username σας δεν μπορεί να περιέχει κενά";
 
-            axios.get("http://localhost:5000/check_username_profile/", {
-                params: {
-                    id: 10,
-                    username: value
-                }
-            })
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
-                    }
-                })
-                .catch((err) => console.log(err));
+            checkUsername(value);
         }
 
-        let password = data.password;
+        // let password = data.password;
         // let confirm = conPass.cpsw;
 
         if (name === "password") {
-            password = value;
-            let len = password.length;
+            // password = value;
+            let len = value.length;
             // let cpswlen = confirm.length;
             let specialRegex = /[!@#$%^&*()_\-+=\[\]{};:'"\\|,.<>\/?]/;
             // if (password === confirm && len != 0) {
@@ -187,44 +215,98 @@ function Profile() {
 
             else if (len < 5 || len > 15) error = "Ο κωδικός σας πρέπει να αποτελείται απο 5 μέχρι 15 χαρακτήρες";
 
-            else if (password.includes(" ")) error = "Ο κωδικός σας δεν μπορεί να περιέχει κενά";
+            else if (value.includes(" ")) error = "Ο κωδικός σας δεν μπορεί να περιέχει κενά";
 
-            else if (!specialRegex.test(password)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
+            else if (!specialRegex.test(value)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
 
-            axios.get("http://localhost:5000/get_password_profile/", {
-                params: {
-                    id: 10,
-                    password: value
-                }
-            })
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, password: "Edv eimaste einaia oi kvdikoi eiidoi." }));
-                    }
-                })
-                .catch((err) => console.log(err));
+            // axios.get("http://localhost:5000/get_password_profile/", {
+            //     params: {
+            //         id: 10,
+            //         password: value
+            //     }
+            // })
+            //     .then((res) => {
+            //         if (res.data.exists) {
+            if (!originalPassword) return;
+
+            setCpswRequired(originalPassword !== value);
+            // if(originalPassword == value) setCpswRequired(false);
+
+            // else setCpswRequired(true);
+
+            // setErrors(prev => ({ ...prev, password: "Edv eimaste einaia oi kvdikoi eiidoi." }));
+            //     }
+            //     else{
+            //         setCpswRequired(true);
+            //     }
+            // })
+            // .catch((err) => console.log(err));
         }
 
-        setErrors(prev => ({ ...prev, [name]: error }));
+        if (name === "cpsw") {
+            confirm = value;
+            let len = confirm.length;
+            let password = data.password;
+            if (len === 0) {
+                cpswerror = "";
+                cpswmatch = "";
+            }
+            else if (confirm !== password) {
+                cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
+                cpswmatch = "";
+            }
+            else if (confirm === password) {
+                cpswerror = "";
+                cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
+            }
+        }
+
+        if (name !== "provider") {
+            setErrors(prev => ({ ...prev, [name]: error }));
+
+            setCpswError(prev => ({ ...prev, cpsw: cpswerror }));
+
+            setCpswMatch(prev => ({ ...prev, cpsw: cpswmatch }));
+        }
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
+        if (loading) return;
+        setLoading(true);
         const hasErrors = Object.values(errors).some(err => err !== "");
+        const hasCpswErrors = Object.values(cpswError).some(err => err !== "");
 
-        if (hasErrors) {
+        if (hasErrors || hasCpswErrors) {
             setAllError(prev => ({ ...prev, all: "Υπάρχουν λάθη στη φόρμα" }));
+            setLoading(false);
             return;
         }
-        axios.put(`http://localhost:5000/edit_user/${10}`, data)
-            .then((res) => console.log(res))
-            .catch((err) => console.log(err))
 
-        setAllError(prev => ({ ...prev, all: "" }))
-        setSaved(prev => ({ ...prev, saved: "Οι αλλαγές ήταν επιτυχής" }));
+        try {
+            await axios.put(`http://localhost:5000/edit_user/${10}`, data);
+
+            const res = await axios.get(`http://localhost:5000/user_profile/10`);
+            if (res.data) {
+                setData(res.data);
+                setOriginalPassword(res.data.password);
+            }
+
+            setAllError(prev => ({ ...prev, all: "" }))
+            setSaved(prev => ({ ...prev, saved: "Οι αλλαγές ήταν επιτυχής" }));
+            setConPass({cpsw:""});
+            setCpswMatch({cpsw:""});
+            // navigate('/profile');
+        }
+        catch (err) { console.log(err); }
+        finally {
+            setLoading(false);
+        }
+
     }
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfPassword, setShowConfPassword] = useState(false);
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -318,13 +400,29 @@ function Profile() {
                             onChange={handleChange}
                             className={errors.password ? styles.inputError : ""}
                         />
-                        <div className={styles.errorMsg}>{errors.password}</div>
+                        <br />
                         <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
+                        <div className={styles.errorMsg}>{errors.password}</div>
+                    </div>
+
+                    <div className={styles.profileData}><label>Confirm Password</label><br />
+                        <input
+                            type={showConfPassword ? "text" : "password"}
+                            name="cpsw"
+                            value={conPass.cpsw}
+                            onChange={handleChange}
+                            required={cpswRequired}
+                            className={cpswError.cpsw ? styles.inputError : ""}
+                        />
+                        <br />
+                        <input type="checkbox" onChange={() => setShowConfPassword(!showConfPassword)} /> Εμφάνιση κωδικού
+                        <div className={styles.errorMsg}>{cpswError.cpsw}</div>
+                        <div className={styles.pswmatch}>{cpswMatch.cpsw}</div><br />
                     </div>
 
                     <div className={styles.errorMsg}>{allError.all}</div>
                     <div className={styles.pswmatch}>{saved.saved}</div>
-                    <input type="submit" value="Αποθήκευση αλλαγών" />
+                    <input type="submit" value="Αποθήκευση αλλαγών" disabled={loading} />
                 </form>
             </div>
         </div>
