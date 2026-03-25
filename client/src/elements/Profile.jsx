@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios, { all } from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import {Link} from "react-router-dom";
 import debounce from "lodash/debounce";
 import styles from './Profile.module.css';
 import matchings from '../assets/images/mymatchings.png';
@@ -13,8 +13,6 @@ import profile from '../assets/images/profileVisit.png';
 import menu from '../assets/images/menu.png';
 
 function Profile() {
-    const navigate = useNavigate();
-
     const checkEmail = debounce((value) => {
         axios.get("http://localhost:5000/check_email_profile/", {
             params: { id: 10, email: value }
@@ -77,7 +75,6 @@ function Profile() {
     });
 
     const [providers, setProviders] = useState([]);
-
     useEffect(() => {
         axios.get('http://localhost:5000/get_providers')
             .then((res) => { setProviders(res.data); })
@@ -124,19 +121,8 @@ function Profile() {
 
     function handleChange(e) {
         const { name, value } = e.target;
-        // alert(originalPassword);
-        if (name === "cpsw") {
-            setConPass({
-                ...conPass,
-                [name]: value
-            });
-        }
-        else {
-            setData({
-                ...data,
-                [name]: value
-            });
-        }
+        if (name === "cpsw") setConPass({...conPass, [name]: value});
+        else setData({...data, [name]: value});
 
         validateField(name, value);
     };
@@ -237,7 +223,7 @@ function Profile() {
             let password = data.password;
 
             if (!originalPassword) return;
-            
+
             if (len === 0 || password == originalPassword) {
                 cpswerror = "";
                 cpswmatch = "";
@@ -287,13 +273,9 @@ function Profile() {
             setSaved(prev => ({ ...prev, saved: "Οι αλλαγές ήταν επιτυχής" }));
             setConPass({cpsw:""});
             setCpswMatch({cpsw:""});
-            // navigate('/profile');
         }
         catch (err) { console.log(err); }
-        finally {
-            setLoading(false);
-        }
-
+        finally { setLoading(false); }
     }
 
     const [showPassword, setShowPassword] = useState(false);

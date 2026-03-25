@@ -22,6 +22,10 @@
     grid-column: 1 / 5;
     width: 100%;
     outline-style: groove;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    align-items: start;
     outline-color: rgb(194, 186, 186);
     background-color: rgb(209, 205, 205);
     padding: 10px 5px 5px 10px;
@@ -39,26 +43,20 @@
     font-weight: 100;
 }
 
-.must {
-    color:rgb(187, 6, 6);
-}
+.must {color:rgb(187, 6, 6);}
 
 .titlee {
     text-align: center;
     font-size: 1.2em;
 }
 
-.inputError{
-  border: 2px solid red;
-}
+.inputError{border: 2px solid red;}
 
-.errorMsg {
-    color:red;
-}
+.formData {margin-bottom: 20px;}
 
-.pswmatch {
-    color: green;
-}
+.errorMsg {color:red;}
+
+.pswmatch {color: green;}
 
 @media screen and (min-width: 600px){
 

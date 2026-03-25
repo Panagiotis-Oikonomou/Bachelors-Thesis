@@ -1,11 +1,35 @@
 import { useState, useEffect } from "react";
-import axios, { all } from 'axios';
-import { Link, useAsyncError, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { Link, useNavigate } from "react-router-dom";
+import debounce from "lodash/debounce";
 import styles from './LoginRegister.module.css';
 
 
 function Register() {
     const navigate = useNavigate();
+    const checkClock = debounce((value) => {
+        axios.get(`http://localhost:5000/check_clock/${value}`)
+            .then((res) => {
+                if (res.data.exists) setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
+            })
+            .catch((err) => console.log(err));
+    }, 500);
+
+    const checkUsername = debounce((value) => {
+        axios.get(`http://localhost:5000/check_username/${value}`)
+            .then((res) => {
+                if (res.data.exists) setErrors(prev => ({ ...prev, username: "Υπάρχει χρήστης με αυτό το username." }));
+            })
+            .catch((err) => console.log(err.message));
+    }, 500);
+
+    const checkEmail = debounce((value) => {
+        axios.get(`http://localhost:5000/check_email/${value}`)
+            .then((res) => {
+                if (res.data.exists) setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
+            })
+            .catch((err) => console.log(err));
+    }, 500);
 
     const [formData, setFormData] = useState({
         fname: '',
@@ -19,15 +43,10 @@ function Register() {
     const [conPass, setConPass] = useState({ cpsw: "" });
 
     const [providers, setProviders] = useState([]);
-
     useEffect(() => {
         axios.get('http://localhost:5000/get_providers')
-            .then((res) => {
-                setProviders(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            .then((res) => { setProviders(res.data); })
+            .catch((err) => { console.log(err); });
     }, []);
 
     const [errors, setErrors] = useState({
@@ -41,26 +60,15 @@ function Register() {
     });
 
     const [cpswError, setCpswError] = useState({ cpsw: "" });
-
     const [cpswMatch, setCpswMatch] = useState({ cpsw: "" });
-
     const [allError, setAllError] = useState({ all: "" });
 
     function handleChange(e) {
         const { name, value } = e.target;
 
-        if (name === "cpsw") {
-            setConPass({
-                ...conPass,
-                [name]: value
-            });
-        }
-        else {
-            setFormData({
-                ...formData,
-                [name]: value
-            });
-        }
+        if (name === "cpsw") setConPass({ ...conPass, [name]: value });
+
+        else setFormData({ ...formData, [name]: value });
         validateField(name, value);
     }
 
@@ -68,8 +76,8 @@ function Register() {
         let error = "";
         let cpswerror = "";
         let cpswmatch = "";
+        let len = value.length;
         if (name === "fname") {
-            let len = value.length;
             let regex = /\d/;
             if (len === 0) error = "";
 
@@ -81,11 +89,10 @@ function Register() {
         }
 
         if (name === "lname") {
-            let len = value.length;
             let regex = /\d/;
             if (len === 0) error = "";
 
-            else if (len <= 3 || len >= 16) error = "Το επιθετό σας πρέπει να αποτελείται από 4 μεχρι 15 γράμματα";
+            else if (len < 4 || len > 15) error = "Το επιθετό σας πρέπει να αποτελείται από 4 μεχρι 15 γράμματα";
 
             else if (value.includes(" ")) error = "Το επιθετό σας δεν μπορεί να περιέχει κενά";
 
@@ -93,98 +100,69 @@ function Register() {
         }
 
         if (name === "clock") {
-            let len = value.length;
             let regex = /^\d-\d{8}-\d{2}$/;
             if (len === 0) error = "";
 
             else if (regex.test(value)) error = "";
 
             else error = "Ο αριθμός πρέπει να είναι αυτής της μορφής χ-χχχχχχχχ-χχ";
-
-            axios.get(`http://localhost:5000/check_clock/${value}`)
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
-                    }
-                })
-                .catch((err) => console.log(err));
+            checkClock(value);
         }
 
         if (name === "username") {
-            let len = value.length;
-
             if (len === 0) error = "";
 
             else if (len < 5 || len > 10) error = "Το username σας πρέπει να αποτελείται από 5 μέχρι 10 γράμματα";
 
             else if (value.includes(" ")) error = "Το username σας δεν μπορεί να περιέχει κενά";
 
-            axios.get(`http://localhost:5000/check_username/${value}`)
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, username: "Υπάρχει χρήστης με αυτό το username." }));
-                    }
-                })
-                .catch((err) => console.log(err.message));
+            checkUsername(value);
         }
 
         if (name === "email") {
-            let len = value.length;
             if (len === 0) error = "";
-
-            axios.get(`http://localhost:5000/check_email/${value}`)
-                .then((res) => {
-                    if (res.data.exists) {
-                        setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
-                    }
-                })
-                .catch((err) => console.log(err));
+            checkEmail(value);
         }
 
-        let password = formData.password;
-        let confirm = conPass.cpsw;
-
         if (name === "password") {
-            password = value;
-            let len = password.length;
+            let confirm = conPass.cpsw;
             let cpswlen = confirm.length;
             let specialRegex = /[!@#$%^&*()_\-+=\[\]{};:'"\\|,.<>\/?]/;
-            if (password === confirm && len != 0) {
+            if (value === confirm && len != 0) {
                 cpswerror = "";
                 cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
             }
-            else if (password !== confirm && cpswlen === 0) {
+            else if (value !== confirm && cpswlen === 0) {
                 cpswerror = "";
                 cpswmatch = "";
             }
-            else if (password !== confirm && len !== 0) {
+            else if (value !== confirm && len !== 0) {
                 cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
                 cpswmatch = "";
             }
 
-            if (len < 5 || len > 15) error = "Ο κωδικός σας πρέπει να αποτελείται απο 5 μέχρι 15 χαρακτήρες";
+            if (len === 0) error = "";
 
-            else if (password.includes(" ")) error = "Ο κωδικός σας δεν μπορεί να περιέχει κενά";
+            else if (len < 5 || len > 15) error = "Ο κωδικός σας πρέπει να αποτελείται απο 5 μέχρι 15 χαρακτήρες";
 
-            else if (!specialRegex.test(password)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
+            else if (value.includes(" ")) error = "Ο κωδικός σας δεν μπορεί να περιέχει κενά";
+
+            else if (!specialRegex.test(value)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
 
             else error = "";
-
-            if (len === 0) error = "";
         }
 
         if (name === "cpsw") {
-            confirm = value;
-            let len = confirm.length;
+            let password = formData.password;
             if (len === 0) {
                 cpswerror = "";
                 cpswmatch = "";
             }
-            else if (confirm !== password) {
+            else if (value !== password) {
                 cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
                 cpswmatch = "";
             }
-            else if (confirm === password) {
+            else if (value === password) {
                 cpswerror = "";
                 cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
             }
@@ -231,42 +209,104 @@ function Register() {
             <div className={styles.registerForm}>
                 <form onSubmit={handleSubmit}>
                     <p className={styles.titlee}>Πρέπει να συμπληρώσεται όλα τα πεδία της φόρμας</p><br />
-                    Όνομα<span className={styles.must}>*</span>:<br /><input type="text" name="fname" value={formData.fname} required onChange={handleChange} className={errors.fname ? styles.inputError : ""} />
-                    <div className={styles.errorMsg}>{errors.fname}</div><br />
+                    <div className={styles.formData}><label>Όνομα<span className={styles.must}>*</span></label><br />
+                        <input
+                            type="text"
+                            name="fname"
+                            value={formData.fname}
+                            required
+                            onChange={handleChange}
+                            className={errors.fname ? styles.inputError : ""}
+                        />
+                        <div className={styles.errorMsg}>{errors.fname}</div>
+                    </div>
 
-                    Επώνυμο<span className={styles.must}>*</span>:<br /><input type="text" name="lname" value={formData.lname} required onChange={handleChange} className={errors.lname ? styles.inputError : ""} />
-                    <div className={styles.errorMsg}>{errors.lname}</div><br />
+                    <div className={styles.formData}><label>Επώνυμο<span className={styles.must}>*</span></label><br />
+                        <input
+                            type="text"
+                            name="lname"
+                            value={formData.lname}
+                            required
+                            onChange={handleChange}
+                            className={errors.lname ? styles.inputError : ""}
+                        />
+                        <div className={styles.errorMsg}>{errors.lname}</div>
+                    </div>
 
-                    Αριθμός ρολογιού<span className={styles.must}>*</span>:<br /><input type="text" name="clock" value={formData.clock} placeholder="x-xxxxxxxx-xx" required onChange={handleChange} className={errors.clock ? styles.inputError : ""} />
-                    <div className={styles.errorMsg}>{errors.clock}</div><br />
+                    <div className={styles.formData}><label>Αριθμός ρολογιού<span className={styles.must}>*</span></label><br />
+                        <input
+                            type="text"
+                            name="clock"
+                            value={formData.clock}
+                            required
+                            onChange={handleChange}
+                            className={errors.clock ? styles.inputError : ""}
+                        />
+                        <div className={styles.errorMsg}>{errors.clock}</div>
+                    </div>
 
-                    Πάροχος ενέργειας<span className={styles.must}>*</span>:<br />
-                    <select name="provider" required onChange={handleChange} value={formData.provider}>
-                        {providers.map((provider) => {
-                            return (
-                                <option key={provider.providerid} value={provider.providername}>
-                                    {provider.providername}
-                                </option>);
-                        })}
-                    </select><br /><br />
+                    <div className={styles.formData}><label>Πάροχος ενέργειας<span className={styles.must}>*</span></label><br />
+                        <select name="provider" required onChange={handleChange} value={formData.provider}>
+                            <option defaultValue={""}></option>
+                            {providers.map((provider) => {
+                                return (
+                                    <option key={provider.providerid} value={provider.providername}>
+                                        {provider.providername}
+                                    </option>);
+                            })}
+                        </select>
+                    </div>
 
-                    Email<span className={styles.must}>*</span>:<br /><input type="email" name="email" value={formData.email} required onChange={handleChange} className={errors.email ? styles.inputError : ""} />
-                    <div className={styles.errorMsg}>{errors.email}</div><br />
+                    <div className={styles.formData}><label>Email<span className={styles.must}>*</span></label><br />
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            required
+                            onChange={handleChange}
+                            className={errors.clock ? styles.inputError : ""}
+                        />
+                        <div className={styles.errorMsg}>{errors.email}</div>
+                    </div>
 
-                    Username<span className={styles.must}>*</span>:<br /><input type="text" name="username" value={formData.username} required onChange={handleChange} className={errors.username ? styles.inputError : ""} />
-                    <div className={styles.errorMsg}>{errors.username}</div><br />
+                    <div className={styles.formData}><label>Username<span className={styles.must}>*</span></label><br />
+                        <input
+                            type="username"
+                            name="username"
+                            value={formData.username}
+                            required
+                            onChange={handleChange}
+                            className={errors.clock ? styles.inputError : ""}
+                        />
+                        <div className={styles.errorMsg}>{errors.username}</div>
+                    </div>
 
-                    Password<span className={styles.must}>*</span>:<br />
-                    <input type={showPassword ? "text" : "password"} name="password" value={formData.password} required onChange={handleChange} className={errors.password ? styles.inputError : ""} /><br />
-                    <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού<br />
-                    <div className={styles.errorMsg}>{errors.password}</div><br />
+                    <div className={styles.formData}><label>Password<span className={styles.must}>*</span></label><br />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
+                            required
+                            onChange={handleChange}
+                            className={errors.password ? styles.inputError : ""}
+                        /><br />
+                        <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
+                        <div className={styles.errorMsg}>{errors.password}</div>
+                    </div>
 
-                    Confirm Password<span className={styles.must}>*</span>:<br />
-                    <input type={showConfPassword ? "text" : "password"} name="cpsw" value={conPass.cpsw} required onChange={handleChange} className={cpswError.cpsw ? styles.inputError : ""} /><br />
-                    <input type="checkbox" onChange={() => setShowConfPassword(!showConfPassword)} /> Εμφάνιση κωδικού<br />
-                    <div className={styles.errorMsg}>{cpswError.cpsw}</div><br />
-                    <div className={styles.pswmatch}>{cpswMatch.cpsw}</div><br />
-
+                    <div className={styles.formData}><label>Confirm Password<span className={styles.must}>*</span></label><br />
+                        <input
+                            type={showConfPassword ? "text" : "password"}
+                            name="cpsw"
+                            value={conPass.cpsw}
+                            required
+                            onChange={handleChange}
+                            className={cpswError.cpsw ? styles.inputError : ""}
+                        /><br />
+                        <input type="checkbox" onChange={() => setShowConfPassword(!showConfPassword)} /> Εμφάνιση κωδικού
+                        <div className={styles.errorMsg}>{cpswError.cpsw}</div><br />
+                        <div className={styles.pswmatch}>{cpswMatch.cpsw}</div>
+                    </div>
                     <div className={styles.errorMsg}>{allError.all}</div>
                     <input type="submit" value="Εγγραφή" />
                 </form>
