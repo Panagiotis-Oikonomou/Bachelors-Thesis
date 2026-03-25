@@ -209,6 +209,19 @@ app.get('/user_profile/:id', async (req, res) => {
     }
 });
 
+app.get('/login/', async (req, res) => {
+    try {
+        const sql = "SELECT 1 FROM users WHERE `username`=? AND `password`=? LIMIT 1";
+        const usr = req.query.usr;
+        const psw = req.query.psw;
+
+        const [rows] = await db.query(sql, [usr, psw]);
+        if (rows.length === 0) return res.json({ exists: false });
+        return res.json({ exists: true });
+    }
+    catch (err) {return res.status(500).json({ error: "Wrong login" });}
+});
+
 app.listen(port, () => {
     console.log(`Listening to port ${port}`);
 });
