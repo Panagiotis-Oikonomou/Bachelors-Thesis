@@ -190,26 +190,37 @@ function Profile() {
             checkUsername(value);
         }
 
-        // let password = data.password;
-        // let confirm = conPass.cpsw;
-
         if (name === "password") {
-            // password = value;
             let len = value.length;
-            // let cpswlen = confirm.length;
+            let confirm = conPass.cpsw;
+            let cpswlen = confirm.length;
             let specialRegex = /[!@#$%^&*()_\-+=\[\]{};:'"\\|,.<>\/?]/;
-            // if (password === confirm && len != 0) {
-            //     cpswerror = "";
-            //     cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
-            // }
-            // else if (password !== confirm && cpswlen === 0) {
-            //     cpswerror = "";
-            //     cpswmatch = "";
-            // }
-            // else if (password !== confirm && len !== 0) {
-            //     cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
-            //     cpswmatch = "";
-            // }
+
+            if (!originalPassword) return;
+
+            setCpswRequired(originalPassword !== value);
+            alert(value + " " + originalPassword);
+
+            if(originalPassword === value){
+                cpswerror = "";
+                cpswmatch = "";
+            }
+            else if(originalPassword !== value){
+                cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
+                cpswmatch = "";
+            }
+            else if (password === confirm && len !== 0) {
+                cpswerror = "";
+                cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
+            }
+            else if (password !== confirm && cpswlen === 0) {
+                cpswerror = "";
+                cpswmatch = "";
+            }
+            else if (password !== confirm && len !== 0) {
+                cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
+                cpswmatch = "";
+            }
 
             if (len === 0) error = "Ο κωδικός σας είναι κενός";
 
@@ -218,36 +229,16 @@ function Profile() {
             else if (value.includes(" ")) error = "Ο κωδικός σας δεν μπορεί να περιέχει κενά";
 
             else if (!specialRegex.test(value)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
-
-            // axios.get("http://localhost:5000/get_password_profile/", {
-            //     params: {
-            //         id: 10,
-            //         password: value
-            //     }
-            // })
-            //     .then((res) => {
-            //         if (res.data.exists) {
-            if (!originalPassword) return;
-
-            setCpswRequired(originalPassword !== value);
-            // if(originalPassword == value) setCpswRequired(false);
-
-            // else setCpswRequired(true);
-
-            // setErrors(prev => ({ ...prev, password: "Edv eimaste einaia oi kvdikoi eiidoi." }));
-            //     }
-            //     else{
-            //         setCpswRequired(true);
-            //     }
-            // })
-            // .catch((err) => console.log(err));
         }
 
         if (name === "cpsw") {
             confirm = value;
             let len = confirm.length;
             let password = data.password;
-            if (len === 0) {
+
+            if (!originalPassword) return;
+            
+            if (len === 0 || password == originalPassword) {
                 cpswerror = "";
                 cpswmatch = "";
             }
