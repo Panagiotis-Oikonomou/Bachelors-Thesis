@@ -271,7 +271,7 @@ function Register() {
 
                     <div className={styles.formData}><label>Username<span className={styles.must}>*</span></label><br />
                         <input
-                            type="username"
+                            type="text"
                             name="username"
                             value={formData.username}
                             required

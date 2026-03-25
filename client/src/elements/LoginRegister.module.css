@@ -50,6 +50,12 @@
     font-size: 1.2em;
 }
 
+ input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 150px;
+    }
+
 .inputError{border: 2px solid red;}
 
 .formData {margin-bottom: 20px;}
