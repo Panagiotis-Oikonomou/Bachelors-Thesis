@@ -185,7 +185,6 @@ function Profile() {
             if (!originalPassword) return;
 
             setCpswRequired(originalPassword !== value);
-            alert(value + " " + originalPassword);
 
             if(originalPassword === value){
                 cpswerror = "";
@@ -292,7 +291,7 @@ function Profile() {
                 <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
-
+    
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
                     <button className={styles.logout}><Link to='/index'>Logout</Link></button>

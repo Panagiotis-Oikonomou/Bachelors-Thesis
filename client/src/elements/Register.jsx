@@ -264,7 +264,7 @@ function Register() {
                             value={formData.email}
                             required
                             onChange={handleChange}
-                            className={errors.clock ? styles.inputError : ""}
+                            className={errors.email ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.email}</div>
                     </div>
@@ -276,7 +276,7 @@ function Register() {
                             value={formData.username}
                             required
                             onChange={handleChange}
-                            className={errors.clock ? styles.inputError : ""}
+                            className={errors.username ? styles.inputError : ""}
                         />
                         <div className={styles.errorMsg}>{errors.username}</div>
                     </div>
