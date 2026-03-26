@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './AddArea.module.css';
+
+import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
 
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -12,7 +14,6 @@ import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profile.png';
 import menu from '../assets/images/menu.png';
 import map from '../assets/images/map.png';
-
 
 function AddArea() {
     return (
@@ -41,12 +42,26 @@ function AddArea() {
                     Cordinates:<br /><input type="text" id="cordinates" readOnly required /><br /><br />
                     <div>Map&nbsp;&nbsp;&nbsp;<img src={map} className={styles.mapButton} /></div><br />
 
+
                     <div id="error_msg2"></div><br />
 
                     <input type="submit" value="Δημιουργία" />
                 </form>
             </div>
-            <div id="map" className={styles.map}></div>
+            <div className={styles.map}>
+                <MapContainer key="map" center={[51.505, -0.09]} zoom={13} className={styles.leafletMap} scrollWheelZoom={false}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={[51.505, -0.09]}>
+                        <Popup>
+                            A pretty CSS3 popup. <br /> Easily customizable.
+                        </Popup>
+                    </Marker>
+                </MapContainer>
+            </div>
+            {/* <div id="map" className={styles.map}></div> */}
         </div>
     )
 }

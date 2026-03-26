@@ -1,82 +1,48 @@
 .container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    background-color: salmon;
-    grid-auto-rows: auto;
+    grid-template-rows: auto 1fr; /* KEY FIX */
     height: 100dvh;
-    /* width: 100%; */
-    /* min-height: 100dvh; */
-    /* grid-auto-rows: min-content;
-    align-content: start;
-    width: 100%;
-    height: 100dvh; */
+    background-color: salmon;
 }
 
-.up, .map {
+.up {
     display: none;
+}
+
+.menu {
+        grid-column: 6;
+    }
+
+/* Map must fill its parent */
+.leafletMap {
+    height: 100%;
+    width: 100%;
 }
 
 .addArea {
     grid-column: 1 / 7;
-    /* grid-row: 4 / auto; */
-    /* width: 100%;
-    height: 100%; */
-    outline-style: groove;
-    outline-color: rgb(194, 186, 186);
+    grid-row: 2;
+
+    outline: groove rgb(194, 186, 186);
     background-color: rgb(209, 205, 205);
+
     padding-bottom: 10px;
-    display: block;
-    height: 100dvh;
-    overflow-x:auto;
     overflow-y: auto;
+    overflow-x:auto;
     scrollbar-width: thin;
     scrollbar-color: #888 #1b2632;
+
     text-align: center;
 }
 
-/* .main-hidden .profile {
-    display: none;
-}
-
-.main-hidden .addarea {
-    display: none;
-}
-
-.main-hidden .map {
-    display: none;
-}
-
-.main-hidden .up {
+.map {
     grid-column: 1 / 7;
-    grid-row: 2 / auto;
-    text-align: center;
-    display: block;
-    overflow-y:auto;
-    flex: left;
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #1b2632;
-} */
+    grid-row: 3;
 
-/* .main-move .addarea {
-    grid-column: 1 / 7;
-    grid-row: 2 / auto;
-}
-
-.main-move .map {
-    grid-column: 1 / 7;
-    grid-row: 3 / auto;
-    display: block;
-    height: 300px;
-    width: 300px;
-}
-
-.main-hidden .map {
-    display: none;
-} */
-
-.menu {
-    grid-column: 6;
+    /* height: 300px; */
+    height: 100%;
+    width: 100%;
 }
 
 .mapButton {
@@ -84,14 +50,9 @@
     height: 30px;
 }
 
-input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+input[type="text"], input[type="number"] {
     font-size: 12px;
     box-sizing: border-box;
-}
-
-.delete {
-    color: white;
-    background-color: red;
 }
 
 .titlee {
@@ -103,29 +64,15 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     color:rgb(187, 6, 6);
 }
 
-/* #error_msg1, #error_msg2, #error_msg3, #error_msg4, #error_msg5, #error_msg6, #not_send {
-    color: red;
-}
-
-#pswmatch {
-    color: green;
-} */
-
-@media screen and (min-width: 350px){
+@media screen and (min-width: 350px) {
 
     .container {
-        display: grid;
         grid-template-columns: repeat(8, 1fr);
-        background-color: rgb(207, 25, 5);
-        /* grid-gap: 20px; */
+        grid-template-rows: auto 1fr;
     }
 
     input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
         width: 150px;
-    }
-
-    .menu {
-        display: none;
     }
 
     .up {
@@ -134,37 +81,27 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
         display: flex;
         height: auto;
         overflow-x:auto;
-        /* padding: 0px; */
         overflow-y: hidden;
         scrollbar-width: thin;
         scrollbar-color: #888 #1b2632;
-        /* max-width: 100%; */
     }
 
-    .addarea {
-        grid-column: 2 / 8;
-        width: 100%;
-        outline-style: groove;
-        outline-color: rgb(194, 186, 186);
-        background-color: rgb(209, 205, 205);
-        padding: 10px 5px 5px 10px;
-        font-weight: 100;
-        height: 75dvh;
-        text-align: center;
-        display: block;
+    .menu {
+        display: none;
     }
 
-    /* .main-move .addArea {
+    .addArea {  /* FIXED NAME */
         grid-column: 1 / 5;
-        grid-row: 2 / auto;
+        grid-row: 2;
+        /* height: 75dvh; */
     }
 
-    .main-move .map {
+    .map {
         grid-column: 5 / 9;
-        grid-row: 2 / auto;
-        height: auto;
-        width: auto;
-    } */
+        grid-row: 2;
+
+        height: 100%;   /* IMPORTANT */
+    }
 
     .mapButton {
         width: 30px;
@@ -172,37 +109,34 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     }
 }
 
-@media  screen and (min-width: 768px) {
+@media screen and (min-width: 768px) {
 
     .container {
-        display: grid;
         grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: auto 1fr;
         background-color: rgb(78, 42, 132);
-    }   
+    }
 
     .up {
         grid-column: 2 / 13;
     }
 
     .addArea {
-        grid-column: 4 / 9;
-        grid-row: 3 / 10;
+        grid-column: 2 / 7;
+        grid-row: 2;
         padding: 20px;
-        height: 80dvh;
+        margin-top: 10px;
+    }
+
+    .map {
+        grid-column: 7 / 12;
+        grid-row: 2;
+        margin-top: 10px;
+        height: 91vh;  /* KEY */
     }
 
     .mapButton {
         width: 30px;
         height: 30px;
     }
-
-    /* .main-move .addarea {
-        grid-column: 2 / 7;
-        grid-row: 3 / auto;
-    }
-
-    .main-move .map {
-        grid-column: 7 / 12;
-        grid-row: 3 / auto;
-    } */
 }
