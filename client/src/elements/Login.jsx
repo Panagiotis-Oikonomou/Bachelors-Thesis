@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './LoginRegister.module.css';
@@ -7,11 +7,22 @@ import styles from './LoginRegister.module.css';
 function Notifications() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [notFound, setNotFound] = useState({notf: ""});
     const [loginData, setLoginData] = useState({
         usr: "",
         psw: ""
     });
 
+    useEffect(()=>{
+        if(notFound.notf !== ""){
+            const timer = setTimeout(()=>{
+                setNotFound({...notFound, notf:""});
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [notFound.notf]);
+    
     function handleSubmit(e) {
         e.preventDefault();
         axios.get('http://localhost:5000/login', {
@@ -22,7 +33,9 @@ function Notifications() {
         })
         .then((res) => {
             if (res.data.exists) navigate('/profile');
-            else alert("wrong");
+            else {
+                setNotFound({ ...notFound, notf:"Το username ή ο κωδικός είναι λάθος"});
+            }
         })
         .catch((err) => console.log(err));
     }
@@ -55,7 +68,7 @@ function Notifications() {
                         /><br />
                         <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
                     </div>
-
+                    <div className={styles.errorMsg}>{notFound.notf}</div>
                     <input type="submit" value="Login" />
                 </form>
                 <p>Δεν έχεις λογαριασμό; κάνε <Link to='/register'>Εγγραφή</Link></p>
