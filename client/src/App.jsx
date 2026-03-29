@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Layout from "./elements/Layout";
 
 import MyAreas from "./elements/MyAreas";
 import AddArea from "./elements/AddArea";

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import debounce from "lodash/debounce";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/profileApiChecks.js";
 
 export default function userProfile(userId) {
@@ -77,9 +76,6 @@ export default function userProfile(userId) {
     const checkEmail = checkEmailApi(userId, setErrors);
     const checkClock = checkClockApi(userId, setErrors);
     const checkUsername = checkUsernameApi(userId, setErrors);
-    checkEmail(data.email);
-    checkClock(data.clock);
-    checkUsername(data.username);
 
     function handleChange(e) {
         const { name, value } = e.target;
