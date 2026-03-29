@@ -7,42 +7,39 @@ import styles from './LoginRegister.module.css';
 function Notifications() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
-    const [notFound, setNotFound] = useState({notf: ""});
+    const [notFound, setNotFound] = useState({ notf: "" });
     const [loginData, setLoginData] = useState({
         usr: "",
         psw: ""
     });
 
-    useEffect(()=>{
-        if(notFound.notf !== ""){
-            const timer = setTimeout(()=>{
-                setNotFound({...notFound, notf:""});
+    useEffect(() => {
+        if (notFound.notf !== "") {
+            const timer = setTimeout(() => {
+                setNotFound({ ...notFound, notf: "" });
             }, 5000);
 
             return () => clearTimeout(timer);
         }
     }, [notFound.notf]);
-    
+
     function handleSubmit(e) {
         e.preventDefault();
-        axios.get('http://localhost:5000/login', {
-            params: {
-                usr: loginData.usr,
-                psw: loginData.psw
-            }
+        axios.post('http://localhost:5000/login', {
+            usr: loginData.usr,
+            psw: loginData.psw
         })
-        .then((res) => {
-            if (res.data.exists) navigate('/profile');
-            else {
-                setNotFound({ ...notFound, notf:"Το username ή ο κωδικός είναι λάθος"});
-            }
-        })
-        .catch((err) => console.log(err));
+            .then((res) => {
+                if (res.data.exists) navigate('/profile');
+                else {
+                    setNotFound({ ...notFound, notf: "Το username ή ο κωδικός είναι λάθος" });
+                }
+            })
+            .catch((err) => console.log(err));
     }
 
     return (
         <div className={styles.container}>
-
             <div className={styles.header}>Login Form</div>
 
             <div className={styles.loginForm}>
@@ -54,7 +51,7 @@ function Notifications() {
                             name="usr"
                             required
                             autoFocus
-                            onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value}) }}
+                            onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
                         />
                     </div>
 

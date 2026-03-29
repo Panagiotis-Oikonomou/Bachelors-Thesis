@@ -209,11 +209,11 @@ app.get('/user_profile/:id', async (req, res) => {
     }
 });
 
-app.get('/login/', async (req, res) => {
+app.post('/login/', async (req, res) => {
     try {
         const sql = "SELECT 1 FROM users WHERE `username`=? AND `password`=? LIMIT 1";
-        const usr = req.query.usr;
-        const psw = req.query.psw;
+        const usr = req.body.usr;
+        const psw = req.body.psw;
 
         const [rows] = await db.query(sql, [usr, psw]);
         if (rows.length === 0) return res.json({ exists: false });

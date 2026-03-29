@@ -262,7 +262,7 @@ function Profile() {
         try {
             await axios.put(`http://localhost:5000/edit_user/${10}`, data);
 
-            const res = await axios.get(`http://localhost:5000/user_profile/10`);
+            const res = await axios.get(`http://localhost:5000/user_profile/${10}`);
             if (res.data) {
                 setData(res.data);
                 setOriginalPassword(res.data.password);
