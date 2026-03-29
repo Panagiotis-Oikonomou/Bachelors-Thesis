@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import debounce from "lodash/debounce";
+// import debounce from "lodash/debounce";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/profileApiChecks.js";
 
 export default function userProfile(userId) {
@@ -80,16 +80,6 @@ export default function userProfile(userId) {
     checkEmail(data.email);
     checkClock(data.clock);
     checkUsername(data.username);
-
-    // const checkUsername = debounce((value) => {
-    //     axios.post('http://localhost:5000/check_username_profile', { id: 10, username: value })
-    //         .then((res) => {
-    //             if (res.data.exists) {
-    //                 setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
-    //             }
-    //         })
-    //         .catch((err) => console.log(err));
-    // }, 500);
 
     function handleChange(e) {
         const { name, value } = e.target;
