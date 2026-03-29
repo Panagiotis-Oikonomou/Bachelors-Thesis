@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import debounce from "lodash/debounce";
+import { checkEmail as checkEmailApi} from "../apiCalls/profileApiChecks.js";
 
 export default function userProfile(userId) {
+    
     const [data, setData] = useState({
         fname: "",
         lname: "",
@@ -72,18 +74,20 @@ export default function userProfile(userId) {
         }
     }, [saved.saved, allError.all]);
 
-    const checkEmail = debounce((value) => {
-        axios.get("http://localhost:5000/check_email_profile/", {
-            params: { id: 10, email: value }
-        })
-            .then((res) => {
-                if (res.data.exists) {
-                    setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
-                }
-            })
-            .catch((err) => console.log(err));
-    }, 500);
+    // const checkEmail = debounce((value) => {
+    //     axios.get("http://localhost:5000/check_email_profile/", {
+    //         params: { id: 10, email: value }
+    //     })
+    //         .then((res) => {
+    //             if (res.data.exists) {
+    //                 setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
+    //             }
+    //         })
+    //         .catch((err) => console.log(err));
+    // }, 500);
 
+    const checkEmail = checkEmailApi(userId, setErrors);
+    checkEmail(data.email);
     const checkClock = debounce((value) => {
         axios.get("http://localhost:5000/check_clock_profile/", {
             params: { id: 10, clock: value }
@@ -266,21 +270,11 @@ export default function userProfile(userId) {
     }
 
     return {
-    data,
-    conPass,
-    errors,
-    providers,
-    cpswError,
-    cpswMatch,
-    cpswRequired,
-    allError,
-    saved,
-    loading,
-    showPassword,
-    setShowPassword,
-    showConfPassword,
-    setShowConfPassword,
-    handleChange,
+    data, conPass, errors, providers,
+    cpswError, cpswMatch, cpswRequired,
+    allError, saved, loading, showPassword,
+    setShowPassword, showConfPassword,
+    setShowConfPassword, handleChange,
     handleSubmit,
   };
 }
