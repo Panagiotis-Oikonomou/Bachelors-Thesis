@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import debounce from "lodash/debounce";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/registerApiChecks.js";
+import { getProviders } from "../apiCalls/getProviders.js";
 
 export default function userRegister(userId) {
     const navigate = useNavigate();
@@ -40,10 +40,10 @@ export default function userRegister(userId) {
 
     const [providers, setProviders] = useState([]);
     useEffect(() => {
-        axios.get('http://localhost:5000/get_providers')
-            .then((res) => { setProviders(res.data); })
-            .catch((err) => { console.log(err); });
-    }, []);
+            getProviders()
+            .then(setProviders)
+            .catch(console.log)
+        }, []);
 
     function handleChange(e) {
         const { name, value } = e.target;

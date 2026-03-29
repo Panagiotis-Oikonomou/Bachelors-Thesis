@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/profileApiChecks.js";
+import { getProviders } from "../apiCalls/getProviders.js";
 
 export default function userProfile(userId) {
     
@@ -39,9 +40,9 @@ export default function userProfile(userId) {
     const [showConfPassword, setShowConfPassword] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/get_providers')
-            .then((res) => { setProviders(res.data); })
-            .catch((err) => { console.log(err); });
+        getProviders()
+        .then(setProviders)
+        .catch(console.log)
     }, []);
 
     useEffect(() => {
