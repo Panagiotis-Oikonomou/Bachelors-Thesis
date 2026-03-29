@@ -1,6 +1,5 @@
 // npm run dev to start the development
 const express = require('express');
-// const promise = require('promises');
 const path = require('path');
 const cors = require('cors');
 const mysql = require('mysql2');
@@ -64,7 +63,6 @@ app.get('/check_email/:email', async (req, res) => {
         res.json({ exists: rows.length > 0 });
     }
     catch (err) {
-        // return res.status(500).json({ error: err.message });
         return res.status(500).json({ error: "Wrong email" });
     }
 })
@@ -79,7 +77,6 @@ app.get('/check_clock/:clock', async (req, res) => {
         res.json({ exists: rows.length > 0 });
     }
     catch (err) {
-        // return res.status(500).json({ error: err.message });
         return res.status(500).json({ error: "Wrong clock" });
     }
 });
@@ -93,21 +90,20 @@ app.get('/check_clock_profile/', async (req, res) => {
         const [rows] = await db.query(sql, [clock]);
 
         if (rows.length === 0) return res.json({ exists: false });
-        if (rows[0].userid == id) { console.log(rows[0].userid); return res.json({ exists: false }); }
+        if (rows[0].userid == id) { return res.json({ exists: false }); }
 
         return res.json({ exists: true });
     }
     catch (err) {
-        // return res.json(err);
         return res.status(500).json({ error: "Wrong clock profile" });
     }
 });
 
-app.post('/check_username_profile/', async (req, res) => {
+app.get('/check_username_profile/', async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `username` = ?";
-        const username = req.body.username;
-        const id = req.body.id;
+        const username = req.query.username;
+        const id = req.query.id;
 
         const [rows] = await db.query(sql, [username]);
 
@@ -117,7 +113,6 @@ app.post('/check_username_profile/', async (req, res) => {
         return res.json({ exists: true });
     }
     catch (err) {
-        // return res.json(err);
         return res.status(500).json({ error: "Wrong username profile" });
     }
 });
@@ -136,7 +131,6 @@ app.get('/check_email_profile/', async (req, res) => {
         return res.json({ exists: true });
     }
     catch (err) {
-        // return res.json(err);
         return res.status(500).json({ error: "Wrong email profile" });
     }
 });
@@ -156,7 +150,6 @@ app.get('/get_password_profile/', async (req, res) => {
         // return res.json({ exists: true });
     }
     catch (err) {
-        // return res.json(err);
         return res.status(500).json({ error: "Wrong password profile" });
     }
 });
@@ -168,7 +161,6 @@ app.get('/get_providers', async (req, res) => {
         res.json(rows);
     }
     catch (err) {
-        // return res.status(500).json({ error: err.message });
         return res.status(500).json({ error: "Wrong get providers" });
     }
 });
@@ -190,7 +182,6 @@ app.put('/edit_user/:id', async (req, res) => {
         res.json({ values });
     }
     catch (err) {
-        // return res.status(500).json({ error: err.message });
         return res.status(500).json({ error: "Wrong edit user" });
     }
 });
@@ -204,7 +195,6 @@ app.get('/user_profile/:id', async (req, res) => {
         res.json(rows[0] || null);
     }
     catch (err) {
-        // return res.status(500).json({ error: err.message });
         return res.status(500).json({ error: "Wrong get profile" });
     }
 });
