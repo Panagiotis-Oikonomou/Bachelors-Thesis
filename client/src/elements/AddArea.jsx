@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import styles from './AddArea.module.css';
+import MyComponent from "./maps/MyComponent";
 
 import { MapContainer, TileLayer, Marker, useMapEvents} from 'react-leaflet'
 
@@ -17,16 +18,6 @@ import map from '../assets/images/map.png';
 
 function AddArea() {
     const [location, setLocation] = useState(null);
-
-    function MyComponent({ setLocation }) {
-        const map = useMapEvents({
-            click(e) {
-                const { lat, lng } = e.latlng;
-                setLocation({ lat, lng });
-            }
-        });
-        return null
-    }
 
     return (
         <div className={styles.container}>
