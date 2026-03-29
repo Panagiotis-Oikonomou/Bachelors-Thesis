@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import debounce from "lodash/debounce";
-import { checkEmail as checkEmailApi, checkClock as checkClockApi} from "../apiCalls/profileApiChecks.js";
+import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/profileApiChecks.js";
 
 export default function userProfile(userId) {
     
@@ -74,43 +74,22 @@ export default function userProfile(userId) {
         }
     }, [saved.saved, allError.all]);
 
-    // const checkEmail = debounce((value) => {
-    //     axios.get("http://localhost:5000/check_email_profile/", {
-    //         params: { id: 10, email: value }
-    //     })
-    //         .then((res) => {
-    //             if (res.data.exists) {
-    //                 setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
-    //             }
-    //         })
-    //         .catch((err) => console.log(err));
-    // }, 500);
-
     const checkEmail = checkEmailApi(userId, setErrors);
     const checkClock = checkClockApi(userId, setErrors);
+    const checkUsername = checkUsernameApi(userId, setErrors);
     checkEmail(data.email);
     checkClock(data.clock);
-    // const checkClock = debounce((value) => {
-    //     axios.get("http://localhost:5000/check_clock_profile/", {
-    //         params: { id: 10, clock: value }
-    //     })
+    checkUsername(data.username);
+
+    // const checkUsername = debounce((value) => {
+    //     axios.post('http://localhost:5000/check_username_profile', { id: 10, username: value })
     //         .then((res) => {
     //             if (res.data.exists) {
-    //                 setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
+    //                 setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
     //             }
     //         })
     //         .catch((err) => console.log(err));
     // }, 500);
-
-    const checkUsername = debounce((value) => {
-        axios.post('http://localhost:5000/check_username_profile', { id: 10, username: value })
-            .then((res) => {
-                if (res.data.exists) {
-                    setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
-                }
-            })
-            .catch((err) => console.log(err));
-    }, 500);
 
     function handleChange(e) {
         const { name, value } = e.target;

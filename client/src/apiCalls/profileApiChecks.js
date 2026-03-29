@@ -24,3 +24,13 @@ export const checkClock = (userId, setErrors) => debounce((clock) => {
             })
             .catch((err) => console.log(err));
     }, 500);
+
+export const checkUsername = (userId, setErrors) => debounce((usr) => {
+        axios.post('http://localhost:5000/check_username_profile', { id: 10, username: usr })
+            .then((res) => {
+                if (res.data.exists) {
+                    setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
+                }
+            })
+            .catch((err) => console.log(err));
+    }, 500);
