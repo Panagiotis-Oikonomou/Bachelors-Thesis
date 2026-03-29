@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from './AddArea.module.css';
 
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMapEvents} from 'react-leaflet'
 
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -16,6 +16,18 @@ import menu from '../assets/images/menu.png';
 import map from '../assets/images/map.png';
 
 function AddArea() {
+    const [location, setLocation] = useState(null);
+
+    function MyComponent({ setLocation }) {
+        const map = useMapEvents({
+            click(e) {
+                const { lat, lng } = e.latlng;
+                setLocation({ lat, lng });
+            }
+        });
+        return null
+    }
+
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -39,7 +51,12 @@ function AddArea() {
 
                     Ποσοστό ηληοφάνειας:<br /><input type="text" id="sun" readOnly required /><br /><br />
 
-                    Cordinates:<br /><input type="text" id="cordinates" readOnly required /><br /><br />
+                    Cordinates:<br /><input
+                        type="text"
+                        value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""}
+                        readOnly
+                        required
+                    /><br /><br />
                     <div>Map&nbsp;&nbsp;&nbsp;<img src={map} className={styles.mapButton} /></div><br />
 
 
@@ -54,14 +71,12 @@ function AddArea() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={[38, 23]}>
-                        <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
-                        </Popup>
-                    </Marker>
+                    <MyComponent setLocation={setLocation} />
+                    {location && (
+                        <Marker position={[location.lat, location.lng]}></Marker>
+                    )}
                 </MapContainer>
             </div>
-            {/* <div id="map" className={styles.map}></div> */}
         </div>
     )
 }
