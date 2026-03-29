@@ -103,11 +103,11 @@ app.get('/check_clock_profile/', async (req, res) => {
     }
 });
 
-app.get('/check_username_profile/', async (req, res) => {
+app.post('/check_username_profile/', async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `username` = ?";
-        const username = req.query.username;
-        const id = req.query.id;
+        const username = req.body.username;
+        const id = req.body.id;
 
         const [rows] = await db.query(sql, [username]);
 

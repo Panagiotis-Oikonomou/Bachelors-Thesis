@@ -38,12 +38,7 @@ function Profile() {
     }, 500);
 
     const checkUsername = debounce((value) => {
-        axios.get("http://localhost:5000/check_username_profile/", {
-            params: {
-                id: 10,
-                username: value
-            }
-        })
+        axios.post('http://localhost:5000/check_username_profile', {id: 10, username: value})
             .then((res) => {
                 if (res.data.exists) {
                     setErrors(prev => ({ ...prev, username: "Υπάρχει ήδη αυτό το username." }));
@@ -121,8 +116,8 @@ function Profile() {
 
     function handleChange(e) {
         const { name, value } = e.target;
-        if (name === "cpsw") setConPass({...conPass, [name]: value});
-        else setData({...data, [name]: value});
+        if (name === "cpsw") setConPass(prev => ({...prev, [name]: value}));
+        else setData(prev => ({...prev, [name]: value}));
 
         validateField(name, value);
     };
@@ -270,8 +265,8 @@ function Profile() {
 
             setAllError(prev => ({ ...prev, all: "" }))
             setSaved(prev => ({ ...prev, saved: "Οι αλλαγές ήταν επιτυχής" }));
-            setConPass({cpsw:""});
-            setCpswMatch({cpsw:""});
+            setConPass(prev => ({...prev, cpsw:""}));
+            setCpswMatch(prev => ({ ...prev, cpsw:""}));
         }
         catch (err) { console.log(err); }
         finally { setLoading(false); }

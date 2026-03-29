@@ -49,12 +49,12 @@ function AddArea() {
                 </form>
             </div>
             <div className={styles.map}>
-                <MapContainer key="map" center={[51.505, -0.09]} zoom={13} className={styles.leafletMap} scrollWheelZoom={false}>
+                <MapContainer key="map" center={[38, 23]} zoom={6} className={styles.leafletMap}>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={[51.505, -0.09]}>
+                    <Marker position={[38, 23]}>
                         <Popup>
                             A pretty CSS3 popup. <br /> Easily customizable.
                         </Popup>

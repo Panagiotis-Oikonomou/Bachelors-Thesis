@@ -66,9 +66,9 @@ function Register() {
     function handleChange(e) {
         const { name, value } = e.target;
 
-        if (name === "cpsw") setConPass({ ...conPass, [name]: value });
+        if (name === "cpsw") setConPass(prev => ({ ...prev, [name]: value }));
 
-        else setFormData({ ...formData, [name]: value });
+        else setFormData(prev => ({ ...prev, [name]: value }));
         validateField(name, value);
     }
 
@@ -194,8 +194,8 @@ function Register() {
         axios.post('http://localhost:5000/register', formData)
             .then((res) => {
                 navigate('/match');
-                console.log(res);
-                console.log("Form submitted:", formData);
+                // console.log(res);
+                // console.log("Form submitted:", formData);
             })
             .catch((err) => console.log(err));
         navigate('/profile');
