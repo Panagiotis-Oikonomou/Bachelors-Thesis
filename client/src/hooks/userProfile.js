@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import debounce from "lodash/debounce";
-import { checkEmail as checkEmailApi} from "../apiCalls/profileApiChecks.js";
+import { checkEmail as checkEmailApi, checkClock as checkClockApi} from "../apiCalls/profileApiChecks.js";
 
 export default function userProfile(userId) {
     
@@ -87,18 +87,20 @@ export default function userProfile(userId) {
     // }, 500);
 
     const checkEmail = checkEmailApi(userId, setErrors);
+    const checkClock = checkClockApi(userId, setErrors);
     checkEmail(data.email);
-    const checkClock = debounce((value) => {
-        axios.get("http://localhost:5000/check_clock_profile/", {
-            params: { id: 10, clock: value }
-        })
-            .then((res) => {
-                if (res.data.exists) {
-                    setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
-                }
-            })
-            .catch((err) => console.log(err));
-    }, 500);
+    checkClock(data.clock);
+    // const checkClock = debounce((value) => {
+    //     axios.get("http://localhost:5000/check_clock_profile/", {
+    //         params: { id: 10, clock: value }
+    //     })
+    //         .then((res) => {
+    //             if (res.data.exists) {
+    //                 setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
+    //             }
+    //         })
+    //         .catch((err) => console.log(err));
+    // }, 500);
 
     const checkUsername = debounce((value) => {
         axios.post('http://localhost:5000/check_username_profile', { id: 10, username: value })
