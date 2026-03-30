@@ -12,6 +12,12 @@ export default function userAddArea(userId){
         lng:""
     });
 
+    const [panelData, setPanelData] = useState({
+        power:1,
+        loss:1.4,
+        panelAxis:""
+    });
+
     const [formError, setFormError] = useState({err:""});
     const [nameError, setNameError] = useState({name:""});
 

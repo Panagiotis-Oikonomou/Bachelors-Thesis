@@ -72,7 +72,14 @@ function AddArea() {
                         onChange={handleChange}
                         required /><br /><br />
 
-                    Ποσοστό ηληοφάνειας:<br />
+                    Είδος ηλιακού πάνελ:<br />
+                    <div className={styles.radioButtons}>
+                        <label className={styles.radioLabel}><input type="radio" name="panelType" value="vertical"/>Vertical Axis</label>
+                        <label className={styles.radioLabel}><input type="radio" name="panelType" value="inclined"/>Inclined Axis</label>
+                        <label className={styles.radioLabel}><input type="radio" name="panelType" value="two"/>Two Axis</label><br />
+                    </div>
+
+                    Ποσοστό ηληοφάνειας(kWh):<br />
                     <input type="text"
                         name="sun"
                         value={areaData.sun}
