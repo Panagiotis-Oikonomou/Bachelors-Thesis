@@ -1,0 +1,51 @@
+/* .container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto 1fr;
+    height: 100dvh;
+    background-color: salmon;
+} */
+
+.up {
+    display: none;
+}
+
+.menu {
+        grid-column: 6;
+    }
+
+@media screen and (min-width: 350px) {
+
+    /* .container {
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: auto 1fr;
+    } */
+
+    .up {
+        grid-column: 1 / 9;
+        grid-row: 1;
+        display: flex;
+        height: auto;
+        overflow-x:auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #888 #1b2632;
+    }
+
+    .menu {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 768px) {
+
+    /* .container {
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: auto 1fr;
+        background-color: rgb(78, 42, 132);
+    } */
+
+    .up {
+        grid-column: 2 / 13;
+    }
+}
