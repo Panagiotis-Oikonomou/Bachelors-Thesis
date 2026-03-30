@@ -1,45 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
-export default function userAddArea(userId){
+export default function userAddArea(userId) {
     const navigate = useNavigate();
     const [areaData, setAreaData] = useState({
-        name:"",
-        size:"",
-        sun:"3",
-        lat:"",
-        lng:""
+        name: "",
+        size: "",
+        energy: "",
+        lat: "",
+        lng: ""
     });
 
     const [panelData, setPanelData] = useState({
-        power:1,
-        loss:1.4,
-        panelAxis:""
+        power: 1,
+        loss: 14,
+        panelType: ""
     });
 
-    const [formError, setFormError] = useState({err:""});
-    const [nameError, setNameError] = useState({name:""});
+    const [formError, setFormError] = useState({ err: "" });
+    const [nameError, setNameError] = useState({ name: "" });
 
-    function handleChange(e){
-        const {name, value} = e.target;
-
-        // if(name === "cordinates"){
-        //     // setAreaData(prev => ({...prev, lat:value.lat, lng:value.lng}));
-        //     // alert(value.lat + " " + value.lng);
-        //     // alert(areaData.lat + " " + areaData.lng);
-        // }
-        if(name !== "coordinates"){
-            setAreaData(prev => ({...prev, [name]:value}));
+    function handleChange(e) {
+        const { name, value } = e.target;
+        
+        if (name !== "coordinates" && name !== "panelType") {
+            setAreaData(prev => ({ ...prev, [name]: value }));
             validateField(name, value);
         }
-            
+
+        if (name === "panelType") {
+            setPanelData(prev => ({...prev, panelType:value}));
+        }
     }
 
-    function validateField(name, value){
+    function validateField(name, value) {
         let len = value.length;
         let error = "";
-        if(name === "name"){
+        if (name === "name") {
             let regex = /\d/;
             if (len === 0) error = "";
 
@@ -48,32 +47,25 @@ export default function userAddArea(userId){
             // else if (value.includes(" ")) error = "Το όνομά σας δεν μπορεί να περιέχει κενά";
 
             else if (regex.test(value)) error = "Το όνομά περιοχής δεν επιτρέπεται να περιέχει ψηφία";
-            setNameError(prev => ({...prev, [name]:error}));
+            setNameError(prev => ({ ...prev, [name]: error }));
         }
     }
 
-    function handleSubmit(e){
+    function handleSubmit(e) {
         e.preventDefault();
 
         const hasErrors = Object.values(nameError).some(err => err !== "");
 
-        if(hasErrors){
-            setFormError(prev => ({...prev, err:"Υπάρχουν κάποια λάθοι στην φόρμα"}));
+        if (hasErrors) {
+            setFormError(prev => ({ ...prev, err: "Υπάρχουν κάποια λάθοι στην φόρμα" }));
             return;
         }
-        
+
         navigate('/my_areas');
-        // axios.post('http://localhost:5000/register', areaData)
-        //     .then((res) => {
-        //         navigate('/my_areas');
-        //         console.log(res);
-        //         console.log("Form submitted:", areaData);
-        //     })
-        //     .catch((err) => console.log(err));
     }
 
-    return{
-        areaData, setAreaData, nameError,
-        formError, handleChange, handleSubmit
+    return {
+        areaData, setAreaData, nameError, formError, 
+        setPanelData, panelData, handleChange, handleSubmit
     };
 }

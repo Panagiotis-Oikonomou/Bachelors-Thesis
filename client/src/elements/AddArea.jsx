@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from "react";
-// import { Link } from "react-router-dom";
 import styles from './AddArea.module.css';
 import MyComponent from "../components/maps/MyComponent";
 import userAddArea from "../hooks/userAddArea";
 import { Up } from "../components/Up";
+import axios from 'axios';
 
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
-
-// import matchings from '../assets/images/mymatchings.png';
-// import myareas from '../assets/images/myareas.png';
-// import criteria from '../assets/images/criteria.png';
-// import match from '../assets/images/match.png';
-// import chats from '../assets/images/chats.png';
-// import notifications from '../assets/images/notifications.png';
-// import profile from '../assets/images/profile.png';
-// import menu from '../assets/images/menu.png';
 import map from '../assets/images/map.png';
 
 function AddArea() {
     const [location, setLocation] = useState(null);
     const userId = 10;
     const {
-        areaData, setAreaData, nameError,
-        formError, handleChange, handleSubmit
+        areaData, setAreaData, nameError, formError,
+        setPanelData, panelData, handleChange, handleSubmit
     } = userAddArea(userId);
 
     useEffect(() => {
@@ -35,19 +26,26 @@ function AddArea() {
         }
     }, [location]);
 
+    useEffect(() => {
+        if (areaData.lat && areaData.lng) {
+            if (panelData.panelType == "two") {
+                axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}`)
+                    .then((res) => {
+                        const energy = res.data;
+                        if (energy !== undefined) {
+                            setAreaData(prev => ({ ...prev, energy:energy }));
+                        } else {
+                            console.log("PVcalc data missing:", res.data);
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            }
+        }
+    }, [areaData.lat, areaData.lng, panelData.panelType]);
+
     return (
         <div className={styles.container}>
             <Up></Up>
-            {/* <img src={menu} className={styles.menu} alt="menu"/>
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteria} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div> */}
 
             <div className={styles.addArea}>
                 <p className={styles.titlee}>Δημιουργία καινούργιας περιοχής</p><br />
@@ -70,23 +68,35 @@ function AddArea() {
                         value={areaData.size}
                         max="131"
                         onChange={handleChange}
-                        required /><br /><br />
+                        required
+                    /><br /><br />
 
                     Είδος ηλιακού πάνελ:<br />
                     <div className={styles.radioButtons}>
-                        <label className={styles.radioLabel}><input type="radio" name="panelType" value="vertical"/>Vertical Axis</label>
-                        <label className={styles.radioLabel}><input type="radio" name="panelType" value="inclined"/>Inclined Axis</label>
-                        <label className={styles.radioLabel}><input type="radio" name="panelType" value="two"/>Two Axis</label><br />
+                        <label className={styles.radioLabel}>
+                            <input
+                                type="radio" name="panelType"
+                                checked={panelData.panelType === 'vertical'}
+                                onChange={handleChange} value="vertical" required
+                            />Vertical Axis
+                        </label>
+                        <label className={styles.radioLabel}>
+                            <input
+                                type="radio" name="panelType"
+                                checked={panelData.panelType === 'inclined'}
+                                onChange={handleChange} value="inclined" required
+                            />Inclined Axis
+                        </label>
+                        <label className={styles.radioLabel}>
+                            <input
+                                type="radio" name="panelType"
+                                checked={panelData.panelType === 'two'}
+                                onChange={handleChange} value="two" required
+                            />Two Axis
+                        </label><br />
                     </div>
 
-                    Ποσοστό ηληοφάνειας(kWh):<br />
-                    <input type="text"
-                        name="sun"
-                        value={areaData.sun}
-                        readOnly
-                    /><br /><br />
-
-                    Cordinates:<br /><input
+                    Coordinates:<br /><input
                         type="text"
                         name="coordinates"
                         value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""}
@@ -94,6 +104,14 @@ function AddArea() {
                         required
                     /><br /><br />
                     <div>Map&nbsp;&nbsp;&nbsp;<img src={map} className={styles.mapButton} /></div><br />
+
+                    Ετήσια παραγωγή PV ενέργειας(kWh):<br />
+                    <input type="text"
+                        name="energy"
+                        value={areaData.energy}
+                        readOnly
+                        required
+                    /><br /><br />
 
                     <div className={styles.msg}>{formError.err}</div>
                     <input type="submit" value="Δημιουργία" />
