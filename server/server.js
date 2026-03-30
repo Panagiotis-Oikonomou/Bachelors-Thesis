@@ -3,8 +3,9 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const mysql = require('mysql2');
+const axios = require('axios');
 
-app = express();
+const app = express();
 // to serve static files, to handle client side assets like css and javascript
 app.use(express.static(path.join(__dirname, "public")));
 // to manage and control security
@@ -47,7 +48,7 @@ app.get('/check_username/:username', async (req, res) => {
         const username = req.params.username;
 
         const [rows] = await db.query(sql, [username]);
-        res.json({exists: rows.length > 0});
+        res.json({ exists: rows.length > 0 });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong username" });
@@ -144,7 +145,7 @@ app.get('/get_password_profile/', async (req, res) => {
         const [rows] = await db.query(sql, [password]);
 
         // if (rows.length === 0) return res.json({ exists: false });
-        if(rows.length != 0) return res.json({exists: rows[0].userid == id})
+        if (rows.length != 0) return res.json({ exists: rows[0].userid == id })
         // if (rows[0].userid == id) return res.json({ exists: true });
 
         // return res.json({ exists: true });
@@ -209,7 +210,22 @@ app.post('/login/', async (req, res) => {
         if (rows.length === 0) return res.json({ exists: false });
         return res.json({ exists: true });
     }
-    catch (err) {return res.status(500).json({ error: "Wrong login" });}
+    catch (err) { return res.status(500).json({ error: "Wrong login" }); }
+});
+
+app.get('/pvcalc', async (req, res) => {
+    const { lat, lon } = req.query;
+
+    try {
+        const response = await axios.get(
+            `https://re.jrc.ec.europa.eu/api/PVcalc?lat=${lat}&lon=${lon}&peakpower=1&loss=14&twoaxis=1&outputformat=json`
+        );
+
+        res.json(response.data?.outputs?.totals?.two_axis?.E_y);
+    } catch (err) {
+        console.error("PVcalc API error:", err.response?.status, err.response?.data || err.message);
+        res.status(500).json({ error: "PV API failed" });
+    }
 });
 
 app.listen(port, () => {
