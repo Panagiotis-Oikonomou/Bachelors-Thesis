@@ -27,13 +27,38 @@ function AddArea() {
     }, [location]);
 
     useEffect(() => {
-        if (areaData.lat && areaData.lng) {
-            if (panelData.panelType == "two") {
-                axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}`)
+        if (areaData.lat && areaData.lng && areaData.size) {
+            if (panelData.panelType === "vertical") {
+                axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
                     .then((res) => {
-                        const energy = res.data;
+                        const energy = res.data * areaData.size * 0.2;
                         if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, energy:energy }));
+                            setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
+                        } else {
+                            console.log("PVcalc data missing:", res.data);
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            }
+            else if (panelData.panelType == "inclined") {
+                axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
+                    .then((res) => {
+                        console.log(res.data);
+                        const energy = res.data * areaData.size * 0.2;
+                        if (energy !== undefined) {
+                            setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
+                        } else {
+                            console.log("PVcalc data missing:", res.data);
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            }
+            else if (panelData.panelType == "two") {
+                axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
+                    .then((res) => {
+                        const energy = res.data * areaData.size * 0.2;
+                        if (energy !== undefined) {
+                            setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
                         } else {
                             console.log("PVcalc data missing:", res.data);
                         }
@@ -41,7 +66,7 @@ function AddArea() {
                     .catch((err) => console.log(err));
             }
         }
-    }, [areaData.lat, areaData.lng, panelData.panelType]);
+    }, [areaData.lat, areaData.lng, panelData.panelType, areaData.size]);
 
     return (
         <div className={styles.container}>
@@ -66,7 +91,7 @@ function AddArea() {
                         type="number"
                         name="size"
                         value={areaData.size}
-                        max="131"
+                        min="1"
                         onChange={handleChange}
                         required
                     /><br /><br />

@@ -214,18 +214,47 @@ app.post('/login/', async (req, res) => {
 });
 
 app.get('/pvcalc', async (req, res) => {
-    const { lat, lon } = req.query;
+    const { lat, lon, type } = req.query;
+    if(type == 1){
+        try {
+            const response = await axios.get(
+                `https://re.jrc.ec.europa.eu/api/PVcalc?lat=${lat}&lon=${lon}&peakpower=1&loss=14&vertical_axis=1&vertical_optimum=1&outputformat=json`
+            );
 
-    try {
-        const response = await axios.get(
-            `https://re.jrc.ec.europa.eu/api/PVcalc?lat=${lat}&lon=${lon}&peakpower=1&loss=14&twoaxis=1&outputformat=json`
-        );
-
-        res.json(response.data?.outputs?.totals?.two_axis?.E_y);
-    } catch (err) {
-        console.error("PVcalc API error:", err.response?.status, err.response?.data || err.message);
-        res.status(500).json({ error: "PV API failed" });
+            value = response.data?.outputs?.totals?.vertical_axis?.["H(i)_y"];
+            res.json(value ?? null);
+        } catch (err) {
+            console.error("PVcalc API error:", err.response?.status, err.response?.data || err.message);
+            res.status(500).json({ error: "PV API failed" });
+        }
     }
+    else if(type == 2){
+        try {
+            const response = await axios.get(
+                `https://re.jrc.ec.europa.eu/api/PVcalc?lat=${lat}&lon=${lon}&peakpower=1&loss=14&inclined_axis=1&inclined_optimum=1&outputformat=json`
+            );
+
+            value = response.data?.outputs?.totals?.inclined_axis?.["H(i)_y"];
+            res.json(value ?? null);
+        } catch (err) {
+            console.error("PVcalc API error:", err.response?.status, err.response?.data || err.message);
+            res.status(500).json({ error: "PV API failed" });
+        }
+    }
+    else if (type == 3) {
+        try {
+            const response = await axios.get(
+                `https://re.jrc.ec.europa.eu/api/PVcalc?lat=${lat}&lon=${lon}&peakpower=1&loss=14&twoaxis=1&outputformat=json`
+            );
+
+            value = response.data?.outputs?.totals?.two_axis?.["H(i)_y"];
+            res.json(value ?? null);
+        } catch (err) {
+            console.error("PVcalc API error:", err.response?.status, err.response?.data || err.message);
+            res.status(500).json({ error: "PV API failed" });
+        }
+    }
+
 });
 
 app.listen(port, () => {

@@ -14,8 +14,8 @@ export default function userAddArea(userId) {
     });
 
     const [panelData, setPanelData] = useState({
-        power: 1,
-        loss: 14,
+        // power: 1,
+        // loss: 14,
         panelType: ""
     });
 
@@ -24,13 +24,13 @@ export default function userAddArea(userId) {
 
     function handleChange(e) {
         const { name, value } = e.target;
-        
-        if (name !== "coordinates" && name !== "panelType") {
+
+        if(name === "name" || name === "size") {
             setAreaData(prev => ({ ...prev, [name]: value }));
             validateField(name, value);
         }
 
-        if (name === "panelType") {
+        if(name === "panelType") {
             setPanelData(prev => ({...prev, panelType:value}));
         }
     }
@@ -55,9 +55,10 @@ export default function userAddArea(userId) {
         e.preventDefault();
 
         const hasErrors = Object.values(nameError).some(err => err !== "");
+        const emptyCoordinates = Object.values(areaData).some(err => err !== "");
 
-        if (hasErrors) {
-            setFormError(prev => ({ ...prev, err: "Υπάρχουν κάποια λάθοι στην φόρμα" }));
+        if (hasErrors || emptyCoordinates) {
+            setFormError(prev => ({ ...prev, err: "Υπάρχουν κάποια λάθοι ή λείπουν στοιχεία από την φόρμα" }));
             return;
         }
 
