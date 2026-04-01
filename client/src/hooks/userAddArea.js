@@ -13,11 +13,7 @@ export default function userAddArea(userId) {
         lng: ""
     });
 
-    const [panelData, setPanelData] = useState({
-        // power: 1,
-        // loss: 14,
-        panelType: ""
-    });
+    const [panelData, setPanelData] = useState({ panelType: "" });
 
     const [formError, setFormError] = useState({ err: "" });
     const [nameError, setNameError] = useState({ name: "" });
@@ -25,13 +21,13 @@ export default function userAddArea(userId) {
     function handleChange(e) {
         const { name, value } = e.target;
 
-        if(name === "name" || name === "size") {
+        if (name === "name" || name === "size") {
             setAreaData(prev => ({ ...prev, [name]: value }));
             validateField(name, value);
         }
 
-        if(name === "panelType") {
-            setPanelData(prev => ({...prev, panelType:value}));
+        if (name === "panelType") {
+            setPanelData(prev => ({ ...prev, panelType: value }));
         }
     }
 
@@ -55,18 +51,26 @@ export default function userAddArea(userId) {
         e.preventDefault();
 
         const hasErrors = Object.values(nameError).some(err => err !== "");
-        const emptyCoordinates = Object.values(areaData).some(err => err !== "");
+        const fields = ["lat", "lon", "energy"];
+        const isMissing = fields.some(field => areaData[field] === "");
 
-        if (hasErrors || emptyCoordinates) {
+        if (hasErrors || isMissing) {
             setFormError(prev => ({ ...prev, err: "Υπάρχουν κάποια λάθοι ή λείπουν στοιχεία από την φόρμα" }));
             return;
         }
 
-        navigate('/my_areas');
+        const send = {
+            ...areaData,
+            size: Number(areaData.size),
+            energy: Number(areaData.energy),
+            lat : Number(areaData.lat),
+            lng: Number(areaData.lng)
+        };
+        // navigate('/my_areas');
     }
 
     return {
-        areaData, setAreaData, nameError, formError, 
-        setPanelData, panelData, handleChange, handleSubmit
+        areaData, setAreaData, nameError, formError,
+        panelData, handleChange, handleSubmit
     };
 }

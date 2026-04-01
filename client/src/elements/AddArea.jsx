@@ -12,16 +12,15 @@ function AddArea() {
     const [location, setLocation] = useState(null);
     const userId = 10;
     const {
-        areaData, setAreaData, nameError, formError,
-        setPanelData, panelData, handleChange, handleSubmit
+        areaData, setAreaData, nameError, formError,panelData, handleChange, handleSubmit
     } = userAddArea(userId);
 
     useEffect(() => {
         if (location) {
             setAreaData(prev => ({
                 ...prev,
-                lat: location.lat,
-                lng: location.lng
+                lat: String(location.lat),
+                lng: String(location.lng)
             }));
         }
     }, [location]);
@@ -31,7 +30,8 @@ function AddArea() {
             if (panelData.panelType === "vertical") {
                 axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
                     .then((res) => {
-                        const energy = res.data * areaData.size * 0.2;
+                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
+                        // console.log(typeof energy);
                         if (energy !== undefined) {
                             setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
                         } else {
@@ -44,7 +44,7 @@ function AddArea() {
                 axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
                     .then((res) => {
                         console.log(res.data);
-                        const energy = res.data * areaData.size * 0.2;
+                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
                             setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
                         } else {
@@ -56,7 +56,7 @@ function AddArea() {
             else if (panelData.panelType == "two") {
                 axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
                     .then((res) => {
-                        const energy = res.data * areaData.size * 0.2;
+                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
                             setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
                         } else {
@@ -121,7 +121,7 @@ function AddArea() {
                         </label><br />
                     </div>
 
-                    Coordinates:<br /><input
+                    Coordinates(lat, lng):<br /><input
                         type="text"
                         name="coordinates"
                         value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""}
