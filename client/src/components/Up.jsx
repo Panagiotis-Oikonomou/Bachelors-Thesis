@@ -1,4 +1,3 @@
-
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
 import criteria from '../assets/images/criteria.png';
