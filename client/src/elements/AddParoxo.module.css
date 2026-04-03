@@ -6,9 +6,9 @@
     height: 100dvh;
 }
 
-.up {
+/* .up {
     display: none;
-}
+} */
 
 .paroxos {
     grid-column: 1 / 7;
@@ -36,9 +36,9 @@
     scrollbar-color: #888 #1b2632;
 } */
 
-.menu {
+/* .menu {
     grid-column: 6;
-}
+} */
 
 input[type="text"] {
     font-size: 12px;
@@ -72,7 +72,7 @@ input[type="text"] {
         width: 120px;
     }
 
-    .menu {
+    /* .menu {
         display: none;
     }
 
@@ -84,7 +84,7 @@ input[type="text"] {
         overflow-y: hidden;
         scrollbar-width: thin;
         scrollbar-color: #888 #1b2632;
-    }
+    } */
 
     .paroxos {
         grid-column: 2 / 8;
@@ -100,9 +100,9 @@ input[type="text"] {
         background-color: rgb(78, 42, 132);
     }   
 
-    .up {
+    /* .up {
         grid-column: 4 / 12;
-    }
+    } */
 
     .paroxos {
         grid-column: 5 / 9;
