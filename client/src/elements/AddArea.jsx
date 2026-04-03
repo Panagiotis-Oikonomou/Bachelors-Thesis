@@ -12,15 +12,17 @@ function AddArea() {
     const [location, setLocation] = useState(null);
     const userId = 10;
     const {
-        areaData, setAreaData, nameError, formError,panelData, handleChange, handleSubmit
+        areaData, setAreaData, nameError, formError, panelData, setPanelData, handleChange, handleSubmit
     } = userAddArea(userId);
 
     useEffect(() => {
         if (location) {
             setAreaData(prev => ({
                 ...prev,
-                lat: String(location.lat),
-                lng: String(location.lng)
+                // lat: Number(location.lat.toFixed(6)),
+                // lng: Number(location.lng.toFixed(6))
+                lat: location.lat.toFixed(6),
+                lng: location.lng.toFixed(6)
             }));
         }
     }, [location]);
@@ -31,7 +33,6 @@ function AddArea() {
                 axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        // console.log(typeof energy);
                         if (energy !== undefined) {
                             setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
                         } else {
@@ -43,7 +44,6 @@ function AddArea() {
             else if (panelData.panelType == "inclined") {
                 axios.get(`http://localhost:5000/pvcalc?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
                     .then((res) => {
-                        console.log(res.data);
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
                             setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
@@ -86,7 +86,7 @@ function AddArea() {
                     />
                     <div className={styles.msg}>{nameError.name}</div><br />
 
-                    Μέγεθος έκτασης (σε km<sup>2</sup>):<br />
+                    Μέγεθος έκτασης (σε m<sup>2</sup>):<br />
                     <input
                         type="number"
                         name="size"

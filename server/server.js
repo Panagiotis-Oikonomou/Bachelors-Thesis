@@ -257,6 +257,19 @@ app.get('/pvcalc', async (req, res) => {
 
 });
 
+app.post('/addArea', async (req, res) => {
+    try {
+        const sql = "INSERT INTO areas (userid, name, size, paneltype, lat, lng,  ac) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        const {userid, size, paneltype, lat, lng, ac, name} = req.body;
+        const values = [userid, name, size, paneltype, lat, lng, ac];
+
+        await db.query(sql, values);
+    }
+    catch (err) {
+        return res.status(500).json({ error: "Wrong addArea" });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Listening to port ${port}`);
 });

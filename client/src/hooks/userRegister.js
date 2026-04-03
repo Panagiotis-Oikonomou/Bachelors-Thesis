@@ -176,8 +176,6 @@ export default function userRegister(userId) {
         axios.post('http://localhost:5000/register', formData)
             .then((res) => {
                 navigate('/match');
-                // console.log(res);
-                // console.log("Form submitted:", formData);
             })
             .catch((err) => console.log(err));
         navigate('/profile');

@@ -27,7 +27,7 @@ export default function userAddArea(userId) {
         }
 
         if (name === "panelType") {
-            setPanelData(prev => ({ ...prev, panelType: value }));
+            setPanelData(prev => ({ ...prev, [name]: value }));
         }
     }
 
@@ -53,7 +53,7 @@ export default function userAddArea(userId) {
         const hasErrors = Object.values(nameError).some(err => err !== "");
         const fields = ["lat", "lon", "energy"];
         const isMissing = fields.some(field => areaData[field] === "");
-
+        
         if (hasErrors || isMissing) {
             setFormError(prev => ({ ...prev, err: "Υπάρχουν κάποια λάθοι ή λείπουν στοιχεία από την φόρμα" }));
             return;
@@ -61,16 +61,22 @@ export default function userAddArea(userId) {
 
         const send = {
             ...areaData,
+            userid:userId,
             size: Number(areaData.size),
-            energy: Number(areaData.energy),
+            paneltype: panelData.panelType,
             lat : Number(areaData.lat),
-            lng: Number(areaData.lng)
+            lng: Number(areaData.lng),
+            ac: Number(areaData.energy)
         };
-        // navigate('/my_areas');
+        axios.post('http://localhost:5000/addArea', send)
+            .then((res) => {
+            })
+            .catch((err) => console.log(err));
+        navigate('/my_areas');
     }
 
     return {
         areaData, setAreaData, nameError, formError,
-        panelData, handleChange, handleSubmit
+        panelData, setPanelData, handleChange, handleSubmit
     };
 }
