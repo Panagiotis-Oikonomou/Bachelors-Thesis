@@ -1,4 +1,3 @@
-// npm run dev to start the development
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -21,7 +20,6 @@ const db = mysql.createConnection({
     database: "energy_community"
 }).promise();
 
-
 app.post('/register', async (req, res) => {
     try {
         const sql = "INSERT INTO users (fname, lname, clock, provider, email, username,  password) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -36,6 +34,7 @@ app.post('/register', async (req, res) => {
         ];
 
         await db.query(sql, values);
+        res.status(201).json({ message: "User added successfully" });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong register" });
@@ -264,6 +263,7 @@ app.post('/addArea', async (req, res) => {
         const values = [userid, name, size, paneltype, lat, lng, ac];
 
         await db.query(sql, values);
+        res.status(201).json({ message: "Area added successfully" });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong addArea" });

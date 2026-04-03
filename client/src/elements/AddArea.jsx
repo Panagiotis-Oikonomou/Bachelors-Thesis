@@ -12,15 +12,13 @@ function AddArea() {
     const [location, setLocation] = useState(null);
     const userId = 10;
     const {
-        areaData, setAreaData, nameError, formError, panelData, setPanelData, handleChange, handleSubmit
+        areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
     } = userAddArea(userId);
 
     useEffect(() => {
         if (location) {
             setAreaData(prev => ({
                 ...prev,
-                // lat: Number(location.lat.toFixed(6)),
-                // lng: Number(location.lng.toFixed(6))
                 lat: location.lat.toFixed(6),
                 lng: location.lng.toFixed(6)
             }));
@@ -75,68 +73,75 @@ function AddArea() {
             <div className={styles.addArea}>
                 <p className={styles.titlee}>Δημιουργία καινούργιας περιοχής</p><br />
                 <form autoComplete="off" onSubmit={handleSubmit}>
-                    Όνομα περιοχής:<br />
-                    <input
-                        type="text"
-                        name="name"
-                        value={areaData.name}
-                        onChange={handleChange}
-                        className={nameError.name ? styles.inputError : ""}
-                        required
-                    />
-                    <div className={styles.msg}>{nameError.name}</div><br />
-
-                    Μέγεθος έκτασης (σε m<sup>2</sup>):<br />
-                    <input
-                        type="number"
-                        name="size"
-                        value={areaData.size}
-                        min="1"
-                        onChange={handleChange}
-                        required
-                    /><br /><br />
-
-                    Είδος ηλιακού πάνελ:<br />
-                    <div className={styles.radioButtons}>
-                        <label className={styles.radioLabel}>
-                            <input
-                                type="radio" name="panelType"
-                                checked={panelData.panelType === 'vertical'}
-                                onChange={handleChange} value="vertical" required
-                            />Vertical Axis
-                        </label>
-                        <label className={styles.radioLabel}>
-                            <input
-                                type="radio" name="panelType"
-                                checked={panelData.panelType === 'inclined'}
-                                onChange={handleChange} value="inclined" required
-                            />Inclined Axis
-                        </label>
-                        <label className={styles.radioLabel}>
-                            <input
-                                type="radio" name="panelType"
-                                checked={panelData.panelType === 'two'}
-                                onChange={handleChange} value="two" required
-                            />Two Axis
-                        </label><br />
+                    <div className={styles.data}>Όνομα περιοχής:<br />
+                        <input
+                            type="text"
+                            name="name"
+                            value={areaData.name}
+                            onChange={handleChange}
+                            className={nameError.name ? styles.inputError : ""}
+                            required
+                        />
+                        <div className={styles.msg}>{nameError.name}</div>
                     </div>
 
-                    Coordinates(lat, lng):<br /><input
-                        type="text"
-                        name="coordinates"
-                        value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""}
-                        readOnly
-                        required
-                    /><br /><br />
+                    <div className={styles.data}>Μέγεθος έκτασης (σε m<sup>2</sup>):<br />
+                        <input
+                            type="number"
+                            name="size"
+                            value={areaData.size}
+                            min="1"
+                            step="0.01"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.data}>Είδος ηλιακού πάνελ:<br />
+                        <div className={styles.radioButtons}>
+                            <label className={styles.radioLabel}>
+                                <input
+                                    type="radio" name="panelType"
+                                    checked={panelData.panelType === 'vertical'}
+                                    onChange={handleChange} value="vertical" required
+                                />Vertical Axis
+                            </label>
+                            <label className={styles.radioLabel}>
+                                <input
+                                    type="radio" name="panelType"
+                                    checked={panelData.panelType === 'inclined'}
+                                    onChange={handleChange} value="inclined" required
+                                />Inclined Axis
+                            </label>
+                            <label className={styles.radioLabel}>
+                                <input
+                                    type="radio" name="panelType"
+                                    checked={panelData.panelType === 'two'}
+                                    onChange={handleChange} value="two" required
+                                />Two Axis
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className={styles.data}>Coordinates(lat, lng):<br />
+                        <input
+                            type="text"
+                            name="coordinates"
+                            value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""}
+                            readOnly
+                            required
+                        />
+                    </div>
                     <div>Map&nbsp;&nbsp;&nbsp;<img src={map} className={styles.mapButton} /></div><br />
 
-                    Ετήσια παραγωγή PV ενέργειας(kWh):<br />
-                    <input type="text"
-                        name="energy"
-                        value={areaData.energy}
-                        readOnly
-                        required
-                    /><br /><br />
+                    <div className={styles.data}>Ετήσια παραγωγή PV ενέργειας(kWh):<br />
+                        <input type="text"
+                            name="energy"
+                            value={areaData.energy}
+                            readOnly
+                            required
+                        />
+                    </div>
 
                     <div className={styles.msg}>{formError.err}</div>
                     <input type="submit" value="Δημιουργία" />
@@ -157,5 +162,4 @@ function AddArea() {
         </div>
     )
 }
-
 export default AddArea;
