@@ -6,9 +6,9 @@ router.get("/username/:username", validation.checkUsername);
 router.get("/email/:email", validation.checkEmail);
 router.get("/clock/:clock", validation.checkClock);
 
-router.get("/username-profile", validation.checkUsernameProfile);
-router.get("/email-profile", validation.checkEmailProfile);
-router.get("/clock-profile", validation.checkClockProfile);
-router.get("/password-profile", validation.checkPasswordProfile);
+router.get("/username_profile", validation.checkUsernameProfile);
+router.get("/email_profile", validation.checkEmailProfile);
+router.get("/clock_profile", validation.checkClockProfile);
+router.get("/password_profile", validation.checkPasswordProfile);
 
 module.exports = router;

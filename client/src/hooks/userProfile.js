@@ -46,7 +46,7 @@ export default function userProfile(userId) {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/user_profile/${userId}`)
+        axios.get(`http://localhost:5000/api/users/${userId}`)
             .then((res) => {
                 if (res.data) {
                     setData(res.data)
@@ -220,9 +220,9 @@ export default function userProfile(userId) {
         }
 
         try {
-            await axios.put(`http://localhost:5000/edit_user/${10}`, data);
+            await axios.put(`http://localhost:5000/api/users/${10}`, data);
 
-            const res = await axios.get(`http://localhost:5000/user_profile/${10}`);
+            const res = await axios.get(`http://localhost:5000/api/users/${10}`);
             if (res.data) {
                 setData(res.data);
                 setOriginalPassword(res.data.password);

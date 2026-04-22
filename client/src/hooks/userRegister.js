@@ -173,7 +173,7 @@ export default function userRegister(userId) {
             return;
         }
 
-        axios.post('http://localhost:5000/register', formData)
+        axios.post('http://localhost:5000/api/users/register/', formData)
             .then((res) => {
                 navigate('/profile');
             })

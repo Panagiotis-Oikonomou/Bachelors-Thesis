@@ -25,7 +25,7 @@ function Notifications() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:5000/login', {usr: loginData.usr, psw: loginData.psw})
+        axios.post('http://localhost:5000/api/users/login', {usr: loginData.usr, psw: loginData.psw})
             .then((res) => {
                 if (res.data.exists) navigate('/profile');
                 else {

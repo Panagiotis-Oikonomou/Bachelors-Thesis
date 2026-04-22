@@ -16,8 +16,8 @@ app.use(express.json());
 
 app.use("/api/users", userRoutes);
 app.use("/api/pv", pvRoutes);
-app.use("/api/addArea", areaRoutes);
-app.use("/api/get_providers", providerRoutes);
+app.use("/api/areas", areaRoutes);
+app.use("/api/providers", providerRoutes);
 app.use("/api/validate", validationRoutes);
 
 module.exports = app;

@@ -62,7 +62,7 @@ export default function userAddArea(userId) {
             lng: Number(areaData.lng),
             ac: Number(areaData.energy)
         };
-        axios.post('http://localhost:5000/addArea', send)
+        axios.post('http://localhost:5000/api/areas', send)
             .then((res) => {
                 navigate('/my_areas');
             })
