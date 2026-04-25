@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 exports.getProviders = async (req, res) => {
     try {
-        const sql = "SELECT * FROM providers";
+        const sql = "SELECT * FROM providers ORDER BY providername";
         const [rows] = await db.query(sql);
         res.json(rows);
     }

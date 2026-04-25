@@ -10,7 +10,7 @@ import map from '../assets/images/map.png';
 
 function AddArea() {
     const [location, setLocation] = useState(null);
-    const userId = 10;
+    const userId = 1;
     const {
         areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
     } = userAddArea(userId);

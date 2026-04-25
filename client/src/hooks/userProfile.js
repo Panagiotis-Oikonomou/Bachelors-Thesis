@@ -220,9 +220,9 @@ export default function userProfile(userId) {
         }
 
         try {
-            await axios.put(`http://localhost:5000/api/users/${10}`, data);
+            await axios.put(`http://localhost:5000/api/users/${userId}`, data);
 
-            const res = await axios.get(`http://localhost:5000/api/users/${10}`);
+            const res = await axios.get(`http://localhost:5000/api/users/${userId}`);
             if (res.data) {
                 setData(res.data);
                 setOriginalPassword(res.data.password);

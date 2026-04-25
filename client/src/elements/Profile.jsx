@@ -13,7 +13,7 @@ import profile from '../assets/images/profileVisit.png';
 import menu from '../assets/images/menu.png';
 
 function Profile() {
-    const userId = 10;
+    const userId = 1;
 
     const {
         data, conPass, errors, providers, cpswError, cpswMatch,
@@ -76,7 +76,7 @@ function Profile() {
 
                     <div className={styles.profileData}><label>Πάροχος</label><br />
                         <select name="provider" onChange={handleChange} value={data.provider}>
-                            <option defaultValue={data.provider} key={10}>{data.provider}</option>
+                            <option defaultValue={data.provider} key={userId}>{data.provider}</option>
                             {providers.map((provider) => {
                                 return (
                                     <option key={provider.providerid} value={provider.providername}>
