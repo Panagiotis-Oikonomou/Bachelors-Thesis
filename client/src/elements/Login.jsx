@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
 
 
-function Notifications() {
+function Login() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [notFound, setNotFound] = useState({ notf: "" });
@@ -12,6 +12,7 @@ function Notifications() {
         usr: "",
         psw: ""
     });
+    // const [token, setToken] = useState('');
 
     useEffect(() => {
         if (notFound.notf !== "") {
@@ -25,14 +26,20 @@ function Notifications() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/users/login', {usr: loginData.usr, psw: loginData.psw})
+        axios.post('http://localhost:5000/api/users/login', loginData)
             .then((res) => {
-                if (res.data.exists) navigate('/profile');
+                if (res.data.exists) {
+                    // setToken(res.data.accesstoken);
+                    localStorage.setItem("token", res.data.accessToken);
+                    navigate('/profile');
+                }
                 else {
                     setNotFound({ ...notFound, notf: "Το username ή ο κωδικός είναι λάθος" });
                 }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                setNotFound({ notf: "Server error" });
+            });
     }
 
     return (
@@ -73,4 +80,4 @@ function Notifications() {
     )
 }
 
-export default Notifications;
+export default Login;

@@ -1,4 +1,7 @@
 const db = require('../config/db');
+const jwt = require("jsonwebtoken");
+
+let refreshTokens = []
 
 exports.register = async (req, res) => {
     try {
@@ -21,18 +24,43 @@ exports.register = async (req, res) => {
     }
 }
 
+const generateAccessToken = (id, isAdmin) => {
+    return jwt.sign({ userid: id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: 300 });
+}
+
+
 exports.login = async (req, res) => {
     try {
-        const sql = "SELECT 1 FROM users WHERE `username`=? AND `password`=? LIMIT 1";
+        const sql = "SELECT userid FROM users WHERE `username`=? AND `password`=? LIMIT 1";
+        const sql2 = "SELECT adminid FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
         const usr = req.body.usr;
         const psw = req.body.psw;
+        // const hashedPassword = await bcrypt.hash(password, 10);
+        // const isMatch = await bcrypt.compare(psw, user.password);
 
-        const [rows] = await db.query(sql, [req.body.usr, req.body.psw]);
-        res.json({exists: rows.length > 0});
+        const [rows] = await db.query(sql, [usr, psw]);
+        const [rows2] = await db.query(sql2, [usr, psw]);
+        let accessToken;
+
+        if (rows.length > 0) {
+            const id = rows[0].userid;
+            // here the id will be the name of the field so you can access it like that token.id
+            // const token = jwt.sign({ id, isAdmin: false }, process.env.SECRET_JWT_KEY, { expiresIn: 300 });
+            accessToken = generateAccessToken(id, false);
+            // return res.json({ exists: true, token });
+        }
+        else if (rows2.length > 0) {
+            const id = rows2[0].adminid;
+            accessToken = generateAccessToken(id, true);
+        }
+        else return res.json({ exists: false });
+
+        return res.json({ exists: true, accessToken });
+        // res.json({exists: rows.length > 0});
         // if (rows.length === 0) return res.json({ exists: false });
         // return res.json({ exists: true });
     }
-    catch (err) { return res.status(500).json({ error: "Wrong login" }); }
+    catch (err) { return res.status(500).json({ error: "Error with login" }); }
 }
 
 exports.getProfile = async (req, res) => {
@@ -67,4 +95,31 @@ exports.updateUser = async (req, res) => {
     catch (err) {
         return res.status(500).json({ error: "Wrong edit user" });
     }
+}
+
+exports.verifyJwt = (req, res, next) => {
+    // const token = req.headers["access-token"];
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({ error: "Token required" });
+    }
+
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json("we need token");
+    }
+
+    jwt.verify(token, process.env.SECRET_JWT_KEY, (err, decoded) => {
+        if (err) return res.status(403).json("Not authenticated");
+        else {
+            req.user = decoded;
+            next();
+        }
+    });
+}
+
+exports.jwtAuth = (req, res) => {
+    return res.json({ message: "Protected data", user: req.user });
 }

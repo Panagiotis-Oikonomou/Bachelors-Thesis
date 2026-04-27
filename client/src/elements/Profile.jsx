@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './Profile.module.css';
 import userProfile from "../hooks/userProfile";
+import axios from "axios";
 
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -11,9 +12,14 @@ import chats from '../assets/images/chats.png';
 import notifications from '../assets/images/notifications.png';
 import profile from '../assets/images/profileVisit.png';
 import menu from '../assets/images/menu.png';
+import { useEffect } from 'react';
+import { getUserFromToken } from '../helpers/auth';
 
 function Profile() {
-    const userId = 1;
+    const user = getUserFromToken();
+    const userid = user?.userid;
+    // if (!userid) return null;
+    const navigate = useNavigate();
 
     const {
         data, conPass, errors, providers, cpswError, cpswMatch,
@@ -21,7 +27,30 @@ function Profile() {
         showPassword, setShowPassword,
         showConfPassword, setShowConfPassword,
         handleChange, handleSubmit
-    } = userProfile(userId);
+    } = userProfile(userid);
+
+
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        axios.get('http://localhost:5000/api/users/checkAuth', {
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        })
+            .then(res => console.log(res))
+            .catch(err => {
+                localStorage.removeItem("token");
+                navigate('/login');
+            });
+    }, []);
+
+    if(!data) return <div>Loading...</div>
 
     return (
         <div className={styles.container}>
@@ -45,7 +74,7 @@ function Profile() {
                         <input
                             type="text"
                             name="fname"
-                            value={data.fname}
+                            value={data?.fname || ""}
                             onChange={handleChange}
                             className={errors.fname ? styles.inputError : ""}
                         />
@@ -56,7 +85,7 @@ function Profile() {
                         <input
                             type="text"
                             name="lname"
-                            value={data.lname}
+                            value={data?.lname || ""}
                             onChange={handleChange}
                             className={errors.lname ? styles.inputError : ""}
                         />
@@ -67,7 +96,7 @@ function Profile() {
                         <input
                             type="text"
                             name="clock"
-                            value={data.clock}
+                            value={data?.clock || ""}
                             onChange={handleChange}
                             className={errors.clock ? styles.inputError : ""}
                         />
@@ -75,7 +104,7 @@ function Profile() {
                     </div>
 
                     <div className={styles.profileData}><label>Πάροχος</label><br />
-                        <select name="provider" onChange={handleChange} value={data.provider}>
+                        <select name="provider" onChange={handleChange} value={data?.provider || ""}>
                             <option defaultValue={data.provider} key={userId}>{data.provider}</option>
                             {providers.map((provider) => {
                                 return (
@@ -90,7 +119,7 @@ function Profile() {
                         <input
                             type="text"
                             name="email"
-                            value={data.email}
+                            value={data?.email || ""}
                             onChange={handleChange}
                             className={errors.email ? styles.inputError : ""}
                         />
@@ -101,7 +130,7 @@ function Profile() {
                         <input
                             type="text"
                             name="username"
-                            value={data.username}
+                            value={data?.username || ""}
                             onChange={handleChange}
                             className={errors.username ? styles.inputError : ""}
                         />
@@ -112,7 +141,7 @@ function Profile() {
                         <input
                             type={showPassword ? "text" : "password"}
                             name="password"
-                            value={data.password}
+                            value={data?.password || ""}
                             onChange={handleChange}
                             className={errors.password ? styles.inputError : ""}
                         />
@@ -125,7 +154,7 @@ function Profile() {
                         <input
                             type={showConfPassword ? "text" : "password"}
                             name="cpsw"
-                            value={conPass.cpsw}
+                            value={conPass?.cpsw || ""}
                             onChange={handleChange}
                             required={cpswRequired}
                             className={cpswError.cpsw ? styles.inputError : ""}

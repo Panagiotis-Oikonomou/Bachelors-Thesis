@@ -4,6 +4,26 @@ import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername
 import { getProviders } from "../apiCalls/getProviders.js";
 
 export default function userProfile(userId) {
+    if (!userId) {
+        return {
+            data: null,
+            conPass: {},
+            errors: {},
+            providers: [],
+            cpswError: {},
+            cpswMatch: {},
+            cpswRequired: false,
+            allError: {},
+            saved: {},
+            loading: false,
+            showPassword: false,
+            setShowPassword: () => {},
+            showConfPassword: false,
+            setShowConfPassword: () => {},
+            handleChange: () => {},
+            handleSubmit: () => {}
+        };
+    }
     
     const [data, setData] = useState({
         fname: "",
@@ -39,6 +59,7 @@ export default function userProfile(userId) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfPassword, setShowConfPassword] = useState(false);
 
+    if(!userId) return;
     useEffect(() => {
         getProviders()
         .then(setProviders)

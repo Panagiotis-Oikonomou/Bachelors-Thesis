@@ -20,16 +20,28 @@ import Users from './elements/Users';
 import Paroxoi from './elements/Paroxoi';
 import ManageParoxo from './elements/ManageParoxo';
 import AddParoxo from './elements/AddParoxo';
+import ProtectedRoute from "./elements/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/profile"  element={<Profile/>}/>
-        <Route path="/profile/admin" element={<ProfileAdmin />} />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile/admin" element={
+          <ProtectedRoute>
+            <ProfileAdmin />
+          </ProtectedRoute>
+        } />
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
-        <Route path="/add_area" element={<AddArea />} />
+        <Route path="/add_area" element={
+          <ProtectedRoute>
+            <AddArea />
+          </ProtectedRoute>} />
         <Route path="/my_chats" element={<MyChats />} />
         <Route path="/chatroom" element={<ChatRoom />} />
         <Route path="/matchings" element={<Matchings />} />
