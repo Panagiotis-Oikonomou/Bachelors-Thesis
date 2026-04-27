@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
     try {
@@ -24,11 +25,25 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const sql = "SELECT 1 FROM users WHERE `username`=? AND `password`=? LIMIT 1";
-        const usr = req.body.usr;
-        const psw = req.body.psw;
+        const sql2 = "SELECT 1 FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
+        // const usr = req.body.usr;
+        // const psw = req.body.psw;
+        const {usr, psw} = req.body;
 
-        const [rows] = await db.query(sql, [req.body.usr, req.body.psw]);
-        res.json({exists: rows.length > 0});
+        const [rows] = await db.query(sql, [usr, psw]);
+        const [rows2] = await db.query(sql2, [usr, psw]);
+
+        if(rows.length > 0){
+            // generate accesstoken
+            const accessToken = jwt.sign({id: rows[0].userid, isAdmin: false}, process.env.SECRET_JWT_KEY, {expiresIn:"5m"});
+            res.json({exists: true, accessToken});
+        }   
+        else if(rows2.length > 0){
+            const accessToken = jwt.sign({id: rows2[0].adminid, isAdmin: true}, process.env.SECRET_JWT_KEY, {expiresIn:"5m"});
+            res.json({exists: true, accessToken});
+        }
+        else return res.status(400).json({exists: false});
+        // res.json({exists: rows.length > 0});
         // if (rows.length === 0) return res.json({ exists: false });
         // return res.json({ exists: true });
     }
