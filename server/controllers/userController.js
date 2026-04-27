@@ -24,8 +24,8 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const sql = "SELECT 1 FROM users WHERE `username`=? AND `password`=? LIMIT 1";
-        const sql2 = "SELECT 1 FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
+        const sql = "SELECT userid FROM users WHERE `username`=? AND `password`=? LIMIT 1";
+        const sql2 = "SELECT adminid FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
         // const usr = req.body.usr;
         // const psw = req.body.psw;
         const {usr, psw} = req.body;
@@ -51,9 +51,11 @@ exports.login = async (req, res) => {
 }
 
 exports.getProfile = async (req, res) => {
+    // if(req.user.id ) 
     try {
         const sql = "SELECT * FROM users WHERE `userid`=?";
-        const id = req.params.id;
+        // const id = req.params.id;
+        const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
         res.json(rows[0] || null);
@@ -82,4 +84,22 @@ exports.updateUser = async (req, res) => {
     catch (err) {
         return res.status(500).json({ error: "Wrong edit user" });
     }
+}
+
+exports.verify = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if(authHeader){
+        const token = authHeader.split(" ")[1];
+
+        jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
+            // the user here contains the payload
+            if(err) return res.status(403).json("Token is not valid");
+
+            req.user = user;
+            next();
+
+        });
+    }
+    else res.status(401).json("You are not Authenticated");
 }
