@@ -1,28 +1,30 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
+import axios  from "../helpers/axiosInstance.js";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/profileApiChecks.js";
 import { getProviders } from "../apiCalls/getProviders.js";
 
-export default function userProfile(userId) {
+export default function useUserProfile(userId, token) {
     if (!userId) {
-        return {
-            data: null,
-            conPass: {},
-            errors: {},
-            providers: [],
-            cpswError: {},
-            cpswMatch: {},
-            cpswRequired: false,
-            allError: {},
-            saved: {},
-            loading: false,
-            showPassword: false,
-            setShowPassword: () => {},
-            showConfPassword: false,
-            setShowConfPassword: () => {},
-            handleChange: () => {},
-            handleSubmit: () => {}
-        };
+        return 
+        // {
+        //     data: null,
+        //     conPass: {},
+        //     errors: {},
+        //     providers: [],
+        //     cpswError: {},
+        //     cpswMatch: {},
+        //     cpswRequired: false,
+        //     allError: {},
+        //     saved: {},
+        //     loading: false,
+        //     showPassword: false,
+        //     setShowPassword: () => {},
+        //     showConfPassword: false,
+        //     setShowConfPassword: () => {},
+        //     handleChange: () => {},
+        //     handleSubmit: () => {}
+        // };
     }
     
     const [data, setData] = useState({
@@ -59,7 +61,7 @@ export default function userProfile(userId) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfPassword, setShowConfPassword] = useState(false);
 
-    if(!userId) return;
+    // if(!userId) return;
     useEffect(() => {
         getProviders()
         .then(setProviders)
@@ -67,7 +69,9 @@ export default function userProfile(userId) {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/users/${userId}`)
+        axios.get(`/users/${userId}`, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
             .then((res) => {
                 if (res.data) {
                     setData(res.data)
@@ -75,7 +79,7 @@ export default function userProfile(userId) {
                 }
             })
             .catch((err) => { console.log(err); });
-    }, []);
+    }, [userId, token]);
 
     useEffect(() => {
         if (saved.saved !== "") {
@@ -241,9 +245,9 @@ export default function userProfile(userId) {
         }
 
         try {
-            await axios.put(`http://localhost:5000/api/users/${userId}`, data);
+            await axios.put(`/users/${userId}`, data);
 
-            const res = await axios.get(`http://localhost:5000/api/users/${userId}`);
+            const res = await axios.get(`/users/${userId}`);
             if (res.data) {
                 setData(res.data);
                 setOriginalPassword(res.data.password);

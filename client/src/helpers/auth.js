@@ -11,7 +11,7 @@ export const getUserFromToken = () => {
             localStorage.removeItem("token");
             return null;
         }
-        return decoded;
+        return decoded.id;
     } catch {
         return null;
     }

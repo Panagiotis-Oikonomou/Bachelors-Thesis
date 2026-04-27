@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+// import { AuthProvider } from "./context/AuthContext.jsx";
 import './assets/css/global.css';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -15,6 +16,8 @@ L.Icon.Default.mergeOptions({
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    {/* <AuthProvider> */}
+      <App />
+    {/* </AuthProvider> */}
   </React.StrictMode>
 );

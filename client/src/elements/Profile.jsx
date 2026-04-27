@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import styles from './Profile.module.css';
-import userProfile from "../hooks/userProfile";
-import axios from "axios";
+import useUserProfile from "../hooks/useUserProfile";
+// import axios from "axios";
+import axios from "../helpers/axiosInstance";
+import { useAuth } from '../context/AuthContext';
 
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -16,9 +18,14 @@ import { useEffect } from 'react';
 import { getUserFromToken } from '../helpers/auth';
 
 function Profile() {
-    const user = getUserFromToken();
-    const userid = user?.userid;
+    // const user = getUserFromToken();
+    // const userId = user?.userid;
+    // const userId = user;
     // if (!userid) return null;
+    // const {userId, token, logout} = useAuth();
+    const token = useAuth().token;
+    const userId = getUserFromToken();
+    // const [user, setUser]
     const navigate = useNavigate();
 
     const {
@@ -27,28 +34,29 @@ function Profile() {
         showPassword, setShowPassword,
         showConfPassword, setShowConfPassword,
         handleChange, handleSubmit
-    } = userProfile(userid);
+    } = useUserProfile(userId, token);
 
 
 
     useEffect(() => {
+        // if (!userId) return;
         const token = localStorage.getItem("token");
         if (!token) {
             navigate('/login');
             return;
         }
 
-        axios.get('http://localhost:5000/api/users/checkAuth', {
-            headers: {
-                'authorization': `Bearer ${token}`
-            }
-        })
-            .then(res => console.log(res))
-            .catch(err => {
-                localStorage.removeItem("token");
-                navigate('/login');
-            });
-    }, []);
+        // axios.get('/users/checkAuth', {
+        //     headers: {
+        //         'authorization': `Bearer ${token}`
+        //     }
+        // })
+        //     .then(res => console.log(res))
+        //     .catch(err => {
+        //         localStorage.removeItem("token");
+        //         navigate('/login');
+        //     });
+    }, [navigate]);
 
     if(!data) return <div>Loading...</div>
 
@@ -67,7 +75,9 @@ function Profile() {
 
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
-                    <button className={styles.logout}><Link to='/index'>Logout</Link></button>
+                    {/* <button className={styles.logout}><Link to='/index'>Logout</Link></button>
+                     */}
+                     <button className={styles.logout} onClick={logout}>Logout</button>
                 </div>
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <div className={styles.profileData}><label>Ονομα</label><br />

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+// import axios from 'axios';
+import axios from "../helpers/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
+import { useAuth } from "../context/AuthContext";
+
+
 
 
 function Login() {
@@ -14,6 +18,7 @@ function Login() {
     });
     // const [token, setToken] = useState('');
 
+    const {login} = useAuth();
     useEffect(() => {
         if (notFound.notf !== "") {
             const timer = setTimeout(() => {
@@ -26,11 +31,12 @@ function Login() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/users/login', loginData)
+        axios.post('/users/login', loginData)
             .then((res) => {
                 if (res.data.exists) {
                     // setToken(res.data.accesstoken);
-                    localStorage.setItem("token", res.data.accessToken);
+                    // localStorage.setItem("token", res.data.accessToken);
+                    login(res.data.accessToken);
                     navigate('/profile');
                 }
                 else {

@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 import MyAreas from "./elements/MyAreas";
 import AddArea from "./elements/AddArea";
@@ -25,38 +26,40 @@ import ProtectedRoute from "./elements/ProtectedRoute";
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        } />
-        <Route path="/profile/admin" element={
-          <ProtectedRoute>
-            <ProfileAdmin />
-          </ProtectedRoute>
-        } />
-        <Route path="/my_areas" element={<MyAreas />} />
-        <Route path="/manage_area" element={<ManageArea />} />
-        <Route path="/add_area" element={
-          <ProtectedRoute>
-            <AddArea />
-          </ProtectedRoute>} />
-        <Route path="/my_chats" element={<MyChats />} />
-        <Route path="/chatroom" element={<ChatRoom />} />
-        <Route path="/matchings" element={<Matchings />} />
-        <Route path="/criteria" element={<Criteria />} />
-        <Route path="/match" element={<Match />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/notifications/admin" element={<NotificationsAdmin />} />
-        <Route path="/index" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/paroxoi" element={<Paroxoi />} />
-        <Route path="/manage_paroxo" element={<ManageParoxo />} />
-        <Route path="/add_paroxo" element={<AddParoxo />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile/admin" element={
+            <ProtectedRoute>
+              <ProfileAdmin />
+            </ProtectedRoute>
+          } />
+          <Route path="/my_areas" element={<MyAreas />} />
+          <Route path="/manage_area" element={<ManageArea />} />
+          <Route path="/add_area" element={
+            <ProtectedRoute>
+              <AddArea />
+            </ProtectedRoute>} />
+          <Route path="/my_chats" element={<MyChats />} />
+          <Route path="/chatroom" element={<ChatRoom />} />
+          <Route path="/matchings" element={<Matchings />} />
+          <Route path="/criteria" element={<Criteria />} />
+          <Route path="/match" element={<Match />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/notifications/admin" element={<NotificationsAdmin />} />
+          <Route path="/index" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/paroxoi" element={<Paroxoi />} />
+          <Route path="/manage_paroxo" element={<ManageParoxo />} />
+          <Route path="/add_paroxo" element={<AddParoxo />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

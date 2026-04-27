@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
 }
 
 const generateAccessToken = (id, isAdmin) => {
-    return jwt.sign({ userid: id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: 300 });
+    return jwt.sign({ userid: id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "5m" });
 }
 
 
@@ -60,7 +60,10 @@ exports.login = async (req, res) => {
         // if (rows.length === 0) return res.json({ exists: false });
         // return res.json({ exists: true });
     }
-    catch (err) { return res.status(500).json({ error: "Error with login" }); }
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Error with login" });
+    }
 }
 
 exports.getProfile = async (req, res) => {
