@@ -8,6 +8,7 @@ const pvRoutes = require("./routes/pvRoutes");
 const areaRoutes = require("./routes/areaRoutes");
 const providerRoutes = require("./routes/providerRoutes");
 const validationRoutes = require("./routes/validationRoutes");
+const tokenServiceRoutes = require('./routes/tokenServiceRoutes');
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.use("/api/pv", pvRoutes);
 app.use("/api/areas", areaRoutes);
 app.use("/api/providers", providerRoutes);
 app.use("/api/validate", validationRoutes);
+app.use("/api/refresh", tokenServiceRoutes);
 
 module.exports = app;

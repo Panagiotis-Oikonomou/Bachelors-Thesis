@@ -8,7 +8,7 @@ export default function userProfile() {
 
     // const refreshToken = async () => {
     //     try {
-    //         const res = await axios.post("http://localhost:5000/api/users/refresh", { token: localStorage.getItem("refreshToken") });
+    //         const res = await axios.post("http://localhost:5000/api/refresh", { token: localStorage.getItem("refreshToken") });
 
     //         localStorage.removeItem("token");
     //         localStorage.removeItem("refreshToken");
@@ -112,10 +112,10 @@ export default function userProfile() {
         }
     }, [saved.saved, allError.all]);
 
-    // const userId = jwtDecode(localStorage.getItem("accessToken"));
-    // const checkEmail = checkEmailApi(userId.id, setErrors);
-    // const checkClock = checkClockApi(userId.id, setErrors);
-    // const checkUsername = checkUsernameApi(userId.id, setErrors);
+    const decoded = jwtDecode(localStorage.getItem("accessToken"));
+    const checkEmail = checkEmailApi(decoded.id, setErrors);
+    const checkClock = checkClockApi(decoded.id, setErrors);
+    const checkUsername = checkUsernameApi(decoded.id, setErrors);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -158,12 +158,12 @@ export default function userProfile() {
 
             else error = "Ο αριθμός πρέπει να είναι αυτής της μορφής χ-χχχχχχχχ-χχ";
 
-            // checkClock(value);
+            checkClock(value);
         }
         else if (name === "email") {
             if (len === 0) error = "Το email σας είναι κενό";
             else error = "";
-            // checkEmail(value);
+            checkEmail(value);
         }
         else if (name === "username") {
             if (len === 0) error = "Το username σας είναι κενό";
@@ -172,7 +172,7 @@ export default function userProfile() {
 
             else if (value.includes(" ")) error = "Το username σας δεν μπορεί να περιέχει κενά";
 
-            // checkUsername(value);
+            checkUsername(value);
         }
 
         if (name === "password") {

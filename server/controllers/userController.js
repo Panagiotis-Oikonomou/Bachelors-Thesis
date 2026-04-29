@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
+const tokenService = require('../services/tokenService');
 
 exports.register = async (req, res) => {
     try {
@@ -22,13 +23,13 @@ exports.register = async (req, res) => {
     }
 }
 
-const generateAccessToken = (id, isAdmin) => {
-    return accessToken = jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "5m" });
-}
+// const generateAccessToken = (id, isAdmin) => {
+//     return accessToken = jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "5m" });
+// }
 
-const generateRefreshToken = (id, isAdmin) => {
-    return refreshToken = jwt.sign({ id, isAdmin }, process.env.SECRET_REFRESH_JWT_KEY);
-}
+// const generateRefreshToken = (id, isAdmin) => {
+//     return refreshToken = jwt.sign({ id, isAdmin }, process.env.SECRET_REFRESH_JWT_KEY);
+// }
 
 exports.login = async (req, res) => {
     try {
@@ -40,15 +41,20 @@ exports.login = async (req, res) => {
         const [rows2] = await db.query(sql2, [usr, psw]);
 
         if (rows.length > 0) {
-            const accessToken = generateAccessToken(rows[0].userid, false);
-            const refreshToken = generateRefreshToken(rows[0].userid, false);
-            refreshTokens.push(refreshToken);
+            // const accessToken = generateAccessToken(rows[0].userid, false);
+            const accessToken = tokenService.generateAccessToken(rows[0].userid, false);
+            const refreshToken = tokenService.generateRefreshToken(rows[0].userid, false);
+            // refreshTokens.push(refreshToken);
+            tokenService.storeRefreshTokens(refreshToken);
             res.json({ exists: true, isAdmin:false, accessToken, refreshToken });
         }
         else if (rows2.length > 0) {
-            const accessToken = generateAccessToken(rows2[0].userid, false);
-            const refreshToken = generateRefreshToken(rows2[0].userid, false);
-            refreshTokens.push(refreshToken);
+            // const accessToken = generateAccessToken(rows2[0].userid, false);
+            // const refreshToken = generateRefreshToken(rows2[0].userid, false);
+            const accessToken = tokenService.generateAccessToken(rows2[0].userid, true);
+            const refreshToken = tokenService.generateRefreshToken(rows2[0].userid, true);
+            // refreshTokens.push(refreshToken);
+            tokenService.storeRefreshTokens(refreshToken);
             res.json({ exists: true, isAdmin:true,accessToken, refreshToken });
         }
         else return res.json({ exists: false });
@@ -56,53 +62,54 @@ exports.login = async (req, res) => {
     catch (err) { return res.status(500).json({ error: "Wrong login" }); }
 }
 
-let refreshTokens = [];
+// let refreshTokens = [];
 
-exports.refresh = async (req, res) => {
-    // take the refresh token from user
-    const refreshToken = req.body.token;
+// exports.refresh = async (req, res) => {
+//     // take the refresh token from user
+//     const refreshToken = req.body.token;
 
-    // send error if there is no token or not valid
-    if (!refreshToken) return res.status(401).json("You are not authenticated");
+//     // send error if there is no token or not valid
+//     if (!refreshToken) return res.status(401).json("You are not authenticated");
 
-    if (!refreshTokens.includes(refreshToken)) {
-        return res.status(403).json("Refresh token is not valid");
-    }
+//     if (!refreshTokens.includes(refreshToken)) {
+//         return res.status(403).json("Refresh token is not valid");
+//     }
 
-    jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, user) => {
-        if (err) console.log(err);
+//     jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, user) => {
+//         if (err) console.log(err);
 
-        refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+//         refreshTokens = refreshTokens.filter(token => token !== refreshToken);
 
-        if (user.isAdmin) {
-            const newAccessToken = generateAccessToken(user.id, true);
-            const newRefreshToken = generateRefreshToken(user.id, true);
+//         if (user.isAdmin) {
+//             const newAccessToken = generateAccessToken(user.id, true);
+//             const newRefreshToken = generateRefreshToken(user.id, true);
 
-            refreshTokens.push(newRefreshToken);
+//             refreshTokens.push(newRefreshToken);
 
-            res.status(201).json({
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken
-            });
-        }
-        else {
-            const newAccessToken = generateAccessToken(user.id, false);
-            const newRefreshToken = generateRefreshToken(user.id, false);
-            refreshTokens.push(newRefreshToken);
+//             res.status(201).json({
+//                 accessToken: newAccessToken,
+//                 refreshToken: newRefreshToken
+//             });
+//         }
+//         else {
+//             const newAccessToken = generateAccessToken(user.id, false);
+//             const newRefreshToken = generateRefreshToken(user.id, false);
+//             refreshTokens.push(newRefreshToken);
 
-            res.status(201).json({
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken
-            });
-        }
-    })
-    // if everything is okay create new access token, also refresh and send to user
-}
+//             res.status(201).json({
+//                 accessToken: newAccessToken,
+//                 refreshToken: newRefreshToken
+//             });
+//         }
+//     })
+//     // if everything is okay create new access token, also refresh and send to user
+// }
 
 exports.logout = async (req, res) => {
     const refreshToken = req.body.token;
 
-    refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+    
+    tokenService.refreshTokens = tokenService.refreshTokens.filter(token => token !== refreshToken);
     res.status(200).json("You have logout successfully");
 }
 
@@ -148,20 +155,20 @@ exports.updateUser = async (req, res) => {
     }
 }
 
-exports.verify = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+// exports.verify = (req, res, next) => {
+//     const authHeader = req.headers.authorization;
 
-    if (authHeader) {
-        const token = authHeader.split(" ")[1];
+//     if (authHeader) {
+//         const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
-            // the user here contains the payload
-            if (err) return res.status(403).json("Token is not valid");
+//         jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
+//             // the user here contains the payload
+//             if (err) return res.status(403).json("Token is not valid");
 
-            req.user = user;
-            next();
+//             req.user = user;
+//             next();
 
-        });
-    }
-    else res.status(401).json("You are not Authenticated");
-}
+//         });
+//     }
+//     else res.status(401).json("You are not Authenticated");
+// }
