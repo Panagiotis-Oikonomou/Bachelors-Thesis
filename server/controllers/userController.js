@@ -34,34 +34,24 @@ exports.login = async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `username`=? AND `password`=? LIMIT 1";
         const sql2 = "SELECT adminid FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
-        // const usr = req.body.usr;
-        // const psw = req.body.psw;
         const { usr, psw } = req.body;
 
         const [rows] = await db.query(sql, [usr, psw]);
         const [rows2] = await db.query(sql2, [usr, psw]);
 
         if (rows.length > 0) {
-            // generate accesstoken
-            // const accessToken = jwt.sign({id: rows[0].userid, isAdmin: false}, process.env.SECRET_JWT_KEY, {expiresIn:"20s"});
-            // const refreshToken = jwt.sign({id: rows[0].userid, isAdmin: false}, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn:"20s"});
             const accessToken = generateAccessToken(rows[0].userid, false);
             const refreshToken = generateRefreshToken(rows[0].userid, false);
             refreshTokens.push(refreshToken);
-            res.json({ exists: true, accessToken, refreshToken });
+            res.json({ exists: true, isAdmin:false, accessToken, refreshToken });
         }
         else if (rows2.length > 0) {
-            // const accessToken = jwt.sign({id: rows2[0].adminid, isAdmin: true}, process.env.SECRET_JWT_KEY, {expiresIn:"5m"});
-            // const refreshToken = jwt.sign({id: rows[0].userid, isAdmin: false}, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn:"20s"});
             const accessToken = generateAccessToken(rows2[0].userid, false);
             const refreshToken = generateRefreshToken(rows2[0].userid, false);
             refreshTokens.push(refreshToken);
-            res.json({ exists: true, accessToken, refreshToken });
+            res.json({ exists: true, isAdmin:true,accessToken, refreshToken });
         }
-        else return res.status(400).json({ exists: false });
-        // res.json({exists: rows.length > 0});
-        // if (rows.length === 0) return res.json({ exists: false });
-        // return res.json({ exists: true });
+        else return res.json({ exists: false });
     }
     catch (err) { return res.status(500).json({ error: "Wrong login" }); }
 }
@@ -117,7 +107,6 @@ exports.logout = async (req, res) => {
 }
 
 exports.getProfile = async (req, res) => {
-    // if(req.user.id ) 
     try {
         const isAdmin = req.user.isAdmin;
         let sql;
@@ -128,7 +117,6 @@ exports.getProfile = async (req, res) => {
             sql = "SELECT * FROM users WHERE `userid`=?";
         }
 
-        // const id = req.params.id;
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
@@ -150,7 +138,7 @@ exports.updateUser = async (req, res) => {
             req.body.email,
             req.body.username,
             req.body.password,
-            req.params.id
+            req.user.id
         ];
         await db.query(sql, values);
         res.json({ values });

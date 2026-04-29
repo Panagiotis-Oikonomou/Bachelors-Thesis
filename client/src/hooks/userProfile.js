@@ -1,10 +1,43 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/profileApiChecks.js";
+import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../apiCalls/profileApiChecks.js";
 import { getProviders } from "../apiCalls/getProviders.js";
+import { jwtDecode } from "jwt-decode";
+import api from "../apiCalls/axiosInstance.js";
 
-export default function userProfile(userId) {
-    
+export default function userProfile() {
+
+    // const refreshToken = async () => {
+    //     try {
+    //         const res = await axios.post("http://localhost:5000/api/users/refresh", { token: localStorage.getItem("refreshToken") });
+
+    //         localStorage.removeItem("token");
+    //         localStorage.removeItem("refreshToken");
+    //         localStorage.setItem("token", res.data.accessToken);
+    //         localStorage.setItem("refreshToken", res.data.refreshToken);
+
+    //         return res.data;
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
+
+    // maybe use this not in the login but everywhere else
+    // const axiosJWT = axios.create();
+
+    // axiosJWT.interceptors.request.use(async (config) => {
+    //     let currentDate = new Date();
+
+    //     const decodeToken = jwtDecode(localStorage.getItem("token"));
+    //     if (decodeToken.exp * 1000 < currentDate.getTime()) {
+    //         const data = await refreshToken();
+
+    //         config.headers["authorization"] = "Bearer " + data.accessToken;
+    //     }
+    //     return config;
+    // }, (error) => {
+    //     return Promise.reject(error);
+    // });
+
     const [data, setData] = useState({
         fname: "",
         lname: "",
@@ -41,15 +74,20 @@ export default function userProfile(userId) {
 
     useEffect(() => {
         getProviders()
-        .then(setProviders)
-        .catch(console.log)
+            .then(setProviders)
+            .catch(console.log)
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/users/${userId}`)
+        api.get('/users/profile', {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem("accessToken")
+            }
+        })
             .then((res) => {
                 if (res.data) {
-                    setData(res.data)
+                    // setData(res.data)
+                    setData(prev => ({...prev, ...res.data}));
                     setOriginalPassword(res.data.password);
                 }
             })
@@ -74,9 +112,10 @@ export default function userProfile(userId) {
         }
     }, [saved.saved, allError.all]);
 
-    const checkEmail = checkEmailApi(userId, setErrors);
-    const checkClock = checkClockApi(userId, setErrors);
-    const checkUsername = checkUsernameApi(userId, setErrors);
+    // const userId = jwtDecode(localStorage.getItem("accessToken"));
+    // const checkEmail = checkEmailApi(userId.id, setErrors);
+    // const checkClock = checkClockApi(userId.id, setErrors);
+    // const checkUsername = checkUsernameApi(userId.id, setErrors);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -119,12 +158,12 @@ export default function userProfile(userId) {
 
             else error = "Ο αριθμός πρέπει να είναι αυτής της μορφής χ-χχχχχχχχ-χχ";
 
-            checkClock(value);
+            // checkClock(value);
         }
         else if (name === "email") {
             if (len === 0) error = "Το email σας είναι κενό";
             else error = "";
-            checkEmail(value);
+            // checkEmail(value);
         }
         else if (name === "username") {
             if (len === 0) error = "Το username σας είναι κενό";
@@ -133,7 +172,7 @@ export default function userProfile(userId) {
 
             else if (value.includes(" ")) error = "Το username σας δεν μπορεί να περιέχει κενά";
 
-            checkUsername(value);
+            // checkUsername(value);
         }
 
         if (name === "password") {
@@ -154,15 +193,15 @@ export default function userProfile(userId) {
                 cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
                 cpswmatch = "";
             }
-            else if (password === confirm && len !== 0) {
+            else if (value === confirm && len !== 0) {
                 cpswerror = "";
                 cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
             }
-            else if (password !== confirm && cpswlen === 0) {
+            else if (value !== confirm && cpswlen === 0) {
                 cpswerror = "";
                 cpswmatch = "";
             }
-            else if (password !== confirm && len !== 0) {
+            else if (value !== confirm && len !== 0) {
                 cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
                 cpswmatch = "";
             }
@@ -206,6 +245,24 @@ export default function userProfile(userId) {
         }
     }
 
+    async function logout() {
+        try {
+            await api.post('/users/logout', {
+                token: localStorage.getItem("refreshToken")
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem("accessToken")
+                }
+            });
+
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+
+        } catch (err) {
+            console.error("Logout failed:", err.response?.data || err.message);
+        }
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
         if (loading) return;
@@ -220,11 +277,19 @@ export default function userProfile(userId) {
         }
 
         try {
-            await axios.put(`http://localhost:5000/api/users/${userId}`, data);
+            await api.put('/users/profile', data, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem("accessToken")
+                }
+            });
 
-            const res = await axios.get(`http://localhost:5000/api/users/${userId}`);
+            const res = await api.get('/users/profile', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("accessToken")
+                }
+            });
             if (res.data) {
-                setData(res.data);
+                setData(prev => ({...prev, ...res.data}));
                 setOriginalPassword(res.data.password);
             }
 
@@ -238,11 +303,11 @@ export default function userProfile(userId) {
     }
 
     return {
-    data, conPass, errors, providers,
-    cpswError, cpswMatch, cpswRequired,
-    allError, saved, loading, showPassword,
-    setShowPassword, showConfPassword,
-    setShowConfPassword, handleChange,
-    handleSubmit,
-  };
+        data, conPass, errors, providers,
+        cpswError, cpswMatch, cpswRequired,
+        allError, saved, loading, showPassword,
+        setShowPassword, showConfPassword,
+        setShowConfPassword, handleChange,
+        handleSubmit, logout,
+    };
 }

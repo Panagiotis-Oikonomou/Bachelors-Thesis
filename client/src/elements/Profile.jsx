@@ -13,15 +13,13 @@ import profile from '../assets/images/profileVisit.png';
 import menu from '../assets/images/menu.png';
 
 function Profile() {
-    const userId = 1;
-
     const {
         data, conPass, errors, providers, cpswError, cpswMatch,
         cpswRequired, allError, saved, loading,
         showPassword, setShowPassword,
         showConfPassword, setShowConfPassword,
-        handleChange, handleSubmit
-    } = userProfile(userId);
+        handleChange, handleSubmit, logout
+    } = userProfile();
 
     return (
         <div className={styles.container}>
@@ -38,7 +36,7 @@ function Profile() {
 
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
-                    <button className={styles.logout}><Link to='/index'>Logout</Link></button>
+                    <button className={styles.logout} onClick={logout}><Link to='/index'>Logout</Link></button>
                 </div>
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <div className={styles.profileData}><label>Ονομα</label><br />
@@ -76,7 +74,8 @@ function Profile() {
 
                     <div className={styles.profileData}><label>Πάροχος</label><br />
                         <select name="provider" onChange={handleChange} value={data.provider}>
-                            <option defaultValue={data.provider} key={userId}>{data.provider}</option>
+                            {/* key={userId} */}
+                            <option defaultValue={data.provider} >{data.provider}</option>
                             {providers.map((provider) => {
                                 return (
                                     <option key={provider.providerid} value={provider.providername}>

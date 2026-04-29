@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
+import api from "../apiCalls/axiosInstance";
 
 
-function Notifications() {
+function Login() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [notFound, setNotFound] = useState({ notf: "" });
@@ -25,9 +25,19 @@ function Notifications() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/users/login', {usr: loginData.usr, psw: loginData.psw})
+
+        api.post('/users/login', { usr: loginData.usr, psw: loginData.psw })
             .then((res) => {
-                if (res.data.exists) navigate('/profile');
+                if (res.data.exists) {
+                    localStorage.setItem("accessToken", res.data.accessToken);
+                    localStorage.setItem("refreshToken", res.data.refreshToken);
+                    if(res.data.isAdmin){
+                        navigate('/profile/admin');
+                    }
+                    else{
+                        navigate('/profile');
+                    }
+                }
                 else {
                     setNotFound({ ...notFound, notf: "Το username ή ο κωδικός είναι λάθος" });
                 }
@@ -73,4 +83,4 @@ function Notifications() {
     )
 }
 
-export default Notifications;
+export default Login;
