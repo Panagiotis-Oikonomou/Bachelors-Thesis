@@ -23,7 +23,7 @@ exports.register = async (req, res) => {
 }
 
 const generateAccessToken = (id, isAdmin) => {
-    return accessToken = jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "30s" });
+    return accessToken = jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "5m" });
 }
 
 const generateRefreshToken = (id, isAdmin) => {
@@ -105,11 +105,15 @@ exports.refresh = async (req, res) => {
                 refreshToken: newRefreshToken
             });
         }
-
-
-
     })
     // if everything is okay create new access token, also refresh and send to user
+}
+
+exports.logout = async (req, res) => {
+    const refreshToken = req.body.token;
+
+    refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+    res.status(200).json("You have logout successfully");
 }
 
 exports.getProfile = async (req, res) => {
