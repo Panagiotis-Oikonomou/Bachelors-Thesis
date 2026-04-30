@@ -3,17 +3,16 @@ import styles from './AddArea.module.css';
 import MyComponent from "../components/maps/MyComponent";
 import userAddArea from "../hooks/userAddArea";
 import { Up } from "../components/Up";
-import axios from 'axios';
+import api from "../apiCalls/axiosInstance";
 
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import map from '../assets/images/map.png';
 
 function AddArea() {
     const [location, setLocation] = useState(null);
-    const userId = 1;
     const {
         areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
-    } = userAddArea(userId);
+    } = userAddArea();
 
     useEffect(() => {
         if (location) {
@@ -28,7 +27,7 @@ function AddArea() {
     useEffect(() => {
         if (areaData.lat && areaData.lng && areaData.size) {
             if (panelData.panelType === "vertical") {
-                axios.get(`http://localhost:5000/api/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
+                api.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
@@ -40,7 +39,7 @@ function AddArea() {
                     .catch((err) => console.log(err));
             }
             else if (panelData.panelType == "inclined") {
-                axios.get(`http://localhost:5000/api/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
+                api.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
@@ -52,7 +51,7 @@ function AddArea() {
                     .catch((err) => console.log(err));
             }
             else if (panelData.panelType == "two") {
-                axios.get(`http://localhost:5000/api/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
+                api.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {

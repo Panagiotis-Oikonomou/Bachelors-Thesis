@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from "../apiCalls/axiosInstance";
 
-export default function userAddArea(userId) {
+export default function userAddArea() {
     const navigate = useNavigate();
     const [areaData, setAreaData] = useState({
         name: "",
@@ -55,16 +55,19 @@ export default function userAddArea(userId) {
 
         const send = {
             ...areaData,
-            userid: userId,
             size: Number(areaData.size),
             paneltype: panelData.panelType,
             lat: Number(areaData.lat),
             lng: Number(areaData.lng),
             ac: Number(areaData.energy)
         };
-        axios.post('http://localhost:5000/api/areas', send)
+        api.post('/areas', send, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem("accessToken")
+            }
+        })
             .then((res) => {
-                navigate('/my_areas');
+                navigate('/profile');
             })
             .catch((err) => console.log(err));
     }

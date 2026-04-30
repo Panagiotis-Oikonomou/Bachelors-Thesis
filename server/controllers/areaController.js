@@ -3,7 +3,8 @@ const db = require('../config/db');
 exports.addArea = async (req, res) => {
     try {
         const sql = "INSERT INTO areas (userid, name, size, paneltype, lat, lng,  ac) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        const {userid, size, paneltype, lat, lng, ac, name} = req.body;
+        const {size, paneltype, lat, lng, ac, name} = req.body;
+        const userid = req.user.id;
         const values = [userid, name, size, paneltype, lat, lng, ac];
 
         await db.query(sql, values);
