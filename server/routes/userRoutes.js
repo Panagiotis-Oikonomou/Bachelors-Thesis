@@ -12,4 +12,5 @@ router.put("/profile", ver.verify,user.updateUser);
 // router.post("/refresh", refresh.refresh);
 router.post("/logout", ver.verify, user.logout);
 
+
 module.exports = router;

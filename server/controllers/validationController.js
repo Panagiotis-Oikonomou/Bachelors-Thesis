@@ -4,7 +4,9 @@ const db = require("../config/db");
 exports.checkUsername = async (req, res) => {
     try {
         const sql = "SELECT username FROM users WHERE `username`=?";
-        const username = req.params.username;
+        const username = req.query.username;
+
+        if(!username) return;
 
         const [rows] = await db.query(sql, [username]);
         res.json({ exists: rows.length > 0 });
@@ -17,7 +19,9 @@ exports.checkUsername = async (req, res) => {
 exports.checkEmail = async (req, res) => {
     try {
         const sql = "SELECT 1 FROM users WHERE `email`=? LIMIT 1";
-        const email = req.params.email;
+        const email = req.query.email;
+
+        if(!email) return;
 
         const [rows] = await db.query(sql, [email]);
         res.json({ exists: rows.length > 0 });
@@ -30,7 +34,9 @@ exports.checkEmail = async (req, res) => {
 exports.checkClock = async (req, res) => {
     try {
         const sql = "SELECT 1 FROM users WHERE `clock`=? LIMIT 1";
-        const clock = req.params.clock;
+        const clock = req.query.clock;
+
+        if(!clock) return;
 
         const [rows] = await db.query(sql, [clock]);
 

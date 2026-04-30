@@ -108,7 +108,6 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
     const refreshToken = req.body.token;
 
-    
     tokenService.refreshTokens = tokenService.refreshTokens.filter(token => token !== refreshToken);
     res.status(200).json("You have logout successfully");
 }

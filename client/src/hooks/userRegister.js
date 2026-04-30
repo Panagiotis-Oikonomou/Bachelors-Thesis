@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../apiCalls/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/registerApiChecks.js";
 import { getProviders } from "../apiCalls/getProviders.js";
@@ -173,9 +173,9 @@ export default function userRegister(userId) {
             return;
         }
 
-        axios.post('http://localhost:5000/api/users/register/', formData)
+        api.post('/users/register', formData)
             .then((res) => {
-                navigate('/profile');
+                navigate('/login');
             })
             .catch((err) => console.log(err));
     }
