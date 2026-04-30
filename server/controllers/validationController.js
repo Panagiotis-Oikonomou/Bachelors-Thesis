@@ -52,7 +52,7 @@ exports.checkUsernameProfile = async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `username` = ?";
         const username = req.query.username;
-        const id = req.query.id;
+        const id = req.user.id;
 
         const [rows] = await db.query(sql, [username]);
 
@@ -70,7 +70,7 @@ exports.checkEmailProfile = async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `email` = ?";
         const email = req.query.email;
-        const id = req.query.id;
+        const id = req.user.id;
 
         const [rows] = await db.query(sql, [email]);
 
@@ -88,7 +88,7 @@ exports.checkClockProfile = async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `clock` = ?";
         const clock = req.query.clock;
-        const id = req.query.id;
+        const id = req.user.id;
 
         const [rows] = await db.query(sql, [clock]);
 
@@ -99,24 +99,5 @@ exports.checkClockProfile = async (req, res) => {
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong clock profile" });
-    }
-}
-
-exports.checkPasswordProfile = async (req, res) => {
-    try {
-        const sql = "SELECT userid FROM users WHERE `password` = ?";
-        const password = req.query.password;
-        const id = req.query.id;
-
-        const [rows] = await db.query(sql, [password]);
-
-        // if (rows.length === 0) return res.json({ exists: false });
-        if (rows.length != 0) return res.json({ exists: rows[0].userid == id })
-        // if (rows[0].userid == id) return res.json({ exists: true });
-
-        // return res.json({ exists: true });
-    }
-    catch (err) {
-        return res.status(500).json({ error: "Wrong password profile" });
     }
 }

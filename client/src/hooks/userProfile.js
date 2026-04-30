@@ -86,7 +86,6 @@ export default function userProfile() {
         })
             .then((res) => {
                 if (res.data) {
-                    // setData(res.data)
                     setData(prev => ({...prev, ...res.data}));
                     setOriginalPassword(res.data.password);
                 }
@@ -112,10 +111,9 @@ export default function userProfile() {
         }
     }, [saved.saved, allError.all]);
 
-    const decoded = jwtDecode(localStorage.getItem("accessToken"));
-    const checkEmail = checkEmailApi(decoded.id, setErrors);
-    const checkClock = checkClockApi(decoded.id, setErrors);
-    const checkUsername = checkUsernameApi(decoded.id, setErrors);
+    const checkEmail = checkEmailApi(setErrors);
+    const checkClock = checkClockApi(setErrors);
+    const checkUsername = checkUsernameApi(setErrors);
 
     function handleChange(e) {
         const { name, value } = e.target;
