@@ -5,39 +5,6 @@ import { jwtDecode } from "jwt-decode";
 import api from "../apiCalls/axiosInstance.js";
 
 export default function userProfile() {
-
-    // const refreshToken = async () => {
-    //     try {
-    //         const res = await axios.post("http://localhost:5000/api/refresh", { token: localStorage.getItem("refreshToken") });
-
-    //         localStorage.removeItem("token");
-    //         localStorage.removeItem("refreshToken");
-    //         localStorage.setItem("token", res.data.accessToken);
-    //         localStorage.setItem("refreshToken", res.data.refreshToken);
-
-    //         return res.data;
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // }
-
-    // maybe use this not in the login but everywhere else
-    // const axiosJWT = axios.create();
-
-    // axiosJWT.interceptors.request.use(async (config) => {
-    //     let currentDate = new Date();
-
-    //     const decodeToken = jwtDecode(localStorage.getItem("token"));
-    //     if (decodeToken.exp * 1000 < currentDate.getTime()) {
-    //         const data = await refreshToken();
-
-    //         config.headers["authorization"] = "Bearer " + data.accessToken;
-    //     }
-    //     return config;
-    // }, (error) => {
-    //     return Promise.reject(error);
-    // });
-
     const [data, setData] = useState({
         fname: "",
         lname: "",

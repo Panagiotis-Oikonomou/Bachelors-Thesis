@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 let refreshTokens = [];
+// how to create a user session using cookies
 
 const generateAccessToken = (id, isAdmin) => {
-    return jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "5m" });
+    return jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "15m" });
 }
 
 const generateRefreshToken = (id, isAdmin) => {
@@ -20,31 +21,21 @@ const refresh = async (req, res) => {
     }
 
     jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, user) => {
-        if (err) console.log(err);
+        if (err) {
+            return res.status(403).json("Invalid refresh token");
+        }
 
         refreshTokens = refreshTokens.filter(token => token !== refreshToken);
 
-        if (user.isAdmin) {
-            const newAccessToken = generateAccessToken(user.id, true);
-            const newRefreshToken = generateRefreshToken(user.id, true);
+        const newAccessToken = generateAccessToken(user.id, user.isAdmin);
+        const newRefreshToken = generateRefreshToken(user.id, user.isAdmin);
 
-            refreshTokens.push(newRefreshToken);
+        refreshTokens.push(newRefreshToken);
 
-            res.status(201).json({
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken
-            });
-        }
-        else {
-            const newAccessToken = generateAccessToken(user.id, false);
-            const newRefreshToken = generateRefreshToken(user.id, false);
-            refreshTokens.push(newRefreshToken);
-
-            res.status(201).json({
-                accessToken: newAccessToken,
-                refreshToken: newRefreshToken
-            });
-        }
+        res.status(200).json({
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken
+        });
     })
 }
 
