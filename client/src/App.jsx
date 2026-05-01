@@ -39,11 +39,9 @@ function App() {
           <Route path="/add_area" element={<AddArea />} />
 
         </Route>
-        {/* <Route path="/profile"  element={<Profile/>}/> */}
         <Route path="/profile/admin" element={<ProfileAdmin />} />
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
-        {/* <Route path="/add_area" element={<AddArea />} /> */}
         <Route path="/my_chats" element={<MyChats />} />
         <Route path="/chatroom" element={<ChatRoom />} />
         <Route path="/matchings" element={<Matchings />} />
