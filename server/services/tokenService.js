@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 let refreshTokens = [];
-// how to create a user session using cookies
 
 const generateAccessToken = (id, isAdmin) => {
     return jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "15m" });

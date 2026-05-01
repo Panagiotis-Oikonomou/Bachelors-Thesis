@@ -21,16 +21,29 @@ import Paroxoi from './elements/Paroxoi';
 import ManageParoxo from './elements/ManageParoxo';
 import AddParoxo from './elements/AddParoxo';
 
+import ProtectedRoute from "./routes/ProtectedRoutes";
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/profile"  element={<Profile/>}/>
+
+        {/* Public Routes */}
+        <Route path="/index" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/add_area" element={<AddArea />} />
+
+        </Route>
+        {/* <Route path="/profile"  element={<Profile/>}/> */}
         <Route path="/profile/admin" element={<ProfileAdmin />} />
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
-        <Route path="/add_area" element={<AddArea />} />
+        {/* <Route path="/add_area" element={<AddArea />} /> */}
         <Route path="/my_chats" element={<MyChats />} />
         <Route path="/chatroom" element={<ChatRoom />} />
         <Route path="/matchings" element={<Matchings />} />
@@ -38,9 +51,7 @@ function App() {
         <Route path="/match" element={<Match />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/notifications/admin" element={<NotificationsAdmin />} />
-        <Route path="/index" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        
         <Route path="/users" element={<Users />} />
         <Route path="/paroxoi" element={<Paroxoi />} />
         <Route path="/manage_paroxo" element={<ManageParoxo />} />
