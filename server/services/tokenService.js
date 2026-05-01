@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 let refreshTokens = [];
 
 const generateAccessToken = (id, isAdmin) => {
-    return jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "15m" });
+    return jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "20s" });
 }
 
 const generateRefreshToken = (id, isAdmin) => {
