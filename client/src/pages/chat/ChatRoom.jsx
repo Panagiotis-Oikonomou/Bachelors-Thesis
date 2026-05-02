@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import styles from './ChatRoom.module.css'
-import { Up } from "../components/up/Up";
+import { Up } from "../../components/up/Up";
 
 function ChatRoom() {
     return (

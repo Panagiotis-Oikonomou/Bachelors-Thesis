@@ -3,11 +3,11 @@ import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './NotificationsAdmin.module.css';
 
-import paroxoi from '../assets/images/paroxoi.png';
-import users from '../assets/images/users.png';
-import notifications from '../assets/images/notificationsVisit.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
+import paroxoi from '../../assets/images/paroxoi.png';
+import users from '../../assets/images/users.png';
+import notifications from '../../assets/images/notificationsVisit.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
 
 
 function Notifications() {

@@ -4,11 +4,11 @@ import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './ProfileAdmin.module.css';
 
-import paroxoi from '../assets/images/paroxoi.png';
-import users from '../assets/images/users.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profileVisit.png';
-import menu from '../assets/images/menu.png';
+import paroxoi from '../../assets/images/paroxoi.png';
+import users from '../../assets/images/users.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profileVisit.png';
+import menu from '../../assets/images/menu.png';
 
 function ProfileAdmin() {
     return (

@@ -1,11 +1,11 @@
-import matchings from '../assets/images/mymatchings.png';
-import myareas from '../assets/images/myareas.png';
-import criteria from '../assets/images/criteria.png';
-import match from '../assets/images/match.png';
-import chats from '../assets/images/chats.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
+import matchings from '../../assets/images/mymatchings.png';
+import myareas from '../../assets/images/myareas.png';
+import criteria from '../../assets/images/criteria.png';
+import match from '../../assets/images/match.png';
+import chats from '../../assets/images/chats.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
 import  styles from './Up.module.css';
 
 import { Link } from "react-router-dom";

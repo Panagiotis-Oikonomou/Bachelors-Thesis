@@ -3,15 +3,15 @@ import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './Matchings.module.css';
 
-import matchings from '../assets/images/mymatchingsVisit.png';
-import myareas from '../assets/images/myareas.png';
-import criteria from '../assets/images/criteria.png';
-import match from '../assets/images/match.png';
-import chats from '../assets/images/chats.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
-import check from '../assets/images/CheckmarkNew.png';
+import matchings from '../../assets/images/mymatchingsVisit.png';
+import myareas from '../../assets/images/myareas.png';
+import criteria from '../../assets/images/criteria.png';
+import match from '../../assets/images/match.png';
+import chats from '../../assets/images/chats.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
+import check from '../../assets/images/CheckmarkNew.png';
 
 
 function Matchings() {

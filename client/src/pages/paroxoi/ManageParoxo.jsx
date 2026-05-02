@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import styles from './AddParoxo.module.css';
 
-import { UpAdmin } from "../components/up/UpAdmin";
+import { UpAdmin } from "../../components/up/UpAdmin";
 
 
 function Paroxoi() {

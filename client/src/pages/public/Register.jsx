@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
-import useUserRegister from "../hooks/useUserRegister";
+import useUserRegister from "../../hooks/useUserRegister";
 
 function Register() {
     const {

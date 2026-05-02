@@ -3,16 +3,16 @@ import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './Match.module.css';
 
-import matchings from '../assets/images/mymatchings.png';
-import myareas from '../assets/images/myareas.png';
-import criteria from '../assets/images/criteria.png';
-import match from '../assets/images/matchVisit.png';
-import chats from '../assets/images/chats.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
-import larrow from '../assets/images/leftArrowBlack.png';
-import rarrow from '../assets/images/rightArrowBlack.png';
+import matchings from '../../assets/images/mymatchings.png';
+import myareas from '../../assets/images/myareas.png';
+import criteria from '../../assets/images/criteria.png';
+import match from '../../assets/images/matchVisit.png';
+import chats from '../../assets/images/chats.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
+import larrow from '../../assets/images/leftArrowBlack.png';
+import rarrow from '../../assets/images/rightArrowBlack.png';
 
 
 function Match() {

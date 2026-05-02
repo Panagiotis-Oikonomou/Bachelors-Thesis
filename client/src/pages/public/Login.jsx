@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
-import api from "../apiCalls/axiosInstance";
-
+import api from "../../apiCalls/axiosInstance";
 
 function Login() {
     const navigate = useNavigate();

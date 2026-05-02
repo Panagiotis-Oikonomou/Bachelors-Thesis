@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './Users.module.css';
 
-import paroxoi from '../assets/images/paroxoi.png';
-import users from '../assets/images/usersVisit.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
+import paroxoi from '../../assets/images/paroxoi.png';
+import users from '../../assets/images/usersVisit.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
 
 
 function Users(){

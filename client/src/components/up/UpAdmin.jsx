@@ -1,8 +1,8 @@
-import paroxoi from '../assets/images/paroxoi.png';
-import users from '../assets/images/users.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
+import paroxoi from '../../assets/images/paroxoi.png'
+import users from '../../assets/images/users.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
 import styles from './UpAdmin.module.css';
 
 import { Link } from "react-router-dom";

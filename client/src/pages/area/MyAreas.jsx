@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate} from "react-router-dom";
 import styles from './MyAreas.module.css'
-import matchings from '../assets/images/mymatchings.png';
-import myareas from '../assets/images/myareasVisit.png';
-import criteria from '../assets/images/criteria.png';
-import match from '../assets/images/match.png';
-import chats from '../assets/images/chats.png';
-import notifications from '../assets/images/notifications.png';
-import profile from '../assets/images/profile.png';
-import menu from '../assets/images/menu.png';
-import plus from '../assets/images/plus.png';
+
+import matchings from '../../assets/images/mymatchings.png';
+import myareas from '../../assets/images/myareasVisit.png';
+import criteria from '../../assets/images/criteria.png';
+import match from '../../assets/images/match.png';
+import chats from '../../assets/images/chats.png';
+import notifications from '../../assets/images/notifications.png';
+import profile from '../../assets/images/profile.png';
+import menu from '../../assets/images/menu.png';
+import plus from '../../assets/images/plus.png';
 
 function MyAreas() {
     return (

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styles from './AddArea.module.css';
-import MyComponent from "../components/maps/MyComponent";
-import useUserAddArea from "../hooks/useUserAddArea";
-import { Up } from "../components/up/Up";
-import api from "../apiCalls/axiosInstance";
+import MyComponent from "../../components/maps/MyComponent";
+import useUserAddArea from "../../hooks/useUserAddArea";
+import { Up } from "../../components/up/Up";
+
+import api from "../../apiCalls/axiosInstance";
 
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
-import map from '../assets/images/map.png';
+import map from '../../assets/images/map.png';
 
 function AddArea() {
     const [location, setLocation] = useState(null);
