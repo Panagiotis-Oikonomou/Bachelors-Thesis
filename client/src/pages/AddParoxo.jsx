@@ -3,10 +3,10 @@ import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import styles from './AddParoxo.module.css';
 
-import { UpAdmin } from "../components/UpAdmin";
+import { UpAdmin } from "../components/up/UpAdmin";
 
 
-function Paroxoi() {
+function AddParoxo() {
     return (
         <div className={styles.container}>
             <UpAdmin></UpAdmin>
@@ -19,18 +19,18 @@ function Paroxoi() {
             </div> */}
 
             <div className={styles.paroxos}>
+                <p className={styles.titlee}>Δημιουργία καινούργιας περιοχής</p><br/>
                 <form>
-                    Όνομα παρόχου:<br/><input type="text" id="paroxos" value="kati"/>
-
+                    Όνομα Παρόχου Ενέργειας:<br/><input type="text" id="paroxos" required/>
                     <div id="error_msg1"></div><br/>
                     
-                    <div id="error_msg2"></div><br/> 
+                    <div id="error_msg2"></div><br/>    
 
-                    <input type="submit" value="Αποθήκευση αλλαγών"/>
-                </form><br/>
+                    <input type="submit" value="Δημιουργία"/>
+                </form>
             </div>
         </div>
     )
 }
 
-export default Paroxoi;
+export default AddParoxo;

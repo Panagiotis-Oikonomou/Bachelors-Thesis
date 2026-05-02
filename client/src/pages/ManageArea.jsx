@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './ManageArea.module.css';
-import { Up } from "../components/Up";
+import { Up } from "../components/up/Up";
 
 // import matchings from '../assets/images/mymatchings.png';
 // import myareas from '../assets/images/myareas.png';

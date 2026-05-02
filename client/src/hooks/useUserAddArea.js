@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../apiCalls/axiosInstance";
 
-export default function userAddArea() {
+export default function useUserAddArea() {
     const navigate = useNavigate();
     const [areaData, setAreaData] = useState({
         name: "",

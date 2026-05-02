@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styles from './AddArea.module.css';
 import MyComponent from "../components/maps/MyComponent";
-import userAddArea from "../hooks/userAddArea";
-import { Up } from "../components/Up";
+import useUserAddArea from "../hooks/useUserAddArea";
+import { Up } from "../components/up/Up";
 import api from "../apiCalls/axiosInstance";
 
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
@@ -12,7 +12,7 @@ function AddArea() {
     const [location, setLocation] = useState(null);
     const {
         areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
-    } = userAddArea();
+    } = useUserAddArea();
 
     useEffect(() => {
         if (location) {

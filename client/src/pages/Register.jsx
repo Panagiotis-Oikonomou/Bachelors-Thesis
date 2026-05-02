@@ -1,17 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
-import userRegister from "../hooks/userRegister";
-
+import useUserRegister from "../hooks/useUserRegister";
 
 function Register() {
-    const userId = 10;
     const {
             formData, conPass, errors, providers, cpswError, cpswMatch,
             allError, showConfPassword, showPassword,
             setShowConfPassword, setShowPassword, 
             handleChange, handleSubmit
-        } = userRegister(userId);
+        } = useUserRegister();
     return (
         <div className={styles.container}>
             <div className={styles.header}>Register Form</div>

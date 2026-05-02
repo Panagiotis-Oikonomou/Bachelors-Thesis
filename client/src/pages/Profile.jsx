@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import styles from './Profile.module.css';
-import userProfile from "../hooks/userProfile";
+import useUserProfile from '../hooks/useUserProfile';
 
 import matchings from '../assets/images/mymatchings.png';
 import myareas from '../assets/images/myareas.png';
@@ -19,8 +19,7 @@ function Profile() {
         showPassword, setShowPassword,
         showConfPassword, setShowConfPassword,
         handleChange, handleSubmit, logout
-    } = userProfile();
-
+    } = useUserProfile();
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />

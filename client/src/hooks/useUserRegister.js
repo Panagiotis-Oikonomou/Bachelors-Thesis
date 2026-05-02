@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/registerApiChecks.js";
 import { getProviders } from "../apiCalls/getProviders.js";
 
-export default function userRegister(userId) {
+export default function useUserRegister() {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
