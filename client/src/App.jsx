@@ -28,23 +28,28 @@ import Paroxoi from './pages/paroxoi/Paroxoi';
 import ManageParoxo from './pages/paroxoi/ManageParoxo';
 import AddParoxo from './pages/paroxoi/AddParoxo';
 
-import ProtectedRoute from "./routes/ProtectedRoutes";
+import Layout from "./layouts/Layout";
+import RequiredAuth from "./pages/RequiredAuth";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+      <Route path="/" element={<Layout />}>
 
         {/* Public Routes */}
-        <Route path="/index" element={<Index />} />
+        <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<Profile />} />
+        <Route element={<RequiredAuth />}>
           <Route path="/add_area" element={<AddArea />} />
-
+          <Route path="/profile" element={<Profile />} />
         </Route>
+
+        {/* <Route path="/add_area" element={<AddArea />} />
+        <Route path="/profile" element={<Profile />} /> */}
+
+
         <Route path="/profile/admin" element={<ProfileAdmin />} />
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
@@ -55,13 +60,13 @@ function App() {
         <Route path="/match" element={<Match />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/notifications/admin" element={<NotificationsAdmin />} />
-        
+
         <Route path="/users" element={<Users />} />
         <Route path="/paroxoi" element={<Paroxoi />} />
         <Route path="/manage_paroxo" element={<ManageParoxo />} />
         <Route path="/add_paroxo" element={<AddParoxo />} />
-      </Routes>
-    </BrowserRouter>
+      </Route>
+    </Routes>
   )
 }
 export default App;

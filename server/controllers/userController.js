@@ -37,13 +37,15 @@ exports.login = async (req, res) => {
             const accessToken = tokenService.generateAccessToken(rows[0].userid, false);
             const refreshToken = tokenService.generateRefreshToken(rows[0].userid, false);
             tokenService.storeRefreshTokens(refreshToken);
-            res.json({ exists: true, isAdmin:false, accessToken, refreshToken });
+            // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000});
+            res.json({ exists: true, isAdmin:false, accessToken });
         }
         else if (rows2.length > 0) {
             const accessToken = tokenService.generateAccessToken(rows2[0].userid, true);
             const refreshToken = tokenService.generateRefreshToken(rows2[0].userid, true);
             tokenService.storeRefreshTokens(refreshToken);
-            res.json({ exists: true, isAdmin:true,accessToken, refreshToken });
+            // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000});
+            res.json({ exists: true, isAdmin:true,accessToken });
         }
         else return res.json({ exists: false });
     }

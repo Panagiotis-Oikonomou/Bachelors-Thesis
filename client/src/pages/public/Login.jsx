@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// import AuthContext from '../../context/AuthProvider';
+import useAuth from "../../hooks/useAuth";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from './LoginRegister.module.css';
 import api from "../../apiCalls/axiosInstance";
 
 function Login() {
+    const { setAuth } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
     const [showPassword, setShowPassword] = useState(false);
     const [notFound, setNotFound] = useState({ notf: "" });
     const [loginData, setLoginData] = useState({
@@ -25,16 +30,29 @@ function Login() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        api.post('/users/login', { usr: loginData.usr, psw: loginData.psw })
+        api.post('/users/login', { usr: loginData.usr, psw: loginData.psw }, { withCredentials: true })
             .then((res) => {
                 if (res.data.exists) {
-                    localStorage.setItem("accessToken", res.data.accessToken);
-                    localStorage.setItem("refreshToken", res.data.refreshToken);
-                    if(res.data.isAdmin){
-                        navigate('/profile/admin');
+                    console.log(res.data);
+                    // localStorage.setItem("accessToken", res.data.accessToken);
+                    // localStorage.setItem("refreshToken", res.data.refreshToken);
+                    const accessToken = res.data.accessToken;
+                    setAuth({ accessToken });
+                    // setAuth(res.data.accessToken);
+                    console.log(from);
+                    if (res.data.isAdmin) {
+                        if (from !== "/") {
+                            navigate(from, { replace: true });
+                        }
+                        else navigate('/profile/admin', {replace:true});
+                        // '/profile/admin'
                     }
-                    else{
-                        navigate('/profile');
+                    else {
+                        // navigate('/profile');
+                        if (from !== "/") {
+                            navigate(from, { replace: true });
+                        }
+                        else navigate('/profile', {replace:true});
                     }
                 }
                 else {

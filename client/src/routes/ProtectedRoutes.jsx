@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
 import { isTokenExpired, tryRefreshToken } from "../utils/auth";
 
 const ProtectedRoute = () => {

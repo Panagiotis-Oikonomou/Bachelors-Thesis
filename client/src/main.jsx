@@ -5,6 +5,9 @@ import './assets/css/global.css';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+import { AuthProvider } from "./context/AuthProvider.jsx";
+import { BrowserRouter, Routes } from "react-router-dom";
+
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -15,6 +18,10 @@ L.Icon.Default.mergeOptions({
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <AuthProvider>
+          <App/>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

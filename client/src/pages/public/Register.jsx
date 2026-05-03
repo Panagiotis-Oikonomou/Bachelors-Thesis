@@ -5,55 +5,62 @@ import useUserRegister from "../../hooks/useUserRegister";
 
 function Register() {
     const {
-            formData, conPass, errors, providers, cpswError, cpswMatch,
-            allError, showConfPassword, showPassword,
-            setShowConfPassword, setShowPassword, 
-            handleChange, handleSubmit
-        } = useUserRegister();
+        formData, conPass, errors, providers, cpswError, cpswMatch,
+        allError, showConfPassword, showPassword,
+        setShowConfPassword, setShowPassword,
+        handleChange, handleSubmit
+    } = useUserRegister();
     return (
         <div className={styles.container}>
             <div className={styles.header}>Register Form</div>
             <div className={styles.registerForm}>
                 <form onSubmit={handleSubmit}>
                     <p className={styles.titlee}>Πρέπει να συμπληρώσεται όλα τα πεδία της φόρμας</p><br />
-                    <div className={styles.formData}><label>Όνομα<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="fname">Όνομα<span className={styles.must}>*</span></label><br />
                         <input
                             type="text"
+                            id="fname"
                             name="fname"
                             value={formData.fname}
                             required
                             onChange={handleChange}
                             className={errors.fname ? styles.inputError : ""}
+                            autoFocus
+                            autoComplete="off"
                         />
                         <div className={styles.errorMsg}>{errors.fname}</div>
                     </div>
 
-                    <div className={styles.formData}><label>Επώνυμο<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="lname">Επώνυμο<span className={styles.must}>*</span></label><br />
                         <input
                             type="text"
+                            id="lname"
                             name="lname"
                             value={formData.lname}
                             required
                             onChange={handleChange}
                             className={errors.lname ? styles.inputError : ""}
+                            autoComplete="off"
                         />
                         <div className={styles.errorMsg}>{errors.lname}</div>
                     </div>
 
-                    <div className={styles.formData}><label>Αριθμός ρολογιού<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="clock">Αριθμός ρολογιού<span className={styles.must}>*</span></label><br />
                         <input
                             type="text"
+                            id="clock"
                             name="clock"
                             value={formData.clock}
                             required
                             onChange={handleChange}
                             className={errors.clock ? styles.inputError : ""}
+                            autoComplete="off"
                         />
                         <div className={styles.errorMsg}>{errors.clock}</div>
                     </div>
 
-                    <div className={styles.formData}><label>Πάροχος ενέργειας<span className={styles.must}>*</span></label><br />
-                        <select name="provider" required onChange={handleChange} value={formData.provider}>
+                    <div className={styles.formData}><label htmlFor="provider">Πάροχος ενέργειας<span className={styles.must}>*</span></label><br />
+                        <select id="provider" name="provider" required onChange={handleChange} value={formData.provider}>
                             <option defaultValue={""}></option>
                             {providers.map((provider) => {
                                 return (
@@ -64,33 +71,38 @@ function Register() {
                         </select>
                     </div>
 
-                    <div className={styles.formData}><label>Email<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="email">Email<span className={styles.must}>*</span></label><br />
                         <input
                             type="email"
+                            id="email"
                             name="email"
                             value={formData.email}
                             required
                             onChange={handleChange}
                             className={errors.email ? styles.inputError : ""}
+                            autoComplete="off"
                         />
                         <div className={styles.errorMsg}>{errors.email}</div>
                     </div>
 
-                    <div className={styles.formData}><label>Username<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="username">Username<span className={styles.must}>*</span></label><br />
                         <input
                             type="text"
+                            id="username"
                             name="username"
                             value={formData.username}
                             required
                             onChange={handleChange}
                             className={errors.username ? styles.inputError : ""}
+                            autoComplete="off"
                         />
                         <div className={styles.errorMsg}>{errors.username}</div>
                     </div>
 
-                    <div className={styles.formData}><label>Password<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="password">Password<span className={styles.must}>*</span></label><br />
                         <input
                             type={showPassword ? "text" : "password"}
+                            id="password"
                             name="password"
                             value={formData.password}
                             required
@@ -101,9 +113,10 @@ function Register() {
                         <div className={styles.errorMsg}>{errors.password}</div>
                     </div>
 
-                    <div className={styles.formData}><label>Confirm Password<span className={styles.must}>*</span></label><br />
+                    <div className={styles.formData}><label htmlFor="cpsw">Confirm Password<span className={styles.must}>*</span></label><br />
                         <input
                             type={showConfPassword ? "text" : "password"}
+                            id="cpsw"
                             name="cpsw"
                             value={conPass.cpsw}
                             required
