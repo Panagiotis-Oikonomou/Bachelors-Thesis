@@ -41,16 +41,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<RequiredAuth />}>
+        <Route element={<RequiredAuth admin={false} />}>
           <Route path="/add_area" element={<AddArea />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
 
-        {/* <Route path="/add_area" element={<AddArea />} />
-        <Route path="/profile" element={<Profile />} /> */}
+        <Route element={<RequiredAuth admin={true} />}>
+          <Route path="/users" element={<Users />} />
+          <Route path="/profile/admin" element={<ProfileAdmin />} />
+        </Route>
 
-
-        <Route path="/profile/admin" element={<ProfileAdmin />} />
+        
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
         <Route path="/my_chats" element={<MyChats />} />
@@ -61,7 +62,7 @@ function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/notifications/admin" element={<NotificationsAdmin />} />
 
-        <Route path="/users" element={<Users />} />
+        {/* <Route path="/users" element={<Users />} /> */}
         <Route path="/paroxoi" element={<Paroxoi />} />
         <Route path="/manage_paroxo" element={<ManageParoxo />} />
         <Route path="/add_paroxo" element={<AddParoxo />} />

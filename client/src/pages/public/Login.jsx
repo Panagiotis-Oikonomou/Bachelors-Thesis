@@ -37,10 +37,11 @@ function Login() {
                     // localStorage.setItem("accessToken", res.data.accessToken);
                     // localStorage.setItem("refreshToken", res.data.refreshToken);
                     const accessToken = res.data.accessToken;
-                    setAuth({ accessToken });
+                    const isAdmin = res.data.isAdmin;
+                    setAuth({ accessToken, isAdmin });
                     // setAuth(res.data.accessToken);
-                    console.log(from);
-                    if (res.data.isAdmin) {
+                    // console.log(from);
+                    if (isAdmin) {
                         if (from !== "/") {
                             navigate(from, { replace: true });
                         }
