@@ -1,12 +1,23 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const tokenService = require('../services/tokenService');
+const { refreshTokens, removeRefreshTokens } = require('../services/tokenService');
 
 exports.logout = async (req, res) => {
-    const refreshToken = req.body.token;
+    // on client also delete the accessToken
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204);
 
-    tokenService.refreshTokens = tokenService.refreshTokens.filter(token => token !== refreshToken);
-    res.status(200).json("You have logout successfully");
+    const refreshToken = cookies.jwt;
+
+    if (!refreshTokens.includes(refreshToken)) {
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: false});
+        return res.sendStatus(204);
+    }
+
+    removeRefreshTokens(refreshToken);
+
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: false});
+    return res.sendStatus(204);
 }
 
 exports.getProfile = async (req, res) => {

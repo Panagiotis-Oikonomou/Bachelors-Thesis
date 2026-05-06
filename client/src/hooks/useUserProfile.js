@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../apiCalls/profileApiChecks.js";
 import { getProviders } from "../apiCalls/getProviders.js";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 import api from "../apiCalls/axiosInstance.js";
 
 export default function useUserProfile() {

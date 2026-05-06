@@ -5,6 +5,7 @@ const ver = require('../middleware/authMiddleware');
 
 router.get("/profile", ver.verify, user.getProfile);
 router.put("/profile", ver.verify,user.updateUser);
-router.post("/logout", ver.verify, user.logout);
+// router.get("/logout", ver.verify, user.logout);
+router.get("/logout", user.logout);
 
 module.exports = router;

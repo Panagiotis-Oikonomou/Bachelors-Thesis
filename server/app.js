@@ -3,22 +3,14 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 // const path = require("path");
 
-// const publicRoutes = require('./routes/publicRoutes');
-// const userRoutes = require("./routes/userRoutes");
-// const pvRoutes = require("./routes/pvRoutes");
-// const areaRoutes = require("./routes/areaRoutes");
-// const providerRoutes = require("./routes/providerRoutes");
-// const validationRoutes = require("./routes/validationRoutes");
-// const tokenServiceRoutes = require('./routes/tokenServiceRoutes');
-
 const app = express();
 
 // app.use(express.static(path.join(__dirname, "public")));
-// youa can have all of this into config/corsOptions.js
-// const whiteList = ['http://localhost:5173', 'http://localhost:5000', 'http://www.google.com'];
+// you can have all of this into config/corsOptions.js
+// const allowedOrigins = ['http://localhost:5173', 'http://localhost:5000', 'http://www.google.com'];
 // const corsOptions = {
 //     origin: (origin, callback) => {
-//         if(whiteList.indexOf(origin) !== -1 || !origin){
+//         if(allowedOrigins.indexOf(origin) !== -1 || !origin){
 //             callback(null, true); 
 //         }
 //         else{
@@ -32,6 +24,13 @@ const app = express();
 //     credentials: true
 // }));
 // until here
+// this is a credentials.js middleware for cors policy import allowedOrigins
+// do here in app.js app.use(credentials); before cors
+// const credentials = (res, res, next) => {
+//     const origin = res.headers.origin;
+//     if(allowedOrigins.includes(origin)) res.header('Access-Control-Allow-Credentials', true);
+//     next();
+// }
 // app.use(cors(corsOptions));
 app.use(cors());
 app.use(express.json());
