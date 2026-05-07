@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-let refreshTokens = [];
+let refreshTokens = new Set();
 
 const generateAccessToken = (id, isAdmin) => {
     return jwt.sign({ id, isAdmin }, process.env.SECRET_JWT_KEY, { expiresIn: "30s" });
@@ -11,11 +11,12 @@ const generateRefreshToken = (id, isAdmin) => {
 }
 
 const storeRefreshTokens = (token) => {
-    refreshTokens.push(token);
+    refreshTokens.add(token);
 }
 
 const removeRefreshTokens = (token) => {
-    refreshTokens = refreshTokens.filter(t => t !== token);
+    // refreshTokens = refreshTokens.filter(t => t !== token);
+    refreshTokens.delete(token);
 }
 
 module.exports = {

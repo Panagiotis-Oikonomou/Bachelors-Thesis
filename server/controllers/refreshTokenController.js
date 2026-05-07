@@ -5,10 +5,9 @@ const refresh = (req, res) => {
     const cookies = req.cookies;
 
     if (!cookies?.jwt) return res.sendStatus(401);
-
     const refreshToken = cookies.jwt;
 
-    if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+    if(!refreshTokens.has(refreshToken)) return res.sendStatus(403);
 
     jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, user) => {
         if (err) {

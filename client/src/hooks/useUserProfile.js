@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../apiCalls/profileApiChecks.js";
 import { getProviders } from "../apiCalls/getProviders.js";
-// import { jwtDecode } from "jwt-decode";
 import api from "../apiCalls/axiosInstance.js";
+import { useNavigate } from "react-router-dom";
 
 export default function useUserProfile() {
+    const navigate = useNavigate();
     const [data, setData] = useState({
         fname: "",
         lname: "",
@@ -212,17 +213,12 @@ export default function useUserProfile() {
 
     async function logout() {
         try {
-            await api.post('/users/logout', {
-                token: localStorage.getItem("refreshToken")
-            }, {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem("accessToken")
-                }
-            });
+            await api.get('/users/logout');
 
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
-
+            navigate('/');
+            
         } catch (err) {
             console.error("Logout failed:", err.response?.data || err.message);
         }

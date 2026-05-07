@@ -2,10 +2,11 @@ import api from "../apiCalls/axiosInstance";
 import useAuth from "./useAuth";
 
 const useRefreshToken = () => {
-    const {setAuth} = useAuth();
+    const {auth, setAuth} = useAuth();
 
     const refresh = async () => {
-        const response = await api.post('/refresh', { withCredentials:true });
+        const response = await api.get('/refresh');
+        // , { withCredentials:true }
 
         setAuth(prev => {
             console.log(JSON.stringify(prev));
