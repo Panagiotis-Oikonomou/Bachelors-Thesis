@@ -10,13 +10,13 @@ exports.logout = async (req, res) => {
     const refreshToken = cookies.jwt;
 
     if (!refreshTokens.includes(refreshToken)) {
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: false});
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true});
         return res.sendStatus(204);
     }
 
     removeRefreshTokens(refreshToken);
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: false});
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true});
     return res.sendStatus(204);
 }
 

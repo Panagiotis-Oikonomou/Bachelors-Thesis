@@ -1,20 +1,18 @@
 const jwt = require('jsonwebtoken');
 
 exports.verify = (req, res, next) => {
-    // const authHeader = req.headers.authorization;
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers.authorization || req.headers.Authorization;
 
-    if (authHeader) {
-        const token = authHeader.split(" ")[1];
+    if (!authHeader?.startsWith("Bearer ")) return res.sendStatus(401);
 
-        jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
-            // the user here contains the payload
-            if (err) return res.status(403).json("Token is not valid");
+    const token = authHeader.split(" ")[1];
 
-            req.user = user;
-            next();
+    jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
+        // the user here contains the payload id, isAdmin
+        if (err) return res.status(403).json("Token is not valid");
 
-        });
-    }
-    else res.status(401).json("You are not Authenticated");
+        req.user = user;
+        next();
+
+    });
 }

@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
-// const path = require("path");
+const corsOptions = require('./config/corsOptions');
+const credentials = require('./middleware/credentials');
 
 const app = express();
 
@@ -31,8 +32,9 @@ const app = express();
 //     if(allowedOrigins.includes(origin)) res.header('Access-Control-Allow-Credentials', true);
 //     next();
 // }
-// app.use(cors(corsOptions));
-app.use(cors());
+// app.use(cors());
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
