@@ -1,8 +1,8 @@
-import api from "./axiosInstance";
+import axios from "./axios";
 
 export const getProviders = async () => {
     try {
-        const res = await api.get('/providers');
+        const res = await axios.get('/providers');
         return res.data;
     } catch (err) {
         console.error("Error fetching providers:", err);

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../apiCalls/axiosInstance";
+import useAxiosPrivate from "./useAxiosPrivate";
 
 export default function useUserAddArea() {
     const navigate = useNavigate();
+    const axiosPrivate = useAxiosPrivate();
     const [areaData, setAreaData] = useState({
         name: "",
         size: "",
@@ -41,11 +42,11 @@ export default function useUserAddArea() {
         }
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         const hasErrors = Object.values(nameError).some(err => err !== "");
-        const fields = ["lat", "lon", "energy"];
+        const fields = ["lat", "lng", "energy"];
         const isMissing = fields.some(field => areaData[field] === "");
 
         if (hasErrors || isMissing) {
@@ -61,15 +62,12 @@ export default function useUserAddArea() {
             lng: Number(areaData.lng),
             ac: Number(areaData.energy)
         };
-        api.post('/areas', send, {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem("accessToken")
-            }
-        })
-            .then((res) => {
-                navigate('/profile');
-            })
-            .catch((err) => console.log(err));
+        try {
+            await axiosPrivate.post('/areas', send);
+            navigate('/profile');
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return {

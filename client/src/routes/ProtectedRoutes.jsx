@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { isTokenExpired, tryRefreshToken } from "../utils/auth";
+// not using it now
 
 const ProtectedRoute = () => {
     const location = useLocation();
@@ -29,13 +30,9 @@ const ProtectedRoute = () => {
         checkAuth();
     }, []);
 
-    if (isAuth === null) {
-        return <div>Loading...</div>;
-    }
+    if (isAuth === null) return <div>Loading...</div>;
 
-    if (!isAuth) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
-    }
+    if (!isAuth) return <Navigate to="/login" state={{ from: location }} replace />;
 
     return <Outlet />;
 };

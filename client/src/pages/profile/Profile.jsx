@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { Link } from "react-router-dom";
 import styles from './Profile.module.css';
 import useUserProfile from '../../hooks/useUserProfile';
@@ -20,6 +20,7 @@ function Profile() {
         showConfPassword, setShowConfPassword,
         handleChange, handleSubmit, logout
     } = useUserProfile();
+
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -35,12 +36,13 @@ function Profile() {
 
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
-                    <button className={styles.logout} onClick={logout}><Link to='/index'>Logout</Link></button>
+                    <button className={styles.logout} onClick={logout}>Logout</button>
                 </div>
                 <form onSubmit={handleSubmit} autoComplete="off">
-                    <div className={styles.profileData}><label>Ονομα</label><br />
+                    <div className={styles.profileData}><label htmlFor="fname">Ονομα</label><br />
                         <input
                             type="text"
+                            id="fname"
                             name="fname"
                             value={data.fname}
                             onChange={handleChange}
@@ -49,9 +51,10 @@ function Profile() {
                         <div className={styles.errorMsg}>{errors.fname}</div>
                     </div>
 
-                    <div className={styles.profileData}><label>Επώνυμο</label><br />
+                    <div className={styles.profileData}><label htmlFor="lname">Επώνυμο</label><br />
                         <input
                             type="text"
+                            id="lname"
                             name="lname"
                             value={data.lname}
                             onChange={handleChange}
@@ -60,9 +63,10 @@ function Profile() {
                         <div className={styles.errorMsg}>{errors.lname}</div>
                     </div>
 
-                    <div className={styles.profileData}><label>Ρολόι</label><br />
+                    <div className={styles.profileData}><label htmlFor="clock">Ρολόι</label><br />
                         <input
                             type="text"
+                            id="clock"
                             name="clock"
                             value={data.clock}
                             onChange={handleChange}
@@ -71,8 +75,8 @@ function Profile() {
                         <div className={styles.errorMsg}>{errors.clock}</div>
                     </div>
 
-                    <div className={styles.profileData}><label>Πάροχος</label><br />
-                        <select name="provider" onChange={handleChange} value={data.provider}>
+                    <div className={styles.profileData}><label htmlFor="provider">Πάροχος</label><br />
+                        <select id="provider" name="provider" onChange={handleChange} value={data.provider}>
                             {/* key={userId} */}
                             <option defaultValue={data.provider} >{data.provider}</option>
                             {providers.map((provider) => {
@@ -84,9 +88,10 @@ function Profile() {
                         </select>
                     </div>
 
-                    <div className={styles.profileData}><label>Email</label><br />
+                    <div className={styles.profileData}><label htmlFor="email">Email</label><br />
                         <input
                             type="text"
+                            id="email"
                             name="email"
                             value={data.email}
                             onChange={handleChange}
@@ -95,9 +100,10 @@ function Profile() {
                         <div className={styles.errorMsg}>{errors.email}</div>
                     </div>
 
-                    <div className={styles.profileData}><label>Username</label><br />
+                    <div className={styles.profileData}><label htmlFor="username">Username</label><br />
                         <input
                             type="text"
+                            id="username"
                             name="username"
                             value={data.username}
                             onChange={handleChange}
@@ -106,9 +112,10 @@ function Profile() {
                         <div className={styles.errorMsg}>{errors.username}</div>
                     </div>
 
-                    <div className={styles.profileData}><label>Password</label><br />
+                    <div className={styles.profileData}><label htmlFor="password">Password</label><br />
                         <input
                             type={showPassword ? "text" : "password"}
+                            id="password"
                             name="password"
                             value={data.password}
                             onChange={handleChange}
@@ -119,9 +126,10 @@ function Profile() {
                         <div className={styles.errorMsg}>{errors.password}</div>
                     </div>
 
-                    <div className={styles.profileData}><label>Confirm Password</label><br />
+                    <div className={styles.profileData}><label htmlFor="cpsw">Confirm Password</label><br />
                         <input
                             type={showConfPassword ? "text" : "password"}
+                            id="cpsw"
                             name="cpsw"
                             value={conPass.cpsw}
                             onChange={handleChange}
@@ -136,7 +144,8 @@ function Profile() {
 
                     <div className={styles.errorMsg}>{allError.all}</div>
                     <div className={styles.pswmatch}>{saved.saved}</div>
-                    <input type="submit" value="Αποθήκευση αλλαγών" disabled={loading} />
+                    <input type="submit" value="Αποθήκευση αλλαγών"  />
+                    {/* disabled={loading} */}
                 </form>
             </div>
         </div>

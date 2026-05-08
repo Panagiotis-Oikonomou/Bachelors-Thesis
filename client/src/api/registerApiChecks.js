@@ -1,8 +1,8 @@
 import debounce from "lodash/debounce";
-import api from "./axiosInstance";
+import axios from "./axios";
 
 export const checkClock = (setErrors) => debounce((clock) => {
-    api.get(`/validate/clock?clock=${clock}`)
+    axios.get(`/validate/clock?clock=${clock}`)
         .then((res) => {
             if (res.data.exists) setErrors(prev => ({ ...prev, clock: "Υπάρχει ήδη αυτό το ρολόϊ." }));
         })
@@ -10,7 +10,7 @@ export const checkClock = (setErrors) => debounce((clock) => {
 }, 500);
 
 export const checkUsername = (setErrors) => debounce((username) => {
-    api.get(`/validate/username?username=${username}`)
+    axios.get(`/validate/username?username=${username}`)
         .then((res) => {
             if (res.data.exists) setErrors(prev => ({ ...prev, username: "Υπάρχει χρήστης με αυτό το username." }));
         })
@@ -18,7 +18,7 @@ export const checkUsername = (setErrors) => debounce((username) => {
 }, 500);
 
 export const checkEmail = (setErrors) => debounce((email) => {
-    api.get(`/validate/email?email=${email}`)
+    axios.get(`/validate/email?email=${email}`)
         .then((res) => {
             if (res.data.exists) setErrors(prev => ({ ...prev, email: "Υπάρχει ήδη αυτό το email." }));
         })

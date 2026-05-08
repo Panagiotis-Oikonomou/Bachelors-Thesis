@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-// import AuthContext from '../../context/AuthProvider';
+import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from './LoginRegister.module.css';
-import api from "../../apiCalls/axiosInstance";
+import axios from "../../api/axios";
 
 function Login() {
     const { setAuth } = useAuth();
@@ -30,30 +29,23 @@ function Login() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        api.post('/users/login', { usr: loginData.usr, psw: loginData.psw }, { withCredentials: true })
+        axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw }, { withCredentials: true })
             .then((res) => {
                 if (res.data.exists) {
-                    console.log(res.data);
-                    // localStorage.setItem("accessToken", res.data.accessToken);
-                    // localStorage.setItem("refreshToken", res.data.refreshToken);
                     const accessToken = res.data.accessToken;
                     const isAdmin = res.data.isAdmin;
                     setAuth({ accessToken, isAdmin });
-                    // setAuth(res.data.accessToken);
-                    // console.log(from);
                     if (isAdmin) {
                         if (from !== "/") {
                             navigate(from, { replace: true });
                         }
-                        else navigate('/profile/admin', {replace:true});
-                        // '/profile/admin'
+                        else navigate('/profile/admin', { replace: true });
                     }
                     else {
-                        // navigate('/profile');
                         if (from !== "/") {
                             navigate(from, { replace: true });
                         }
-                        else navigate('/profile', {replace:true});
+                        else navigate('/profile', { replace: true });
                     }
                 }
                 else {
@@ -70,22 +62,26 @@ function Login() {
             <div className={styles.loginForm}>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formData}>
-                        <label>Username</label><br />
+                        <label htmlFor="usr">Username</label><br />
                         <input
                             type="text"
+                            id="usr"
                             name="usr"
                             required
                             autoFocus
+                            autoComplete="on"
                             onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
                         />
                     </div>
 
                     <div className={styles.formData}>
-                        <label>Password</label><br />
+                        <label htmlFor="psw">Password</label><br />
                         <input
                             type={showPassword ? "text" : "password"}
+                            id="psw"
                             name="psw"
                             required
+                            autoComplete="on"
                             onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
                         /><br />
                         <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
@@ -94,11 +90,9 @@ function Login() {
                     <input type="submit" value="Login" />
                 </form>
                 <p>Δεν έχεις λογαριασμό; κάνε <Link to='/register'>Εγγραφή</Link></p>
-
             </div>
-
         </div>
-    )
+    );
 }
 
 export default Login;

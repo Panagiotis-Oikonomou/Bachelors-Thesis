@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
-import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../apiCalls/profileApiChecks.js";
-import { getProviders } from "../apiCalls/getProviders.js";
-import api from "../apiCalls/axiosInstance.js";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../api/profileApiChecks";
+import { getProviders } from "../api/getProviders.js";
+import { useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "./useAxiosPrivate.js";
+import axios from "../api/axios.js";
 
 export default function useUserProfile() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const axiosPrivate  = useAxiosPrivate();
     const [data, setData] = useState({
         fname: "",
         lname: "",
@@ -47,11 +50,7 @@ export default function useUserProfile() {
     }, []);
 
     useEffect(() => {
-        api.get('/users/profile', {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem("accessToken")
-            }
-        })
+        axiosPrivate.get('/users/profile')
             .then((res) => {
                 if (res.data) {
                     setData(prev => ({...prev, ...res.data}));
@@ -79,9 +78,9 @@ export default function useUserProfile() {
         }
     }, [saved.saved, allError.all]);
 
-    const checkEmail = checkEmailApi(setErrors);
-    const checkClock = checkClockApi(setErrors);
-    const checkUsername = checkUsernameApi(setErrors);
+    const checkEmail = useMemo(() => checkEmailApi(axiosPrivate, setErrors), []);
+    const checkClock = useMemo(() => checkClockApi(axiosPrivate, setErrors), []);
+    const checkUsername = useMemo(() => checkUsernameApi(axiosPrivate, setErrors), []);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -213,12 +212,8 @@ export default function useUserProfile() {
 
     async function logout() {
         try {
-            await api.get('/users/logout');
-
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
+            await axios.get('/users/logout');
             navigate('/');
-            
         } catch (err) {
             console.error("Logout failed:", err.response?.data || err.message);
         }
@@ -226,8 +221,8 @@ export default function useUserProfile() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        if (loading) return;
-        setLoading(true);
+        // if (loading) return;
+        // setLoading(true);
         const hasErrors = Object.values(errors).some(err => err !== "");
         const hasCpswErrors = Object.values(cpswError).some(err => err !== "");
 
@@ -238,17 +233,9 @@ export default function useUserProfile() {
         }
 
         try {
-            await api.put('/users/profile', data, {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem("accessToken")
-                }
-            });
+            await axiosPrivate.put('/users/profile', data);
 
-            const res = await api.get('/users/profile', {
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem("accessToken")
-                }
-            });
+            const res = await axiosPrivate.get('/users/profile');
             if (res.data) {
                 setData(prev => ({...prev, ...res.data}));
                 setOriginalPassword(res.data.password);
@@ -259,16 +246,16 @@ export default function useUserProfile() {
             setConPass(prev => ({ ...prev, cpsw: "" }));
             setCpswMatch(prev => ({ ...prev, cpsw: "" }));
         }
-        catch (err) { console.log(err); }
-        finally { setLoading(false); }
+        catch (err) { 
+            console.log(err);
+            navigate('/login', { state: { from: location}, replace: true});
+        }
+        // finally { setLoading(false); }
     }
 
     return {
-        data, conPass, errors, providers,
-        cpswError, cpswMatch, cpswRequired,
-        allError, saved, loading, showPassword,
-        setShowPassword, showConfPassword,
-        setShowConfPassword, handleChange,
-        handleSubmit, logout,
+        data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired,
+        allError, saved, loading, showPassword, setShowPassword, showConfPassword,
+        setShowConfPassword, handleChange, handleSubmit, logout,
     };
 }

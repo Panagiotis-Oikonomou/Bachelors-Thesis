@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import api from "../apiCalls/axiosInstance.js";
+import axios from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
-import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../apiCalls/registerApiChecks.js";
-import { getProviders } from "../apiCalls/getProviders.js";
+import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../api/registerApiChecks";
+import { getProviders } from "../api/getProviders.js";
 
 export default function useUserRegister() {
     const navigate = useNavigate();
@@ -173,7 +173,7 @@ export default function useUserRegister() {
             return;
         }
 
-        api.post('/users/register', formData)
+        axios.post('/public/register', formData)
             .then((res) => {
                 navigate('/login');
             })

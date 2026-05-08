@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from './AddArea.module.css';
 import MyComponent from "../../components/maps/MyComponent";
 import useUserAddArea from "../../hooks/useUserAddArea";
 import { Up } from "../../components/up/Up";
 
-import api from "../../apiCalls/axiosInstance";
-
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import map from '../../assets/images/map.png';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function AddArea() {
+    const axiosPrivate = useAxiosPrivate();
     const [location, setLocation] = useState(null);
     const {
         areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
@@ -28,7 +28,7 @@ function AddArea() {
     useEffect(() => {
         if (areaData.lat && areaData.lng && areaData.size) {
             if (panelData.panelType === "vertical") {
-                api.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
+                axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
@@ -40,7 +40,7 @@ function AddArea() {
                     .catch((err) => console.log(err));
             }
             else if (panelData.panelType == "inclined") {
-                api.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
+                axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
@@ -52,7 +52,7 @@ function AddArea() {
                     .catch((err) => console.log(err));
             }
             else if (panelData.panelType == "two") {
-                api.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
+                axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
                         if (energy !== undefined) {
