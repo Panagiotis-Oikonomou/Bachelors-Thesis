@@ -4,11 +4,13 @@ import { getProviders } from "../api/getProviders.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate.js";
 import axios from "../api/axios.js";
+import useLogout from "./useLogout.js";
 
 export default function useUserProfile() {
     const navigate = useNavigate();
     const location = useLocation();
     const axiosPrivate  = useAxiosPrivate();
+    const logout = useLogout();
     const [data, setData] = useState({
         fname: "",
         lname: "",
@@ -209,9 +211,9 @@ export default function useUserProfile() {
         }
     }
 
-    async function logout() {
+    async function signOut() {
         try {
-            await axios.get('/users/logout');
+            await logout();
             navigate('/');
         } catch (err) {
             console.error("Logout failed:", err.response?.data || err.message);
@@ -252,6 +254,6 @@ export default function useUserProfile() {
     return {
         data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired,
         allError, saved, showPassword, setShowPassword, showConfPassword,
-        setShowConfPassword, handleChange, handleSubmit, logout,
+        setShowConfPassword, handleChange, handleSubmit, signOut
     };
 }

@@ -17,7 +17,7 @@ function Profile() {
         cpswRequired, allError, saved,
         showPassword, setShowPassword,
         showConfPassword, setShowConfPassword,
-        handleChange, handleSubmit, logout
+        handleChange, handleSubmit, signOut
     } = useUserProfile();
 
     return (
@@ -35,7 +35,7 @@ function Profile() {
 
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
-                    <button className={styles.logout} onClick={logout}>Logout</button>
+                    <button className={styles.logout} onClick={signOut}>Logout</button>
                 </div>
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <div className={styles.profileData}><label htmlFor="fname">Ονομα</label><br />

@@ -13,12 +13,12 @@ const refresh = (req, res) => {
         if (err) {
             return res.status(403).json("Invalid refresh token");
         }
-
         const newAccessToken = generateAccessToken(user.id, user.isAdmin);
         // if you want generate new refreshToken but first take it out of the db
 
         res.status(200).json({
-            accessToken: newAccessToken
+            accessToken: newAccessToken,
+            isAdmin: user.isAdmin
         });
     });
 }

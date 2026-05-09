@@ -1,5 +1,4 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import MyAreas from "./pages/area/MyAreas";
 import AddArea from "./pages/area/AddArea";
@@ -30,6 +29,7 @@ import AddParoxo from './pages/paroxoi/AddParoxo';
 
 import Layout from "./layouts/Layout";
 import RequiredAuth from "./pages/RequiredAuth";
+import PersistLogin from "./pages/PersistLogin";
 
 function App() {
   return (
@@ -41,17 +41,19 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<RequiredAuth admin={false} />}>
-          <Route path="/add_area" element={<AddArea />} />
-          <Route path="/profile" element={<Profile />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequiredAuth admin={false} />}>
+            <Route path="/add_area" element={<AddArea />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+
+          <Route element={<RequiredAuth admin={true} />}>
+            <Route path="/users" element={<Users />} />
+            <Route path="/profile/admin" element={<ProfileAdmin />} />
+          </Route>
         </Route>
 
-        <Route element={<RequiredAuth admin={true} />}>
-          <Route path="/users" element={<Users />} />
-          <Route path="/profile/admin" element={<ProfileAdmin />} />
-        </Route>
 
-        
         <Route path="/my_areas" element={<MyAreas />} />
         <Route path="/manage_area" element={<ManageArea />} />
         <Route path="/my_chats" element={<MyChats />} />

@@ -5,7 +5,7 @@ import styles from './LoginRegister.module.css';
 import axios from "../../api/axios";
 
 function Login() {
-    const { setAuth } = useAuth();
+    const { setAuth, persist, setPersist } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
@@ -25,6 +25,14 @@ function Login() {
             return () => clearTimeout(timer);
         }
     }, [notFound.notf]);
+
+    const togglePersist = () =>{
+        setPersist(prev => !prev);
+    }
+
+    useEffect(() => {
+        localStorage.setItem("persist", persist);
+    }, [persist])
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -88,6 +96,10 @@ function Login() {
                     </div>
                     <div className={styles.errorMsg}>{notFound.notf}</div>
                     <input type="submit" value="Login" />
+                    <div>
+                        <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
+                        <label htmlFor="persist">Trust this device</label>
+                    </div>
                 </form>
                 <p>Δεν έχεις λογαριασμό; κάνε <Link to='/register'>Εγγραφή</Link></p>
             </div>
