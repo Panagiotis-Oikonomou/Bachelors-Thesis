@@ -38,7 +38,6 @@ export default function useUserProfile() {
     const [cpswRequired, setCpswRequired] = useState(false);
     const [allError, setAllError] = useState({ all: "" });
     const [saved, setSaved] = useState({ saved: "" });
-    const [loading, setLoading] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfPassword, setShowConfPassword] = useState(false);
@@ -221,8 +220,6 @@ export default function useUserProfile() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        // if (loading) return;
-        // setLoading(true);
         const hasErrors = Object.values(errors).some(err => err !== "");
         const hasCpswErrors = Object.values(cpswError).some(err => err !== "");
 
@@ -250,12 +247,11 @@ export default function useUserProfile() {
             console.log(err);
             navigate('/login', { state: { from: location}, replace: true});
         }
-        // finally { setLoading(false); }
     }
 
     return {
         data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired,
-        allError, saved, loading, showPassword, setShowPassword, showConfPassword,
+        allError, saved, showPassword, setShowPassword, showConfPassword,
         setShowConfPassword, handleChange, handleSubmit, logout,
     };
 }

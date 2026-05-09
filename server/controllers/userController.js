@@ -3,13 +3,11 @@ const jwt = require('jsonwebtoken');
 const { refreshTokens, removeRefreshTokens } = require('../services/tokenService');
 
 exports.logout = async (req, res) => {
-    // on client also delete the accessToken
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204);
 
     const refreshToken = cookies.jwt;
 
-    // if (!refreshTokens.includes(refreshToken)) {
     if (!refreshTokens.has(refreshToken)) {
         res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true});
         return res.sendStatus(204);

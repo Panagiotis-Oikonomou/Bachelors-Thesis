@@ -1,4 +1,3 @@
-// import React from 'react';
 import { Link } from "react-router-dom";
 import styles from './Profile.module.css';
 import useUserProfile from '../../hooks/useUserProfile';
@@ -15,7 +14,7 @@ import menu from '../../assets/images/menu.png';
 function Profile() {
     const {
         data, conPass, errors, providers, cpswError, cpswMatch,
-        cpswRequired, allError, saved, loading,
+        cpswRequired, allError, saved,
         showPassword, setShowPassword,
         showConfPassword, setShowConfPassword,
         handleChange, handleSubmit, logout
@@ -145,7 +144,6 @@ function Profile() {
                     <div className={styles.errorMsg}>{allError.all}</div>
                     <div className={styles.pswmatch}>{saved.saved}</div>
                     <input type="submit" value="Αποθήκευση αλλαγών"  />
-                    {/* disabled={loading} */}
                 </form>
             </div>
         </div>
