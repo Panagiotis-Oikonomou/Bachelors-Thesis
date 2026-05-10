@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from './AddArea.module.css';
 import MyComponent from "../../components/maps/MyComponent";
-import useUserAddArea from "../../hooks/useUserAddArea";
+import useUserAddArea from "../../hooks/useAddArea";
 import { Up } from "../../components/up/Up";
 
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'

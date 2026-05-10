@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './LoginRegister.module.css';
-import useUserRegister from "../../hooks/useUserRegister";
+import useRegister from "../../hooks/useRegister";
 
 function Register() {
     const {
@@ -9,7 +9,7 @@ function Register() {
         allError, showConfPassword, showPassword,
         setShowConfPassword, setShowPassword,
         handleChange, handleSubmit
-    } = useUserRegister();
+    } = useRegister();
     return (
         <div className={styles.container}>
             <div className={styles.header}>Register Form</div>
@@ -109,7 +109,7 @@ function Register() {
                             onChange={handleChange}
                             className={errors.password ? styles.inputError : ""}
                         /><br />
-                        <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
+                        <input type="checkbox" id="showpsw" onChange={() => setShowPassword(!showPassword)} /> <label htmlFor="showpsw">Εμφάνιση κωδικού</label>
                         <div className={styles.errorMsg}>{errors.password}</div>
                     </div>
 
@@ -118,16 +118,16 @@ function Register() {
                             type={showConfPassword ? "text" : "password"}
                             id="cpsw"
                             name="cpsw"
-                            value={conPass.cpsw}
+                            value={conPass}
                             required
                             onChange={handleChange}
-                            className={cpswError.cpsw ? styles.inputError : ""}
+                            className={cpswError ? styles.inputError : ""}
                         /><br />
-                        <input type="checkbox" onChange={() => setShowConfPassword(!showConfPassword)} /> Εμφάνιση κωδικού
-                        <div className={styles.errorMsg}>{cpswError.cpsw}</div><br />
-                        <div className={styles.pswmatch}>{cpswMatch.cpsw}</div>
+                        <input type="checkbox" id="showcpsw" onChange={() => setShowConfPassword(!showConfPassword)} /> <label htmlFor="showcpsw"> Εμφάνιση κωδικού </label>
+                        <div className={styles.errorMsg}>{cpswError}</div><br />
+                        <div className={styles.pswmatch}>{cpswMatch}</div>
                     </div>
-                    <div className={styles.errorMsg}>{allError.all}</div>
+                    <div className={styles.errorMsg}>{allError}</div>
                     <input type="submit" value="Εγγραφή" />
                 </form>
                 <p>Έχεις λογαριασμό; κάνε <Link to='/login'>Σύνδεση</Link></p>

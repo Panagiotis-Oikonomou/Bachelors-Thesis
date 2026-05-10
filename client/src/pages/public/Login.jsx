@@ -92,14 +92,15 @@ function Login() {
                             autoComplete="on"
                             onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
                         /><br />
-                        <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
+                        <input type="checkbox" id="showpsw" onChange={() => setShowPassword(!showPassword)} /><label htmlFor="showpsw"> Εμφάνιση κωδικού</label>
                     </div>
-                    <div className={styles.errorMsg}>{notFound.notf}</div>
-                    <input type="submit" value="Login" />
-                    <div>
+
+                    <div className={styles.formData}>
                         <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
                         <label htmlFor="persist">Trust this device</label>
                     </div>
+                    <div className={styles.errorMsg}>{notFound.notf}</div>
+                    <input type="submit" value="Login" />
                 </form>
                 <p>Δεν έχεις λογαριασμό; κάνε <Link to='/register'>Εγγραφή</Link></p>
             </div>

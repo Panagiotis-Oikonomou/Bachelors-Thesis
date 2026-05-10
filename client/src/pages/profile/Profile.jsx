@@ -92,6 +92,7 @@ function Profile() {
                             type="text"
                             id="email"
                             name="email"
+                            autoComplete="off"
                             value={data.email}
                             onChange={handleChange}
                             className={errors.email ? styles.inputError : ""}
@@ -104,6 +105,7 @@ function Profile() {
                             type="text"
                             id="username"
                             name="username"
+                            autoComplete="off"
                             value={data.username}
                             onChange={handleChange}
                             className={errors.username ? styles.inputError : ""}
@@ -121,7 +123,7 @@ function Profile() {
                             className={errors.password ? styles.inputError : ""}
                         />
                         <br />
-                        <input type="checkbox" onChange={() => setShowPassword(!showPassword)} /> Εμφάνιση κωδικού
+                        <input type="checkbox" id="showpsw" onChange={() => setShowPassword(!showPassword)} /> <label htmlFor="showpsw"> Εμφάνιση κωδικού</label>
                         <div className={styles.errorMsg}>{errors.password}</div>
                     </div>
 
@@ -130,19 +132,19 @@ function Profile() {
                             type={showConfPassword ? "text" : "password"}
                             id="cpsw"
                             name="cpsw"
-                            value={conPass.cpsw}
+                            value={conPass}
                             onChange={handleChange}
                             required={cpswRequired}
-                            className={cpswError.cpsw ? styles.inputError : ""}
+                            className={cpswError ? styles.inputError : ""}
                         />
                         <br />
-                        <input type="checkbox" onChange={() => setShowConfPassword(!showConfPassword)} /> Εμφάνιση κωδικού
-                        <div className={styles.errorMsg}>{cpswError.cpsw}</div>
-                        <div className={styles.pswmatch}>{cpswMatch.cpsw}</div><br />
+                        <input type="checkbox" id="showcpsw" onChange={() => setShowConfPassword(!showConfPassword)} /> <label htmlFor="showcpsw">Εμφάνιση κωδικού</label>
+                        <div className={styles.errorMsg}>{cpswError}</div>
+                        <div className={styles.pswmatch}>{cpswMatch}</div><br />
                     </div>
 
-                    <div className={styles.errorMsg}>{allError.all}</div>
-                    <div className={styles.pswmatch}>{saved.saved}</div>
+                    <div className={styles.errorMsg}>{allError}</div>
+                    <div className={styles.pswmatch}>{saved}</div>
                     <input type="submit" value="Αποθήκευση αλλαγών"  />
                 </form>
             </div>
