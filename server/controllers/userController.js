@@ -54,7 +54,8 @@ exports.updateUser = async (req, res) => {
             req.user.id
         ];
         await db.query(sql, values);
-        res.json({ values });
+        // res.json({ values });
+        res.json(req.body);
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong edit user" });

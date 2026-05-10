@@ -5,6 +5,7 @@ import useAxiosPrivate from "./useAxiosPrivate.js";
 import useLogout from "./useLogout.js";
 import useGetProvider from "./useGetProviders.js";
 import userDataValidation from "../utils/userDataValidation.js";
+import { getProviders } from "../api/getProviders.js";
 
 export default function useUserProfile() {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function useUserProfile() {
     const axiosPrivate = useAxiosPrivate();
     const logout = useLogout();
     const providers = useGetProvider();
-    
+
     const [data, setData] = useState({
         fname: "",
         lname: "",
@@ -22,7 +23,6 @@ export default function useUserProfile() {
         username: "",
         password: ""
     });
-
     const [conPass, setConPass] = useState("");
     const [originalPassword, setOriginalPassword] = useState("");
 
@@ -35,7 +35,6 @@ export default function useUserProfile() {
         password: "",
         pswmatch: ""
     });
-
     const [cpswError, setCpswError] = useState("");
     const [cpswMatch, setCpswMatch] = useState("");
     const [cpswRequired, setCpswRequired] = useState(false);
@@ -46,14 +45,18 @@ export default function useUserProfile() {
     const [showConfPassword, setShowConfPassword] = useState(false);
 
     useEffect(() => {
-        axiosPrivate.get('/users/profile')
-            .then((res) => {
+        const getProfile = async () => {
+            try {
+                const res = await axiosPrivate.get('/users/profile');
                 if (res.data) {
                     setData(res.data);
                     setOriginalPassword(res.data.password);
                 }
-            })
-            .catch((err) => { console.log(err); });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        getProfile();
     }, []);
 
     useEffect(() => {
@@ -93,7 +96,7 @@ export default function useUserProfile() {
         let len = trimmed.length;
         let error = userDataValidation(name, trimmed);
 
-        switch(name){
+        switch (name) {
             case "clock": {
                 checkClock(trimmed);
                 break;
@@ -189,9 +192,8 @@ export default function useUserProfile() {
         }
 
         try {
-            await axiosPrivate.put('/users/profile', data);
+            const res = await axiosPrivate.put('/users/profile', data);
 
-            const res = await axiosPrivate.get('/users/profile');
             if (res.data) {
                 setData(res.data);
                 setOriginalPassword(res.data.password);

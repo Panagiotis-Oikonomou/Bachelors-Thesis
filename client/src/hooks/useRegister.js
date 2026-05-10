@@ -28,11 +28,9 @@ export default function useRegister() {
         password: "",
         pswmatch: ""
     });
-
     const [cpswError, setCpswError] = useState("");
     const [cpswMatch, setCpswMatch] = useState("");
     const [allError, setAllError] = useState("");
-
     const [showPassword, setShowPassword] = useState(false);
     const [showConfPassword, setShowConfPassword] = useState(false);
 
@@ -113,7 +111,7 @@ export default function useRegister() {
         }
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         const hasErrors = Object.values(errors).some(err => err !== "");
         const hasCpswErrors = Object.values(cpswError).some(err => err !== "");
@@ -127,11 +125,17 @@ export default function useRegister() {
             return;
         }
 
-        axios.post('/public/register', formData)
-            .then((res) => {
-                navigate('/login');
-            })
-            .catch((err) => console.log(err));
+        try{
+            const res = await axios.post('/public/register', formData);
+            if(res.data) navigate('/login');
+        } catch(err){
+            console.log(err);
+        }
+        // axios.post('/public/register', formData)
+        //     .then((res) => {
+        //         navigate('/login');
+        //     })
+        //     .catch((err) => console.log(err));
     }
 
     return{
