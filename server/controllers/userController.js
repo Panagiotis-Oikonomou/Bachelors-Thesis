@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { refreshTokens, removeRefreshTokens } = require('../services/tokenService');
+const { removeRefreshTokens } = require('../services/tokenService');
 
 exports.logout = async (req, res) => {
     const cookies = req.cookies;
@@ -8,14 +8,18 @@ exports.logout = async (req, res) => {
 
     const refreshToken = cookies.jwt;
 
-    if (!refreshTokens.has(refreshToken)) {
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true});
-        return res.sendStatus(204);
+    jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
+        if (err) {
+            const decodedId = jwt.decode(refreshToken);
+            if (decodedId?.id) removeRefreshTokens(decodedId.id, refreshToken);
+        }
+        else {
+            removeRefreshTokens(decoded.id, refreshToken);
+        }
     }
+    );
 
-    removeRefreshTokens(refreshToken);
-
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true});
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
     return res.sendStatus(204);
 }
 
@@ -54,7 +58,6 @@ exports.updateUser = async (req, res) => {
             req.user.id
         ];
         await db.query(sql, values);
-        // res.json({ values });
         res.json(req.body);
     }
     catch (err) {
