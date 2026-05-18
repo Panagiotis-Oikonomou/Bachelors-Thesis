@@ -35,7 +35,7 @@ function MyAreas() {
             </div>
 
             <div className={styles.areas}>
-                <p>Δημιουργία νέας έκτασης <Link to='/manage_area'><img src={plus} className={styles.plus}/></Link></p>
+                <p>Δημιουργία νέας έκτασης <Link to='/add_area'><img src={plus} className={styles.plus}/></Link></p>
                 <div className={styles.area}>
                     {/* href="managearea.html" */}
                     <Link to='/manage_area'  className={styles.alink}><div className={styles.areaData}>

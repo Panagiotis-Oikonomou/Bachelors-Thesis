@@ -8,18 +8,18 @@ exports.logout = async (req, res) => {
 
     const refreshToken = cookies.jwt;
 
-    jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
-        if (err) {
-            const decodedId = jwt.decode(refreshToken);
-            if (decodedId?.id) removeRefreshTokens(decodedId.id, refreshToken);
-        }
-        else {
-            removeRefreshTokens(decoded.id, refreshToken);
-        }
-    }
-    );
+    // jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
+    //     if (err) {
+    //         const decodedId = jwt.decode(refreshToken);
+    //         if (decodedId?.id) removeRefreshTokens(decodedId.id, refreshToken);
+    //     }
+    //     else {
+    //         removeRefreshTokens(decoded.id, refreshToken);
+    //     }
+    // }
+    // );
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
     return res.sendStatus(204);
 }
 

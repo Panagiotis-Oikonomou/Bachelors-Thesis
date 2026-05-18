@@ -206,7 +206,6 @@ export default function useUserProfile() {
         }
         catch (err) {
             console.log(err);
-            navigate('/login', { state: { from: location }, replace: true });
         }
     }
 

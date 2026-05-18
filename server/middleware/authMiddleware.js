@@ -13,6 +13,5 @@ exports.verify = (req, res, next) => {
 
         req.user = user;
         next();
-
     });
 }

@@ -64,12 +64,11 @@ function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/notifications/admin" element={<NotificationsAdmin />} />
 
-        {/* <Route path="/users" element={<Users />} /> */}
         <Route path="/paroxoi" element={<Paroxoi />} />
         <Route path="/manage_paroxo" element={<ManageParoxo />} />
         <Route path="/add_paroxo" element={<AddParoxo />} />
       </Route>
     </Routes>
-  )
+  );
 }
 export default App;

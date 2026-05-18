@@ -8,10 +8,9 @@ const useRefreshToken = () => {
         const response = await axios.get('/refresh');
 
         setAuth(prev => {
-            return {
-                ...prev,
+            return {...prev,
                 isAdmin: response.data.isAdmin,
-                accessToken: response.data.accessToken};
+            accessToken: response.data.accessToken};
         });
         return response.data.accessToken;
     }

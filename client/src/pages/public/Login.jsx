@@ -26,7 +26,7 @@ function Login() {
         }
     }, [notFound.notf]);
 
-    const togglePersist = () =>{
+    const togglePersist = () => {
         setPersist(prev => !prev);
     }
 
@@ -37,7 +37,7 @@ function Login() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw }, { withCredentials: true })
+        axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw })
             .then((res) => {
                 if (res.data.exists) {
                     const accessToken = res.data.accessToken;

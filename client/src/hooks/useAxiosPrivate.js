@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { axiosPrivate } from "../api/axios";
+import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "./useAuth";
 import useRefreshToken from "./useRefreshToken";
 
 const useAxiosPrivate = () => {
     const refresh = useRefreshToken();
-    const { auth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { auth, setAuth } = useAuth();
 
     useEffect(() => {
         const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -23,18 +26,31 @@ const useAxiosPrivate = () => {
             response => response,
             async (error) => {
                 const prevRequest = error?.config;
-                if (error?.response?.status === 403 && !prevRequest?.sent) {
+                if (error?.response?.status === 401 && !prevRequest?.sent) {
                     prevRequest.sent = true;
                     try {
                         const newAccessToken = await refresh();
-
                         prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
                         return axiosPrivate(prevRequest);
 
                     } catch (err) {
+                        setAuth({});
+                        navigate('/login', {
+                            state: { from: location },
+                            replace: true
+                        });
                         return Promise.reject(err);
                     }
+                }
+
+                if (error?.response?.status === 403) {
+
+                    setAuth({});
+
+                    navigate('/login', {
+                        state: { from: location },
+                        replace: true
+                    });
                 }
                 return Promise.reject(error);
             }
@@ -44,7 +60,7 @@ const useAxiosPrivate = () => {
             axiosPrivate.interceptors.response.eject(responseIntercept);
             axiosPrivate.interceptors.request.eject(requestIntercept);
         }
-    }, [auth, refresh]);
+    }, [auth, refresh, navigate, location, setAuth]);
 
     return axiosPrivate;
 }

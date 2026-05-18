@@ -32,23 +32,23 @@ exports.login = async (req, res) => {
         const [rows] = await db.query(sql, [usr, psw]);
         const [rows2] = await db.query(sql2, [usr, psw]);
 
-        const cookies = req.cookies;
-        if (cookies?.jwt) {
-            const rt = cookies.jwt;
-            const rtDecoded = jwt.decode(rt);
-            if(rtDecoded?.id && hasRefreshToken(rtDecoded.id, rt)) {
-                // console.log('existing session found, rotating refresh token');
-                removeRefreshTokens(rtDecoded.id, rt);
-            }
-            res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
-        }
+        // const cookies = req.cookies;
+        // if (cookies?.jwt) {
+        //     const rt = cookies.jwt;
+        //     const rtDecoded = jwt.decode(rt);
+        //     if(rtDecoded?.id && hasRefreshToken(rtDecoded.id, rt)) {
+        //         console.log('existing session found, rotating refresh token');
+        //         removeRefreshTokens(rtDecoded.id, rt);
+        //     }
+        //     res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: fasle });
+        // }
 
         if (rows.length > 0) {
             const accessToken = generateAccessToken(rows[0].userid, false);
             const refreshToken = generateRefreshToken(rows[0].userid, false);
 
             storeRefreshTokens(refreshToken, rows[0].userid);
-            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 24 * 60 * 60 * 1000 });
             res.json({ exists: true, isAdmin: false, accessToken });
         }
         // else if (rows2.length > 0) {
