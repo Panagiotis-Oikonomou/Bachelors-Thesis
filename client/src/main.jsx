@@ -7,6 +7,7 @@ import L from 'leaflet';
 
 import { AuthProvider } from "./context/AuthProvider.jsx";
 import { BrowserRouter, Routes } from "react-router-dom";
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -15,6 +16,8 @@ L.Icon.Default.mergeOptions({
   iconUrl: new URL('leaflet/dist/images/marker-icon.png', import.meta.url).href,
   shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url).href,
 });
+
+if(import.meta.env.PROD) disableReactDevTools();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
