@@ -1,27 +1,44 @@
-# dependencies
+# Dependencies
 node_modules/
 
-# env files
+# Environment variables
 .env
 .env.*
 !.env.example
 
-# logs
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# build output
+# Build outputs (frontend + backend)
 dist/
 build/
-.next/
 out/
 
-# caches
-.npm
-.eslintcache
+# Vite cache
 .vite/
 
-# OS
+# Next.js
+.next/
+
+# ESLint cache
+.eslintcache
+
+# Coverage reports
+coverage/
+
+# OS files
 .DS_Store
 Thumbs.db
 
+# IDE / editor
+.vscode/
+.idea/
+
+# Database dumps (if you use them)
 *.sql
+
+# Misc
+*.tmp
