@@ -1,12 +1,19 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { removeRefreshTokens } = require('../services/tokenService');
+const { removeRefreshTokens, hasRefreshToken } = require('../services/tokenService');
 
 exports.logout = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204);
-
+    
     const refreshToken = cookies.jwt;
+    const decoded = jwt.decode(refreshToken);
+    if(!hasRefreshToken(decoded.id, refreshToken)) {
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
+        console.log('User not existing');
+        return res.sendStatus(204);
+    }
+        // removeRefreshTokens(decoded.id, refreshToken);
 
     // jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
     //     if (err) {
@@ -18,7 +25,7 @@ exports.logout = async (req, res) => {
     //     }
     // }
     // );
-
+    console.log('User  existing');
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
     return res.sendStatus(204);
 }

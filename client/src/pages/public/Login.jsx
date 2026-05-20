@@ -10,21 +10,21 @@ function Login() {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
     const [showPassword, setShowPassword] = useState(false);
-    const [notFound, setNotFound] = useState({ notf: "" });
+    const [notFound, setNotFound] = useState("");
     const [loginData, setLoginData] = useState({
         usr: "",
         psw: ""
     });
 
     useEffect(() => {
-        if (notFound.notf !== "") {
+        if (notFound !== "") {
             const timer = setTimeout(() => {
-                setNotFound({ ...notFound, notf: "" });
+                setNotFound("");
             }, 5000);
 
             return () => clearTimeout(timer);
         }
-    }, [notFound.notf]);
+    }, [notFound]);
 
     const togglePersist = () => {
         setPersist(prev => !prev);
@@ -40,8 +40,8 @@ function Login() {
         axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw })
             .then((res) => {
                 if (res.data.exists) {
-                    const accessToken = res.data.accessToken;
-                    const isAdmin = res.data.isAdmin;
+                    const accessToken = res.data?.accessToken;
+                    const isAdmin = res.data?.isAdmin;
                     setAuth({ accessToken, isAdmin });
                     if (isAdmin) {
                         if (from !== "/") {
@@ -57,7 +57,7 @@ function Login() {
                     }
                 }
                 else {
-                    setNotFound({ ...notFound, notf: "Το username ή ο κωδικός είναι λάθος" });
+                    setNotFound("Το username ή ο κωδικός είναι λάθος");
                 }
             })
             .catch((err) => console.log(err));
@@ -99,7 +99,7 @@ function Login() {
                         <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
                         <label htmlFor="persist">Trust this device</label>
                     </div>
-                    <div className={styles.errorMsg}>{notFound.notf}</div>
+                    <div className={styles.errorMsg}>{notFound}</div>
                     <input type="submit" value="Login" />
                 </form>
                 <p>Δεν έχεις λογαριασμό; κάνε <Link to='/register'>Εγγραφή</Link></p>

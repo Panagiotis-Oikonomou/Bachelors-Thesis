@@ -143,7 +143,7 @@ export default function useUserProfile() {
         }
 
         if (name === "cpsw") {
-            confirm = trimmed;
+            let confirm = trimmed;
             let len = confirm.length;
             let password = data.password;
 

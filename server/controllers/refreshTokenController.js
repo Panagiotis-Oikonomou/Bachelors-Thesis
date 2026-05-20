@@ -10,7 +10,7 @@ const refresh = (req, res) => {
 
     jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, async (err, user) => {
         if (err) {
-            // res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false});
+            res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false});
             return res.status(403).json("Invalid refresh token");
         }
         // const tokenExists = hasRefreshToken(user.id, refreshToken);
@@ -23,11 +23,11 @@ const refresh = (req, res) => {
 
         // // rotate token
         // removeRefreshTokens(user.id, refreshToken);
-        const tokenExists = await hasRefreshToken(user.id, refreshToken);
+        // const tokenExists = await hasRefreshToken(user.id, refreshToken);
 
-        if (!tokenExists) {
-            return res.sendStatus(403);
-        }
+        // if (!tokenExists) {
+        //     return res.sendStatus(403);
+        // }
 
         const newAccessToken = generateAccessToken(user.id, user.isAdmin);
         // const newRefreshToken = generateRefreshToken(user.id, user.isAdmin);

@@ -32,16 +32,16 @@ exports.login = async (req, res) => {
         const [rows] = await db.query(sql, [usr, psw]);
         const [rows2] = await db.query(sql2, [usr, psw]);
 
-        // const cookies = req.cookies;
-        // if (cookies?.jwt) {
-        //     const rt = cookies.jwt;
-        //     const rtDecoded = jwt.decode(rt);
-        //     if(rtDecoded?.id && hasRefreshToken(rtDecoded.id, rt)) {
-        //         console.log('existing session found, rotating refresh token');
-        //         removeRefreshTokens(rtDecoded.id, rt);
-        //     }
-        //     res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: fasle });
-        // }
+        const cookies = req.cookies;
+        if (cookies?.jwt) {
+            // const rt = cookies.jwt;
+            // const rtDecoded = jwt.decode(rt);
+            // if(rtDecoded?.id && hasRefreshToken(rtDecoded.id, rt)) {
+                console.log('existing session found, rotating refresh token');
+            //     removeRefreshTokens(rtDecoded.id, rt);
+            // }
+            res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
+        }
 
         if (rows.length > 0) {
             const accessToken = generateAccessToken(rows[0].userid, false);

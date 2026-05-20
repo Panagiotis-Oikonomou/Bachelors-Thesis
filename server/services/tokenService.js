@@ -8,7 +8,7 @@ const generateAccessToken = (id, isAdmin) => {
 }
 
 const generateRefreshToken = (id, isAdmin) => {
-    return jwt.sign({ id, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn: '15s'});
+    return jwt.sign({ id, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn: '15m'});
 }
 
 const storeRefreshTokens = (token, id) => {

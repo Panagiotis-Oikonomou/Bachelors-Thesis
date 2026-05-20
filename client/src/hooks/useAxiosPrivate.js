@@ -26,7 +26,7 @@ const useAxiosPrivate = () => {
             response => response,
             async (error) => {
                 const prevRequest = error?.config;
-                if (error?.response?.status === 401 && !prevRequest?.sent) {
+                if (error?.response?.status === 403 && !prevRequest?.sent) {
                     prevRequest.sent = true;
                     try {
                         const newAccessToken = await refresh();
@@ -42,16 +42,6 @@ const useAxiosPrivate = () => {
                         return Promise.reject(err);
                     }
                 }
-
-                if (error?.response?.status === 403) {
-
-                    setAuth({});
-
-                    navigate('/login', {
-                        state: { from: location },
-                        replace: true
-                    });
-                }
                 return Promise.reject(error);
             }
         );
@@ -60,7 +50,7 @@ const useAxiosPrivate = () => {
             axiosPrivate.interceptors.response.eject(responseIntercept);
             axiosPrivate.interceptors.request.eject(requestIntercept);
         }
-    }, [auth, refresh, navigate, location, setAuth]);
+    }, [auth, refresh, setAuth, navigate, location]);
 
     return axiosPrivate;
 }
