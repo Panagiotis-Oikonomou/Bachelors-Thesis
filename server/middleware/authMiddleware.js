@@ -7,11 +7,11 @@ exports.verify = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
-        // the user here contains the payload id, isAdmin
+    jwt.verify(token, process.env.SECRET_JWT_KEY, (err, decoded) => {
+        // the decoded here contains the payload id, isAdmin
         if (err) return res.status(403).json("Token is not valid");
 
-        req.user = user;
+        req.user = decoded;
         next();
     });
 }

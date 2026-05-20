@@ -1,19 +1,37 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { removeRefreshTokens, hasRefreshToken } = require('../services/tokenService');
+const { removeRefreshToken, hasRefreshToken, clearRefreshCookie, findUserByRefreshToken, showTokens } = require('../services/tokenService');
 
 exports.logout = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204);
-    
+
     const refreshToken = cookies.jwt;
-    const decoded = jwt.decode(refreshToken);
-    if(!hasRefreshToken(decoded.id, refreshToken)) {
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
-        console.log('User not existing');
-        return res.sendStatus(204);
-    }
-        // removeRefreshTokens(decoded.id, refreshToken);
+    // const foundUser = findUserByRefreshToken(refreshToken);
+
+    // if(!foundUser){
+    //     clearRefreshCookie(res);
+    //     return res.sendStatus(204);
+    // }
+        
+    
+    // const decoded = jwt.decode(refreshToken);
+    // if(!hasRefreshToken(decoded.id, refreshToken)) {
+    //     clearRefreshCookie(res);
+    //     console.log('User not existing');
+    //     return res.sendStatus(204);
+    // }
+    // removeRefreshTokens(decoded.id, refreshToken);
+
+    jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
+        if (!err) {
+            const exists = hasRefreshToken(decoded.id, refreshToken);
+            if (exists) {
+                removeRefreshToken(decoded.id, refreshToken);
+                console.log('refresh token removed');
+            }
+        }
+    });
 
     // jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
     //     if (err) {
@@ -25,8 +43,8 @@ exports.logout = async (req, res) => {
     //     }
     // }
     // );
-    console.log('User  existing');
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
+    showTokens();
+    clearRefreshCookie(res);
     return res.sendStatus(204);
 }
 

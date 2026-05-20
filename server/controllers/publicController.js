@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { generateAccessToken, generateRefreshToken, storeRefreshTokens, removeRefreshTokens, hasRefreshToken } = require('../services/tokenService');
+const { generateAccessToken, generateRefreshToken, storeRefreshTokens, removeRefreshToken, hasRefreshToken, clearRefreshCookie, setRefreshCookie, showTokens, removeAllUserTokens } = require('../services/tokenService');
 
 exports.register = async (req, res) => {
     try {
@@ -33,14 +33,32 @@ exports.login = async (req, res) => {
         const [rows2] = await db.query(sql2, [usr, psw]);
 
         const cookies = req.cookies;
+        console.log(`cookie available at: ${JSON.stringify(cookies)}`);
+        showTokens();
         if (cookies?.jwt) {
-            // const rt = cookies.jwt;
-            // const rtDecoded = jwt.decode(rt);
+            const rt = cookies.jwt;
+            const rtDecoded = jwt.decode(rt);
             // if(rtDecoded?.id && hasRefreshToken(rtDecoded.id, rt)) {
-                console.log('existing session found, rotating refresh token');
-            //     removeRefreshTokens(rtDecoded.id, rt);
+            //     console.log('existing session found, rotating refresh token');
+            //     removeRefreshToken(rtDecoded.id, rt);
             // }
-            res.clearCookie('jwt', { httpOnly: true, sameSite: 'Lax', secure: false });
+            // clearRefreshCookie(res);
+
+            jwt.verify(rt, process.env.SECRET_REFRESH_JWT_KEY, async (err, decoded) => {
+                if(err) console.log('Invalid refresh token');
+                const tokenExists = hasRefreshToken(decoded.id, rt);
+                if(!tokenExists){
+                    console.log('attempted refresh token reuse');
+                    removeAllUserTokens(decoded.id)
+                }
+                else removeRefreshToken(decoded.id, rt);
+            });
+            // const foundToken = hasRefreshToken(rtDecoded.id, rt);
+            // if(!foundToken){
+            //     console.log('attempted refresh token reuse at login');
+            //     removeAllUserTokens(rtDecoded.id);
+            // }
+            clearRefreshCookie(res);
         }
 
         if (rows.length > 0) {
@@ -48,7 +66,8 @@ exports.login = async (req, res) => {
             const refreshToken = generateRefreshToken(rows[0].userid, false);
 
             storeRefreshTokens(refreshToken, rows[0].userid);
-            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'Lax', secure: false, maxAge: 24 * 60 * 60 * 1000 });
+            setRefreshCookie(res, refreshToken);
+            showTokens();
             res.json({ exists: true, isAdmin: false, accessToken });
         }
         // else if (rows2.length > 0) {
