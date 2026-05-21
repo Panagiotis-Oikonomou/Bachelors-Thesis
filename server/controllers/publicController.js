@@ -37,12 +37,7 @@ exports.login = async (req, res) => {
         showTokens();
         if (cookies?.jwt) {
             const rt = cookies.jwt;
-            const rtDecoded = jwt.decode(rt);
-            // if(rtDecoded?.id && hasRefreshToken(rtDecoded.id, rt)) {
-            //     console.log('existing session found, rotating refresh token');
-            //     removeRefreshToken(rtDecoded.id, rt);
-            // }
-            // clearRefreshCookie(res);
+            // const rtDecoded = jwt.decode(rt);
 
             jwt.verify(rt, process.env.SECRET_REFRESH_JWT_KEY, async (err, decoded) => {
                 if(err) console.log('Invalid refresh token');
@@ -53,11 +48,6 @@ exports.login = async (req, res) => {
                 }
                 else removeRefreshToken(decoded.id, rt);
             });
-            // const foundToken = hasRefreshToken(rtDecoded.id, rt);
-            // if(!foundToken){
-            //     console.log('attempted refresh token reuse at login');
-            //     removeAllUserTokens(rtDecoded.id);
-            // }
             clearRefreshCookie(res);
         }
 

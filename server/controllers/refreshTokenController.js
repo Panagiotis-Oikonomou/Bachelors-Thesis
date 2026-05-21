@@ -9,6 +9,9 @@ const refresh = (req, res) => {
     clearRefreshCookie(res);
 
     const userId = findUserByRefreshToken(refreshToken);
+    console.log('cookie token:', refreshToken);
+    showTokens();
+    console.log('found userId:', userId);
 
     // Detected refresh token reuse, we got a cookie but there was no user with that refresh token
     if (!userId) {
@@ -21,54 +24,34 @@ const refresh = (req, res) => {
         return res.sendStatus(403);
     }
 
-    // removeRefreshToken(userId, refreshToken);
-
     jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, user) => {
-        if (userId !== user.id) {
-            // clearRefreshCookie(res);
-            removeRefreshToken(user.id, refreshToken);
-            return res.sendStatus(403);
-        }
-
         if (err) {
             console.log('expired refresh token');
             const dec = jwt.decode(refreshToken);
-            if(dec?.id) removeRefreshToken(dec.id, refreshToken)
+            if (dec?.id) removeRefreshToken(dec.id, refreshToken)
             // removeRefreshToken(user.id, refreshToken);
             showTokens();
             return res.sendStatus(403);
         }
-        
 
-        // Refresh token still valid
-        // const tokenExists = hasRefreshToken(user.id, refreshToken);
-
-        // // // sm tried to use the refresh token not the user
-        // if(!tokenExists){
-        //     removeAllUserTokens(user.id);
-        //     return res.sendStatus(403);
-        // }
-
-        // // rotate token
-        // removeRefreshTokens(user.id, refreshToken);
-        // const tokenExists = await hasRefreshToken(user.id, refreshToken);
-
-        // if (!tokenExists) {
-        //     return res.sendStatus(403);
-        // }
-
-        removeRefreshToken(user.id, refreshToken);
+        if (userId !== user.id) {
+            clearRefreshCookie(res);
+            removeRefreshToken(user.id, refreshToken);
+            return res.sendStatus(403);
+        }
 
         const newAccessToken = generateAccessToken(user.id, user.isAdmin);
         const newRefreshToken = generateRefreshToken(user.id, user.isAdmin);
         storeRefreshTokens(newRefreshToken, user.id);
+        removeRefreshToken(user.id, refreshToken);
+        clearRefreshCookie(res);
         setRefreshCookie(res, newRefreshToken);
         showTokens();
         // if you want generate new refreshToken but first take it out of the db
 
         res.status(200).json({
-            accessToken: newAccessToken,
-            isAdmin: user.isAdmin
+            accessToken: newAccessToken
+            // isAdmin: user.isAdmin
         });
     });
 }

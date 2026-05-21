@@ -131,11 +131,6 @@ export default function useRegister() {
         } catch(err){
             console.log(err);
         }
-        // axios.post('/public/register', formData)
-        //     .then((res) => {
-        //         navigate('/login');
-        //     })
-        //     .catch((err) => console.log(err));
     }
 
     return{

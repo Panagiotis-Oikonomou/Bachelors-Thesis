@@ -25,6 +25,7 @@ export default defineConfig([
     rules: {
       "react/react-in-jsx-scope": "off",
       "no-unused-vars": "off",
+      "react/prop-types": "off"
     },
     settings: {
       react: {

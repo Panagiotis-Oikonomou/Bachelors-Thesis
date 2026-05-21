@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
 if(import.meta.env.PROD) disableReactDevTools();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <Routes>
@@ -28,5 +28,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </Routes>
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

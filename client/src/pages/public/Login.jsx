@@ -42,7 +42,7 @@ function Login() {
                 if (res.data.exists) {
                     const accessToken = res.data?.accessToken;
                     const isAdmin = res.data?.isAdmin;
-                    setAuth({ accessToken, isAdmin });
+                    setAuth({ accessToken });
                     if (isAdmin) {
                         if (from !== "/") {
                             navigate(from, { replace: true });

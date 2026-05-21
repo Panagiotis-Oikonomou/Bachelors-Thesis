@@ -9,7 +9,6 @@ const useRefreshToken = () => {
 
         setAuth(prev => {
             return {...prev,
-                isAdmin: response.data.isAdmin,
             accessToken: response.data.accessToken};
         });
         return response.data.accessToken;
