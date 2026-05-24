@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
     try {
         const sql = "SELECT userid FROM users WHERE `username`=? AND `password`=? LIMIT 1";
         const sql2 = "SELECT adminid FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
-        const { usr, psw } = req.body;
+        const { usr, psw, persist } = req.body;
 
         const [rows] = await db.query(sql, [usr, psw]);
         const [rows2] = await db.query(sql2, [usr, psw]);
@@ -37,12 +37,11 @@ exports.login = async (req, res) => {
         showTokens();
         if (cookies?.jwt) {
             const rt = cookies.jwt;
-            // const rtDecoded = jwt.decode(rt);
 
             jwt.verify(rt, process.env.SECRET_REFRESH_JWT_KEY, async (err, decoded) => {
-                if(err) console.log('Invalid refresh token');
+                if (err) console.log('Invalid refresh token');
                 const tokenExists = hasRefreshToken(decoded.id, rt);
-                if(!tokenExists){
+                if (!tokenExists) {
                     console.log('attempted refresh token reuse');
                     removeAllUserTokens(decoded.id)
                 }
@@ -53,20 +52,26 @@ exports.login = async (req, res) => {
 
         if (rows.length > 0) {
             const accessToken = generateAccessToken(rows[0].userid, false);
-            const refreshToken = generateRefreshToken(rows[0].userid, false);
+            if (persist) {
+                const refreshToken = generateRefreshToken(rows[0].userid, false);
+                storeRefreshTokens(refreshToken, rows[0].userid);
+                setRefreshCookie(res, refreshToken);
+                showTokens();
+            }
 
-            storeRefreshTokens(refreshToken, rows[0].userid);
-            setRefreshCookie(res, refreshToken);
-            showTokens();
             res.json({ exists: true, isAdmin: false, accessToken });
         }
-        // else if (rows2.length > 0) {
-        //     const accessToken = generateAccessToken(rows2[0].userid, true);
-        //     const refreshToken = generateRefreshToken(rows2[0].userid, true);
-        //     storeRefreshTokens(refreshToken);
-        //     res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true,maxAge: 24 * 60 * 60 * 1000});
-        //     res.json({ exists: true, isAdmin:true,accessToken });
-        // }
+        else if (rows2.length > 0) {
+            const accessToken = generateAccessToken(rows2[0].userid, true);
+            if (persist) {
+                const refreshToken = generateRefreshToken(rows2[0].userid, true);
+                storeRefreshTokens(refreshToken);
+                setRefreshCookie(res, refreshToken);
+                showTokens();
+            }
+
+            res.json({ exists: true, isAdmin: true, accessToken });
+        }
         else return res.json({ exists: false });
     }
     catch (err) { return res.status(500).json({ error: "Wrong login" }); }

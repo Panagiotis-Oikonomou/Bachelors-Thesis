@@ -29,7 +29,6 @@ const refresh = (req, res) => {
             console.log('expired refresh token');
             const dec = jwt.decode(refreshToken);
             if (dec?.id) removeRefreshToken(dec.id, refreshToken)
-            // removeRefreshToken(user.id, refreshToken);
             showTokens();
             return res.sendStatus(403);
         }
@@ -47,11 +46,9 @@ const refresh = (req, res) => {
         clearRefreshCookie(res);
         setRefreshCookie(res, newRefreshToken);
         showTokens();
-        // if you want generate new refreshToken but first take it out of the db
 
         res.status(200).json({
             accessToken: newAccessToken
-            // isAdmin: user.isAdmin
         });
     });
 }

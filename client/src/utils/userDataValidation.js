@@ -42,7 +42,7 @@ const userDataValidation = (name, value) => {
         case "username": {
             if (len === 0) error = "Το username σας είναι κενό";
 
-            else if (len < 5 || len > 10) error = "Το username σας πρέπει να αποτελείται από 5 μέχρι 10 γράμματα";
+            else if (len < 5 || len > 15) error = "Το username σας πρέπει να αποτελείται από 5 μέχρι 15 γράμματα";
 
             else if (value.includes(" ")) error = "Το username σας δεν μπορεί να περιέχει κενά";
 

@@ -37,7 +37,7 @@ function Login() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw })
+        axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw, persist })
             .then((res) => {
                 if (res.data.exists) {
                     const accessToken = res.data?.accessToken;
