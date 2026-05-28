@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../api/registerApiChecks.js";
-import userDataValidation from "../utils/userDataValidation.js";
+import dataValidation from "../utils/dataValidation.js";
 import useGetProvider from "./useGetProviders.js";
 
 export default function useRegister() {
@@ -52,7 +52,7 @@ export default function useRegister() {
         let cpswmatch = "";
         let trimmed = value.trim();
         let len = trimmed.length;
-        let error = userDataValidation(name, trimmed);
+        let error = dataValidation(name, trimmed);
 
         switch(name){
             case "clock": {

@@ -1,7 +1,5 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { removeRefreshToken, hasRefreshToken, clearRefreshCookie } = require('../services/tokenService');
-
 // exports.logout = async (req, res) => {
 //     const cookies = req.cookies;
 //     if (!cookies?.jwt) return res.sendStatus(204);
@@ -23,7 +21,7 @@ const { removeRefreshToken, hasRefreshToken, clearRefreshCookie } = require('../
 
 exports.getProfile = async (req, res) => {
     try {
-        let sql = "SELECT * FROM users WHERE `userid`=?";
+        const sql = "SELECT * FROM admins WHERE `adminid`=?";
 
         const id = req.user.id;
 
@@ -35,14 +33,12 @@ exports.getProfile = async (req, res) => {
     }
 }
 
-exports.updateUser = async (req, res) => {
+exports.updateAdmin = async (req, res) => {
     try {
-        const sql = "UPDATE users SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
+        const sql = "UPDATE admins SET `fname`=?, `lname`=?, `email`=?, `username`=?, `password`=? WHERE `adminid`=?";
         const values = [
             req.body.fname,
             req.body.lname,
-            req.body.clock,
-            req.body.provider,
             req.body.email,
             req.body.username,
             req.body.password,
@@ -52,6 +48,6 @@ exports.updateUser = async (req, res) => {
         res.json(req.body);
     }
     catch (err) {
-        return res.status(500).json({ error: "Wrong edit user" });
+        return res.status(500).json({ error: "Wrong edit admin" });
     }
 }

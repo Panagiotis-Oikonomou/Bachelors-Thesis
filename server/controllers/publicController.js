@@ -59,10 +59,10 @@ exports.login = async (req, res) => {
             res.json({ exists: true, isAdmin: false, accessToken });
         }
         else if (rows2.length > 0) {
-            const accessToken = generateAccessToken(rows2[0].userid, true);
+            const accessToken = generateAccessToken(rows2[0].adminid, true);
             if (persist) {
-                const refreshToken = generateRefreshToken(rows2[0].userid, true);
-                await storeRefreshTokens(refreshToken);
+                const refreshToken = generateRefreshToken(rows2[0].adminid, true);
+                await storeRefreshTokens(refreshToken, rows2[0].adminid);
                 setRefreshCookie(res, refreshToken);
             }
 

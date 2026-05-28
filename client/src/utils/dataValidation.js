@@ -1,9 +1,9 @@
-const userDataValidation = (name, value) => {
+const dataValidation = (name, value, setErrors) => {
     let error = "";
     let len = value.length;
     const regex = /^[\p{L}]+$/u;
     const clockRegex = /^\d-\d{8}-\d{2}$/;
-    const specialRegex = /[!@#$%^&*()_\-+=\[\]{};:'"\\|,.<>\/?]/;
+    const specialRegex = /[!@#$%^&*()_\-+=[\]{};:'"\\|,.<>/?]/;
 
     switch (name) {
         case "fname": {
@@ -58,9 +58,12 @@ const userDataValidation = (name, value) => {
             else if (!specialRegex.test(value)) error = "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν χαρακτήρα σύμβολο";
             break;
         }
+
+        default:
+            break;
     }
 
     return error;
 }
 
-export default userDataValidation;
+export default dataValidation;

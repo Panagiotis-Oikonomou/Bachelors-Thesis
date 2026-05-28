@@ -1,25 +1,20 @@
 import { useState, useEffect, useMemo } from "react";
-import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../api/profileApiChecks";
+import { checkEmailAdmin as checkEmailApi, checkUsernameAdmin as checkUsernameApi } from "../api/profileApiChecks";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate.js";
 import useLogout from "./useLogout.js";
-import useGetProvider from "./useGetProviders.js";
 import dataValidation from "../utils/dataValidation.js";
 import passwordChecking from "../utils/passwordChecking.js";
-import { getProviders } from "../api/getProviders.js";
 
-export default function useUserProfile() {
+export default function useAdminProfile() {
     const navigate = useNavigate();
     const location = useLocation();
     const axiosPrivate = useAxiosPrivate();
     const logout = useLogout();
-    const providers = useGetProvider();
 
     const [data, setData] = useState({
         fname: "",
         lname: "",
-        clock: "",
-        provider: "",
         email: "",
         username: "",
         password: ""
@@ -30,9 +25,8 @@ export default function useUserProfile() {
     const [errors, setErrors] = useState({
         fname: "",
         lname: "",
-        clock: "",
-        username: "",
         email: "",
+        username: "",
         password: "",
         pswmatch: ""
     });
@@ -48,7 +42,7 @@ export default function useUserProfile() {
     useEffect(() => {
         const getProfile = async () => {
             try {
-                const res = await axiosPrivate.get('/users/profile');
+                const res = await axiosPrivate.get('/admins/profile');
                 if (res.data) {
                     setData(res.data);
                     setOriginalPassword(res.data.password);
@@ -79,7 +73,6 @@ export default function useUserProfile() {
     }, [saved, allError]);
 
     const checkEmail = useMemo(() => checkEmailApi(axiosPrivate, setErrors), []);
-    const checkClock = useMemo(() => checkClockApi(axiosPrivate, setErrors), []);
     const checkUsername = useMemo(() => checkUsernameApi(axiosPrivate, setErrors), []);
 
     function handleChange(e) {
@@ -95,10 +88,6 @@ export default function useUserProfile() {
         let error = dataValidation(name, trimmed);
 
         switch (name) {
-            case "clock": {
-                checkClock(trimmed);
-                break;
-            }
             case "email": {
                 checkEmail(trimmed);
                 break;
@@ -124,7 +113,6 @@ export default function useUserProfile() {
         }
 
         if (name !== "provider") setErrors(prev => ({ ...prev, [name]: error }));
-        
     }
 
     async function signOut() {
@@ -147,7 +135,7 @@ export default function useUserProfile() {
         }
 
         try {
-            const res = await axiosPrivate.put('/users/profile', data);
+            const res = await axiosPrivate.put('/admins/profile', data);
 
             if (res.data) {
                 setData(res.data);
@@ -165,7 +153,7 @@ export default function useUserProfile() {
     }
 
     return {
-        data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired,
+        data, conPass, errors, cpswError, cpswMatch, cpswRequired,
         allError, saved, showPassword, setShowPassword, showConfPassword,
         setShowConfPassword, handleChange, handleSubmit, signOut
     };

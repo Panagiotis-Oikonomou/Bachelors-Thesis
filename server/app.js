@@ -11,12 +11,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/public", require('./routes/publicRoutes'));
+app.use("/api/providers", require('./routes/providerRoutes'));
+app.use("/api/pv", require('./routes/pvRoutes'));
 
 app.use("/api/users", require('./routes/userRoutes'));
-app.use("/api/pv", require('./routes/pvRoutes'));
 app.use("/api/areas", require('./routes/areaRoutes'));
-app.use("/api/providers", require('./routes/providerRoutes'));
 app.use("/api/validate", require('./routes/validationRoutes'));
+
+app.use("/api/admins", require('./routes/adminRoutes'));
+
 app.use("/api/refresh", require('./routes/refreshTokenRoutes'));
+app.use("/api/logout", require('./routes/logoutRoute'));
 
 module.exports = app;

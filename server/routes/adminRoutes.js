@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const user = require('../controllers/userController');
+const admin = require('../controllers/adminController');
 const logout = require('../controllers/logoutController');
 const ver = require('../middleware/authMiddleware');
 
-router.get("/profile", ver.verify, user.getProfile);
-router.put("/profile", ver.verify,user.updateUser);
+router.get("/profile", ver.verify, admin.getProfile);
+router.put("/profile", ver.verify, admin.updateAdmin);
 // router.get("/logout", logout.logout);
 
 module.exports = router;

@@ -11,4 +11,7 @@ router.get("/username_profile", ver.verify, validation.checkUsernameProfile);
 router.get("/email_profile", ver.verify, validation.checkEmailProfile);
 router.get("/clock_profile", ver.verify, validation.checkClockProfile);
 
+router.get("/username_profile_admin", ver.verify, validation.checkUsernameProfileAdmin);
+router.get("/email_profile_admin", ver.verify, validation.checkEmailProfileAdmin);
+
 module.exports = router;

@@ -40,6 +40,8 @@
 
     text-align: center;
 }
+
+.profileData {margin-bottom: 20px;}
 /* .up img {
     height: 50px;
     width: auto;
@@ -89,24 +91,11 @@ input[type="number"] {
     justify-content: flex-end;
 }
 
-#error_msg1,
-#error_msg2,
-#error_msg3,
-#error_msg4,
-#error_msg5,
-#error_msg6,
-#not_send {
-    color: red;
-}
+.errorMsg {color: red;}
 
-#pswmatch {
-    color: green;
-}
+.pswmatch {color: green;}
 
-.alink:link, .alink:visited, .alink:hover {
-    color: black;
-    text-decoration: none;
-}
+.inputError{border: 2px solid red;}
 
 @media screen and (min-width: 350px) {
 

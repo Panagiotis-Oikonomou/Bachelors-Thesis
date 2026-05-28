@@ -101,3 +101,41 @@ exports.checkClockProfile = async (req, res) => {
         return res.status(500).json({ error: "Wrong clock profile" });
     }
 }
+
+
+// ADMINS PROFILE CHECKS
+exports.checkUsernameProfileAdmin = async (req, res) => {
+    try {
+        const sql = "SELECT adminid FROM admins WHERE `username` = ?";
+        const username = req.query.username;
+        const id = req.user.id;
+
+        const [rows] = await db.query(sql, [username]);
+
+        if (rows.length === 0) return res.json({ exists: false });
+        if (rows[0].adminid == id) return res.json({ exists: false });
+
+        return res.json({ exists: true });
+    }
+    catch (err) {
+        return res.status(500).json({ error: "Wrong username profile" });
+    }
+}
+
+exports.checkEmailProfileAdmin = async (req, res) => {
+    try {
+        const sql = "SELECT adminid FROM admins WHERE `email` = ?";
+        const email = req.query.email;
+        const id = req.user.id;
+
+        const [rows] = await db.query(sql, [email]);
+
+        if (rows.length === 0) return res.json({ exists: false });
+        if (rows[0].adminid == id) return res.json({ exists: false });
+
+        return res.json({ exists: true });
+    }
+    catch (err) {
+        return res.status(500).json({ error: "Wrong email profile" });
+    }
+}

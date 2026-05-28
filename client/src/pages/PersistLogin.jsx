@@ -31,10 +31,6 @@ const PersistLogin = () => {
         return () => isMounted = false;
     }, []);
 
-    useEffect(() => {
-        console.log(`at: ${JSON.stringify(auth)}`);
-    }, []);
-
     return (
         <>
             {!persist
