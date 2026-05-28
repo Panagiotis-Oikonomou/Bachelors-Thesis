@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-
-let refreshTokens = new Map();
+const db = require('../config/db');
 
 const generateAccessToken = (id, isAdmin) => {
     return jwt.sign({ id, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_JWT_KEY, { expiresIn: "10s" });
@@ -11,54 +10,90 @@ const generateRefreshToken = (id, isAdmin) => {
     return jwt.sign({ id, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn: '15m'});
 }
 
-const storeRefreshTokens = (token, id) => {
-    if(!refreshTokens.has(id)) refreshTokens.set(id, new Set());
+const storeRefreshTokens = async (token, id) => {
+    try{
+        const sql = "INSERT INTO refresh_tokens (userid, refresh_token, expires_at) VALUES (?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTE))";
 
-    refreshTokens.get(id).add(token);
-}
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-const removeRefreshToken = (id, token) => {
-    if (!refreshTokens.has(id)) return;
-
-    const userTokens = refreshTokens.get(id);
-
-    userTokens.delete(token);
-
-    // cleanup empty sets
-    if (userTokens.size === 0) {
-        refreshTokens.delete(id);
+        await db.query(sql, [id, hashedToken]);
+    }
+    catch(err){
+        console.error(err);
     }
 }
 
-const hasRefreshToken = (id, token) => {
+const removeRefreshToken = async (id, token) => {
+    try{
+        const sql = "DELETE FROM refresh_tokens WHERE userid = ? AND refresh_token = ?";
 
-    if (!refreshTokens.has(id)) return false;
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-    return refreshTokens.get(id).has(token);
+        await db.query(sql, [id, hashedToken]);
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+const hasRefreshToken = async (id, token) => {
+    try{
+        const sql = "SELECT 1 FROM refresh_tokens WHERE userid = ? AND refresh_token = ? AND expires_at > UTC_TIMESTAMP() LIMIT 1";
+
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        const [result] = await db.query(sql, [id, hashedToken]);
+
+        return result.length > 0;
+    }
+    catch(err){
+        console.error(err);
+        return false;
+    }
 };
 
-const removeAllUserTokens = (id) => {
-    refreshTokens.delete(id);
+const removeAllUserTokens = async (id) => {
+    try{
+        const sql = "DELETE FROM refresh_tokens WHERE userid = ?";
+
+        await db.query(sql, [id]);
+    }
+    catch(err){
+        console.error(err);
+    }
 };
 
-const findUserByRefreshToken = (token) => {
-    for (const [userId, tokens] of refreshTokens.entries()) {
-        if (tokens.has(token)) {
-            return userId;
+const findUserByRefreshToken = async (token) => {
+    try{
+        const sql = "SELECT userid FROM refresh_tokens WHERE refresh_token = ? AND expires_at > UTC_TIMESTAMP() LIMIT 1";
+
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        const [result] = await db.query(sql, [hashedToken]);
+        
+        if(result.length > 0) return result[0].userid;
+
+        return null;
+    }
+    catch(err){
+        console.error(err);
+        return null;
+    }
+};
+
+const showTokens = async () => {
+    try{
+        const sql = "SELECT refresh_token, userid, expires_at FROM refresh_tokens";
+
+        const [rows] = await db.query(sql);
+
+        for(const row of rows){
+            console.log(`id: ${row.userid} and rt: ${row.refresh_token}, expires at: ${row.expires_at}`);
         }
     }
-
-    return null;
-};
-
-const findUser = (id) => {
-    if(refreshTokens.has(id)) return true;
-
-    return false;
-};
-
-const showTokens = () => {
-    console.log(refreshTokens);
+    catch(err){
+        console.error(err);
+    }
 }
 
 const clearRefreshCookie = (res) => {
@@ -71,8 +106,7 @@ const setRefreshCookie = (res, rt) => {
 
 module.exports = {
     generateAccessToken, generateRefreshToken,
-    storeRefreshTokens, removeRefreshToken, refreshTokens, showTokens,
+    storeRefreshTokens, removeRefreshToken, showTokens,
     hasRefreshToken, removeAllUserTokens,
-    clearRefreshCookie, setRefreshCookie, findUserByRefreshToken,
-    findUser
+    clearRefreshCookie, setRefreshCookie, findUserByRefreshToken
 }

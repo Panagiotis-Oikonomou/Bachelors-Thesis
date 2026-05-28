@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { removeRefreshToken, hasRefreshToken, clearRefreshCookie, showTokens } = require('../services/tokenService');
+const { removeRefreshToken, hasRefreshToken, clearRefreshCookie } = require('../services/tokenService');
 
 exports.logout = async (req, res) => {
     const cookies = req.cookies;
@@ -8,17 +8,15 @@ exports.logout = async (req, res) => {
 
     const refreshToken = cookies.jwt;
 
-    jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, (err, decoded) => {
+    jwt.verify(refreshToken, process.env.SECRET_REFRESH_JWT_KEY, async (err, decoded) => {
         if (!err) {
-            const exists = hasRefreshToken(decoded.id, refreshToken);
+            const exists = await hasRefreshToken(decoded.id, refreshToken);
             if (exists) {
-                removeRefreshToken(decoded.id, refreshToken);
-                console.log('refresh token removed');
+                await removeRefreshToken(decoded.id, refreshToken);
             }
         }
     });
 
-    showTokens();
     clearRefreshCookie(res);
     return res.sendStatus(204);
 }

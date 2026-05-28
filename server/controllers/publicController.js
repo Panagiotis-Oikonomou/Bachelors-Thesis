@@ -1,6 +1,6 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
-const { generateAccessToken, generateRefreshToken, storeRefreshTokens, removeRefreshToken, hasRefreshToken, clearRefreshCookie, setRefreshCookie, showTokens, removeAllUserTokens } = require('../services/tokenService');
+const { generateAccessToken, generateRefreshToken, storeRefreshTokens, removeRefreshToken, hasRefreshToken, clearRefreshCookie, setRefreshCookie, removeAllUserTokens } = require('../services/tokenService');
 
 exports.register = async (req, res) => {
     try {
@@ -33,19 +33,17 @@ exports.login = async (req, res) => {
         const [rows2] = await db.query(sql2, [usr, psw]);
 
         const cookies = req.cookies;
-        console.log(`cookie available at: ${JSON.stringify(cookies)}`);
-        showTokens();
         if (cookies?.jwt) {
             const rt = cookies.jwt;
 
             jwt.verify(rt, process.env.SECRET_REFRESH_JWT_KEY, async (err, decoded) => {
                 if (err) console.log('Invalid refresh token');
-                const tokenExists = hasRefreshToken(decoded.id, rt);
+                const tokenExists = await hasRefreshToken(decoded.id, rt);
                 if (!tokenExists) {
                     console.log('attempted refresh token reuse');
-                    removeAllUserTokens(decoded.id)
+                    await removeAllUserTokens(decoded.id)
                 }
-                else removeRefreshToken(decoded.id, rt);
+                else await removeRefreshToken(decoded.id, rt);
             });
             clearRefreshCookie(res);
         }
@@ -54,9 +52,8 @@ exports.login = async (req, res) => {
             const accessToken = generateAccessToken(rows[0].userid, false);
             if (persist) {
                 const refreshToken = generateRefreshToken(rows[0].userid, false);
-                storeRefreshTokens(refreshToken, rows[0].userid);
+                await storeRefreshTokens(refreshToken, rows[0].userid);
                 setRefreshCookie(res, refreshToken);
-                showTokens();
             }
 
             res.json({ exists: true, isAdmin: false, accessToken });
@@ -65,9 +62,8 @@ exports.login = async (req, res) => {
             const accessToken = generateAccessToken(rows2[0].userid, true);
             if (persist) {
                 const refreshToken = generateRefreshToken(rows2[0].userid, true);
-                storeRefreshTokens(refreshToken);
+                await storeRefreshTokens(refreshToken);
                 setRefreshCookie(res, refreshToken);
-                showTokens();
             }
 
             res.json({ exists: true, isAdmin: true, accessToken });
