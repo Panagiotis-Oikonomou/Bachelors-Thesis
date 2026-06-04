@@ -9,7 +9,7 @@ exports.checkUsername = async (req, res) => {
         if(!username) return;
 
         const [rows] = await db.query(sql, [username]);
-        res.json({ exists: rows.length > 0 });
+        return res.json({ exists: rows.length > 0 });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong username" });
@@ -24,7 +24,7 @@ exports.checkEmail = async (req, res) => {
         if(!email) return;
 
         const [rows] = await db.query(sql, [email]);
-        res.json({ exists: rows.length > 0 });
+        return res.json({ exists: rows.length > 0 });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong email" });
@@ -40,7 +40,7 @@ exports.checkClock = async (req, res) => {
 
         const [rows] = await db.query(sql, [clock]);
 
-        res.json({ exists: rows.length > 0 });
+        return res.json({ exists: rows.length > 0 });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong clock" });
@@ -93,7 +93,7 @@ exports.checkClockProfile = async (req, res) => {
         const [rows] = await db.query(sql, [clock]);
 
         if (rows.length === 0) return res.json({ exists: false });
-        if (rows[0].userid == id) { return res.json({ exists: false }); }
+        if (rows[0].userid == id) return res.json({ exists: false });
 
         return res.json({ exists: true });
     }

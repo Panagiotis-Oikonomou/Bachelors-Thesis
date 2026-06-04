@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
         ];
 
         await db.query(sql, values);
-        res.status(201).json({ message: "User added successfully" });
+        return res.status(201).json({ message: "User added successfully" });
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong register" });
