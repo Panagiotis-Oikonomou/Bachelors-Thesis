@@ -34,6 +34,11 @@ button {
     margin-left: 10px;
 }
 
+
+.errorMsg {color:red;}
+
+.pswmatch {color: green;}
+
 /* .main-hidden .search-bar {
     display: none;
 }

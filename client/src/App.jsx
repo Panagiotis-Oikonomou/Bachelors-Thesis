@@ -21,11 +21,8 @@ import Index from "./pages/public/Index";
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
 
-import Users from './pages/manageUsers/Users';
-
-import Paroxoi from './pages/paroxoi/Paroxoi';
-import ManageParoxo from './pages/paroxoi/ManageParoxo';
-import AddParoxo from './pages/paroxoi/AddParoxo';
+import Users from "./pages/adminWork/Users";
+import Providers from "./pages/adminWork/Providers";
 
 import Layout from "./layouts/Layout";
 import RequiredAuth from "./pages/RequiredAuth";
@@ -50,6 +47,7 @@ function App() {
           <Route element={<RequiredAuth admin={true} />}>
             <Route path="/users" element={<Users />} />
             <Route path="/profile/admin" element={<ProfileAdmin />} />
+            <Route path="/providers" element={<Providers />} />
           </Route>
         </Route>
 
@@ -64,9 +62,6 @@ function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/notifications/admin" element={<NotificationsAdmin />} />
 
-        <Route path="/paroxoi" element={<Paroxoi />} />
-        <Route path="/manage_paroxo" element={<ManageParoxo />} />
-        <Route path="/add_paroxo" element={<AddParoxo />} />
       </Route>
     </Routes>
   );

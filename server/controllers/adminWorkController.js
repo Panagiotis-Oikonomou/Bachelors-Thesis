@@ -36,3 +36,15 @@ exports.deleteProvider = async (req, res) => {
         return res.status(500).json({err});
     }
 }
+
+exports.addProvider = async (req, res) => {
+    try{
+        const sql = "INSERT INTO providers (providername) VALUES (?)";
+        const provider = req.body.providername;
+        await db.query(sql, [provider]);
+        return res.sendStatus(200);
+    }
+    catch(err){
+        return res.status(500).json({err});
+    }
+}
