@@ -12,6 +12,7 @@ import menu from '../../assets/images/menu.png';
 
 function Users() {
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [search, setSearch] = useState('');
     const axiosPrivate = useAxiosPrivate();
 
@@ -19,7 +20,10 @@ function Users() {
         const getUsers = async () => {
             try {
                 const res = await axiosPrivate.get('/admins/users');
-                if (res.data) setUsers(res.data);
+                if (res.data) {
+                    setUsers(res.data);
+                    setFilteredUsers(res.data);
+                }
             }
             catch (error) {
                 console.log(error);
@@ -32,10 +36,19 @@ function Users() {
         try {
             await axiosPrivate.delete(`/admins/users/${userid}`);
             setUsers(prev => prev.filter(u => u.userid !== userid));
+            setFilteredUsers(prev => prev.filter(u => u.userid !== userid));
         }
         catch (err) {
             console.log(err);
         }
+    }
+
+    function searchUser(value) {
+        setSearch(value);
+
+        if (value === "") setFilteredUsers(users);
+
+        else setFilteredUsers(users.filter(u => u.username.toLowerCase().includes(value.toLowerCase())));
     }
 
     return (
@@ -53,9 +66,8 @@ function Users() {
                         type="search"
                         placeholder="search"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={e => searchUser(e.target.value)}
                     />
-                    {/* <button>Go</button> */}
                 </form>
             </div>
 
@@ -75,7 +87,7 @@ function Users() {
                         </thead>
 
                         <tbody>
-                            {users.map((item) => {
+                            {filteredUsers.map((item) => {
                                 return <tr key={item.userid}>
                                     <td> {item.fname} </td>
                                     <td> {item.lname} </td>

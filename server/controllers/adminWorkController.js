@@ -17,8 +17,6 @@ exports.deleteUser = async (req, res) => {
     try{
         const sql = "DELETE FROM users WHERE userid = ?";
         const userid = req.params.userid;
-        console.log('deleted');
-        console.log(userid);
         await db.query(sql, [userid]);
         return res.sendStatus(200);
     }
