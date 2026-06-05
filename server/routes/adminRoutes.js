@@ -9,5 +9,6 @@ router.put("/profile", ver.verify, admin.updateAdmin);
 
 router.get("/users", ver.verify, work.getUsers);
 router.delete("/users/:userid", ver.verify, work.deleteUser);
+router.delete("/providers/:providerid", ver.verify, work.deleteProvider);
 
 module.exports = router;

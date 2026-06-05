@@ -24,3 +24,15 @@ exports.deleteUser = async (req, res) => {
         return res.status(500).json({err});
     }
 }
+
+exports.deleteProvider = async (req, res) => {
+    try{
+        const sql = "DELETE FROM providers WHERE providerid = ?";
+        const id = req.params.providerid;
+        await db.query(sql, [id]);
+        return res.sendStatus(200);
+    }
+    catch(err){
+        return res.status(500).json({err});
+    }
+}

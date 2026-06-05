@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styles from './Paroxoi.module.css';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useGetProvider from "../../hooks/useGetProviders";
 
 import paroxoi from '../../assets/images/paroxoiVisit.png';
 import users from '../../assets/images/users.png';
@@ -12,6 +13,34 @@ import plus from '../../assets/images/plus.png';
 
 
 function Paroxoi() {
+    const axiosPrivate = useAxiosPrivate();
+    const getproviders = useGetProvider();
+    const [search, setSearch] = useState('');
+    const [filteredProviders, setFilteredProviders] = useState([]);
+
+    useEffect(() => {
+        setFilteredProviders(getproviders);
+    }, [getproviders]);
+
+    async function deleteProvider(providerid) {
+        try {
+            await axiosPrivate.delete(`/admins/providers/${providerid}`);
+            setFilteredProviders(prev => prev.filter(p => p.providerid !== providerid));
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    function searchProvider(value) {
+        setSearch(value);
+
+        if (value === "") setFilteredProviders(getproviders);
+
+        else setFilteredProviders(getproviders.filter(u => u.providername.toLowerCase().includes(value.toLowerCase())));
+    }
+
+
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -23,24 +52,31 @@ function Paroxoi() {
             </div>
 
             <div className={styles.searchBar}>
-                <input type="search" placeholder="search" />
-                <button>Go</button>
+                <form>
+                    <input
+                        type="search"
+                        placeholder="Search provider"
+                        value={search}
+                        onChange={(e) => searchProvider(e.target.value)}
+                    />
+                </form>
             </div>
 
             <div className={styles.main}>
                 <p>Προσθήκη νέου Πάροχου Ενέργειας <Link to='/add_paroxo'><img src={plus} className={styles.plus} /></Link></p>
-                <div className={styles.area}>
-                    <Link to='/manage_paroxo' className={styles.alink}><div className={styles.paroxos}>
-                        Όνομα Πάροχου Ενέργειας: Κάτι
-                    </div></Link>
-                    <button className={styles.delete}>Διαγραδή παρόχου</button>
-                </div>
 
-                <div className={styles.area}>
-                    <Link to='/manage_paroxo' className={styles.alink}><div className={styles.paroxos}>
-                        Όνομα Πάροχου Ενέργειας: Κάτι</div></Link>
-                    <button className={styles.delete}>Διαγραδή παρόχου</button>
-                </div>
+
+                {filteredProviders.map((item) => {
+                    return <div className={styles.area} key={item.providerid}>
+                        {/* <Link to='/manage_paroxo' className={styles.alink}> */}
+                        <div className={styles.paroxos}>
+                            Όνομα Πάροχου Ενέργειας:<br />
+                            {item.providername}
+                        </div>
+                        {/* </Link> */}
+                        <button className={styles.delete} onClick={() => deleteProvider(item.providerid)}>Διαγραδή παρόχου</button>
+                    </div>
+                })}
             </div>
         </div>
     )
