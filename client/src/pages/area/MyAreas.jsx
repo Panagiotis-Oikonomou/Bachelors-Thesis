@@ -48,6 +48,14 @@ function MyAreas() {
         }
     }
 
+    function searchArea(value){
+        setSearch(value);
+
+        if(value == "") setFilteredAreas(areas);
+
+        else setFilteredAreas(areas.filter(a => a.name.toLowerCase().includes(value.toLowerCase())));
+    }
+
 
     return (
         <div className={styles.container}>
@@ -67,6 +75,8 @@ function MyAreas() {
                     <input
                         type="search"
                         placeholder="Search area"
+                        value={search}
+                        onChange={(e) => searchArea(e.target.value)}
                     />
                 </form>
             </div>
