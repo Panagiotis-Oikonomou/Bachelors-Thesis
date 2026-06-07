@@ -81,7 +81,7 @@ button {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
-    line-height: 40px;
+    line-height: 30px;
 }
 
 .menu {
@@ -94,16 +94,10 @@ button {
     padding-left: 10px;
 }
 
-/* img:hover {
-    transform: scale(1.03);
-    cursor: pointer;
-} */
-
 .delete {
     background-color: red;
     color: white;
     cursor: pointer;
-    margin-left: 10px;
 }
 
 .alink:link, .alink:visited, .alink:hover {

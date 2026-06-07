@@ -31,9 +31,7 @@ button {
     background-color: red;
     color: white;
     cursor: pointer;
-    margin-left: 10px;
 }
-
 
 .errorMsg {color:red;}
 

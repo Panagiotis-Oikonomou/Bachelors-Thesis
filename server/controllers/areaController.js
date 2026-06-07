@@ -27,3 +27,16 @@ exports.getAreas = async (req, res) => {
         return res.sendStatus(500);
     }
 }
+
+exports.deleteArea = async (req, res) => {
+    try{
+        const sql = "DELETE FROM areas WHERE areaid = ?";
+        const id = req.params.id;
+
+        await db.query(sql, [id]);
+        return res.sendStatus(200);
+    }
+    catch(err){
+        return res.sendStatus(500);
+    }
+}

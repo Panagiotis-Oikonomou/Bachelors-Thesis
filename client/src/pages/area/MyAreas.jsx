@@ -37,6 +37,17 @@ function MyAreas() {
         getAreas();
     }, []);
 
+    async function deleteArea(id){
+        try{
+            await axiosPrivate.delete(`/areas/${id}`);
+            setAreas(prev => prev.filter(a => a.areaid !== id));
+            setFilteredAreas(prev => prev.filter(a => a.areaid !== id));
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
 
     return (
         <div className={styles.container}>
@@ -65,7 +76,7 @@ function MyAreas() {
 
                 {filteredAreas.map((id) => {
                     return <div className={styles.area} key={id.areaid}>
-                        <Link to='/manage_area' className={styles.alink}>
+                        {/* <Link to='/manage_area' className={styles.alink}> */}
                             <div className={styles.areaData}>
                                 Όνομα περιοχής: {id.name}<br />
 
@@ -79,9 +90,9 @@ function MyAreas() {
 
                                 Ηλεκτρική ενέργεια: {id.ac}<br />
 
-                                <button className={styles.delete}>Διαγραφή</button>
+                                <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
                             </div>
-                        </Link>
+                        {/* </Link> */}
                     </div>
                 })}
 

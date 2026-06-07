@@ -91,7 +91,7 @@ function AddArea() {
                             name="size"
                             value={areaData.size}
                             min="1"
-                            step="0.01"
+                            step="0.1"
                             onChange={handleChange}
                             required
                         />
