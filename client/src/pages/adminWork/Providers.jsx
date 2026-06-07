@@ -133,12 +133,10 @@ function Providers() {
 
                 {filteredProviders.map((item) => {
                     return <div className={styles.area} key={item.providerid}>
-                        {/* <Link to='/manage_paroxo' className={styles.alink}> */}
                         <div className={styles.paroxos}>
                             Όνομα Πάροχου Ενέργειας:<br />
                             {item.providername}
                         </div>
-                        {/* </Link> */}
                         <button className={styles.delete} onClick={() => deleteProvider(item.providerid)}>Διαγραδή παρόχου</button>
                     </div>
                 })}

@@ -73,6 +73,7 @@ button {
     background-color: rgb(209, 205, 205);
     padding-top: 10px;
     padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .areaData {
@@ -80,6 +81,7 @@ button {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
+    line-height: 40px;
 }
 
 .menu {
@@ -96,6 +98,13 @@ button {
     transform: scale(1.03);
     cursor: pointer;
 } */
+
+.delete {
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
 
 .alink:link, .alink:visited, .alink:hover {
     color: black;

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from 'axios';
-import { Link, useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from './MyAreas.module.css'
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 import matchings from '../../assets/images/mymatchings.png';
 import myareas from '../../assets/images/myareasVisit.png';
@@ -14,6 +15,29 @@ import menu from '../../assets/images/menu.png';
 import plus from '../../assets/images/plus.png';
 
 function MyAreas() {
+    const axiosPrivate = useAxiosPrivate();
+    const [search, setSearch] = useState('');
+    const [areas, setAreas] = useState([]);
+    const [filteredAreas, setFilteredAreas] = useState([]);
+
+    useEffect(() => {
+        const getAreas = async () => {
+            try {
+                const res = await axiosPrivate.get('/areas');
+                if (res.data) {
+                    setFilteredAreas(res.data);
+                    setAreas(res.data);
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+        getAreas();
+    }, []);
+
+
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -28,21 +52,40 @@ function MyAreas() {
             </div>
 
             <div className={styles.searchBar}>
-                {/* <form> */}
-                    <input type="search" placeholder="search"/>
-                    <button>Go</button>
-                 {/* </form> */}
+                <form>
+                    <input
+                        type="search"
+                        placeholder="Search area"
+                    />
+                </form>
             </div>
 
             <div className={styles.areas}>
-                <p>Δημιουργία νέας έκτασης <Link to='/add_area'><img src={plus} className={styles.plus}/></Link></p>
-                <div className={styles.area}>
-                    {/* href="managearea.html" */}
-                    <Link to='/manage_area'  className={styles.alink}><div className={styles.areaData}>
-                    Όνομα περιοχής: Κάτι<br/><br/>
+                <p>Δημιουργία νέας έκτασης <Link to='/add_area'><img src={plus} className={styles.plus} /></Link></p>
 
-                    Έκταση περιοχής: Κάτι άλλο<br/><br/></div></Link>
-                </div><br/><br/>
+                {filteredAreas.map((id) => {
+                    return <div className={styles.area} key={id.areaid}>
+                        <Link to='/manage_area' className={styles.alink}>
+                            <div className={styles.areaData}>
+                                Όνομα περιοχής: {id.name}<br />
+
+                                Έκταση περιοχής: {id.size}<br />
+
+                                Τύπος πάνελ: {id.paneltype}<br />
+                                
+                                Γεωγραφικό πλάτος: {id.lat}<br />
+
+                                Γεωγραφικό μήκος: {id.lng}<br />
+
+                                Ηλεκτρική ενέργεια: {id.ac}<br />
+
+                                <button className={styles.delete}>Διαγραφή</button>
+                            </div>
+                        </Link>
+                    </div>
+                })}
+
+
             </div>
         </div>
     )

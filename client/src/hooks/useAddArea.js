@@ -64,7 +64,7 @@ export default function useUserAddArea() {
         };
         try {
             await axiosPrivate.post('/areas', send);
-            navigate('/profile');
+            navigate('/my_areas');
         } catch (err) {
             console.log(err);
         }

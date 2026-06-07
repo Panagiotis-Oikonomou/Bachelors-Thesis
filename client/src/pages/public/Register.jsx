@@ -60,7 +60,7 @@ function Register() {
                     </div>
 
                     <div className={styles.formData}><label htmlFor="provider">Πάροχος ενέργειας<span className={styles.must}>*</span></label><br />
-                        <select id="provider" name="provider" required onChange={handleChange} value={formData.provider}>
+                        <select id="provider" name="provider"  required onChange={handleChange} value={formData.provider}>
                             <option defaultValue={""}></option>
                             {providers.map((provider) => {
                                 return (

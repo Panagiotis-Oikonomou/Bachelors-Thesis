@@ -41,6 +41,8 @@ function App() {
         <Route element={<PersistLogin />}>
           <Route element={<RequiredAuth admin={false} />}>
             <Route path="/add_area" element={<AddArea />} />
+            <Route path="/my_areas" element={<MyAreas />} />
+            <Route path="/manage_area" element={<ManageArea />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 
@@ -52,8 +54,6 @@ function App() {
         </Route>
 
 
-        <Route path="/my_areas" element={<MyAreas />} />
-        <Route path="/manage_area" element={<ManageArea />} />
         <Route path="/my_chats" element={<MyChats />} />
         <Route path="/chatroom" element={<ChatRoom />} />
         <Route path="/matchings" element={<Matchings />} />

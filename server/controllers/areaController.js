@@ -8,9 +8,22 @@ exports.addArea = async (req, res) => {
         const values = [userid, name, size, paneltype, lat, lng, ac];
 
         await db.query(sql, values);
-        res.status(201).json({ message: "Area added successfully" });
+        res.sendStatus(201);
     }
     catch (err) {
-        return res.status(500).json({ error: "Wrong addArea" });
+        return res.sendStatus(500);
+    }
+}
+
+exports.getAreas = async (req, res) => {
+    try{
+        const sql = "SELECT * FROM areas WHERE userid = ?";
+        const id = req.user.id;
+
+        const [rows] = await db.query(sql, [id]);
+        return res.json(rows);
+    }
+    catch(err){
+        return res.sendStatus(500);
     }
 }
