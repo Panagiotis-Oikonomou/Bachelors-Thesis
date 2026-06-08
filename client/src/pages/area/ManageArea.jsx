@@ -1,49 +1,132 @@
-import React, { useState } from "react";
-import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { lazy, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from './ManageArea.module.css';
 import { Up } from '../../components/up/Up';
-
-// import matchings from '../assets/images/mymatchings.png';
-// import myareas from '../assets/images/myareas.png';
-// import criteria from '../assets/images/criteria.png';
-// import match from '../assets/images/match.png';
-// import chats from '../assets/images/chats.png';
-// import notifications from '../assets/images/notifications.png';
-// import profile from '../assets/images/profile.png';
-// import menu from '../assets/images/menu.png';
-
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function ManageArea() {
+    const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    const [areaData, setAreaData] = useState({
+        name: "",
+        size: "",
+        paneltype: "",
+        lat: "",
+        lng: "",
+        ac: ""
+    });
+
+    useEffect(() => {
+        if (!id) {
+            navigate('/login');
+            return;
+        }
+
+        const fetchData = async () => {
+            try {
+                const res = await axiosPrivate.get(`/areas/${id}`);
+
+                if (res.data) setAreaData(res.data);
+
+                else navigate('/my_areas');
+            }
+            catch (err) {
+                if (err.response?.status === 404) {
+                    console.log(err.response.data.message);
+                    navigate('/my_areas');
+                    return;
+                }
+                console.log(err);
+            }
+        }
+
+        fetchData();
+
+    }, [id]);
+
     return (
         <div className={styles.container}>
             <Up></Up>
-            {/* <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteria} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div> */}
 
-            <div class={styles.addArea}>
-                <div className={styles.deleteContainer}>
-                    <button class={styles.delete}>Διαγραδή έκτασης</button>
-                </div>
+            <div className={styles.addArea}>
                 <form>
-                    Όνομα περιοχής:<br /><input type="text" id="area-name" value="kati" />
-                    <div id="error_msg1"></div><br />
+                    <div className={styles.data}>
+                    <label htmlFor="areaname">Όνομα περιοχής:</label><br />
+                    <input
+                        type="text"
+                        id="areaname"
+                        value={areaData.name}
+                        readOnly
+                    />
+                    <div id="error_msg1"></div>
+                    </div>
 
-                    Έκταση περιοχής (σε km<sup>2</sup>):<br /><input type="number" id="size" max="131" value="23" />
+                    <div className={styles.data}>
+                    <label htmlFor="size">Έκταση περιοχής (σε km<sup>2</sup>):</label><br />
+                    <input
+                        type="number"
+                        id="size"
+                        value={areaData.size}
+                        readOnly
+                    />
+                    <div id="error_msg2"></div>
+                    </div>
+                   
 
-                    <div id="error_msg2"></div><br />
+                    <div className={styles.data}>
+                        Είδος ηλιακού πάνελ:<br />
+                        <div className={styles.radioButtonss}>
+                            <label className={styles.radioLabel}>
+                                <input
+                                    type="radio" name="panelType"
+                                    checked={areaData.paneltype === 'vertical'}
+                                    readOnly
+                                    // onChange={handleChange} value="vertical" required
+                                />Vertical Axis
+                            </label>
+                            <label className={styles.radioLabel}>
+                                <input
+                                    type="radio" name="panelType"
+                                    checked={areaData.paneltype === 'inclined'}
+                                    readOnly
+                                    // onChange={handleChange} value="inclined" required
+                                />Inclined Axis
+                            </label>
+                            <label className={styles.radioLabel}>
+                                <input
+                                    type="radio" name="panelType"
+                                    checked={areaData.paneltype === 'two'}
+                                    readOnly
+                                    // onChange={handleChange} value="two" required
+                                />Two Axis
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className={styles.data}>
+                        <label htmlFor="coordinates">Coordinates(lat, lng):</label><br />
+                        <input
+                            type="text"
+                            id="coordinates"
+                            value={`${Number(areaData.lat).toFixed(4)}, ${Number(areaData.lng).toFixed(4)}`}
+                            readOnly
+                        />
+                    </div>
+
+                    <div className={styles.data}>
+                        <label htmlFor="ac">Ετήσια παραγωγή PV ενέργειας(kWh):</label><br />
+                        <input type="text"
+                            id="ac"
+                            value={areaData.ac}
+                            readOnly
+                            required
+                        />
+                    </div>
 
                     <input type="submit" value="Αποθήκευση αλλαγών" />
-                </form><br />
-
+                </form>
             </div>
         </div>
     )

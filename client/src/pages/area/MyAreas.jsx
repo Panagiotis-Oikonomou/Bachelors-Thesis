@@ -37,21 +37,21 @@ function MyAreas() {
         getAreas();
     }, []);
 
-    async function deleteArea(id){
-        try{
+    async function deleteArea(id) {
+        try {
             await axiosPrivate.delete(`/areas/${id}`);
             setAreas(prev => prev.filter(a => a.areaid !== id));
             setFilteredAreas(prev => prev.filter(a => a.areaid !== id));
         }
-        catch(err){
+        catch (err) {
             console.log(err);
         }
     }
 
-    function searchArea(value){
+    function searchArea(value) {
         setSearch(value);
 
-        if(value == "") setFilteredAreas(areas);
+        if (value == "") setFilteredAreas(areas);
 
         else setFilteredAreas(areas.filter(a => a.name.toLowerCase().includes(value.toLowerCase())));
     }
@@ -86,14 +86,14 @@ function MyAreas() {
 
                 {filteredAreas.map((id) => {
                     return <div className={styles.area} key={id.areaid}>
-                        {/* <Link to='/manage_area' className={styles.alink}> */}
+                        <Link to={`/manage_area/${id.areaid}`} className={styles.alink}>
                             <div className={styles.areaData}>
                                 Όνομα περιοχής: {id.name}<br />
 
                                 Έκταση περιοχής: {id.size}<br />
 
                                 Τύπος πάνελ: {id.paneltype}<br />
-                                
+
                                 Γεωγραφικό πλάτος: {id.lat}<br />
 
                                 Γεωγραφικό μήκος: {id.lng}<br />
@@ -102,7 +102,7 @@ function MyAreas() {
 
                                 <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
                             </div>
-                        {/* </Link> */}
+                        </Link>
                     </div>
                 })}
 

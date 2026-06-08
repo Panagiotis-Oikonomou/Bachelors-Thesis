@@ -51,37 +51,37 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     box-sizing: border-box;
 }
 
-/* .delete {
-    color: white;
-    background-color: red;
-} */
-
-.delete {
-    justify-self: end;
-    background-color: red;
-    color: white;
-    padding: 8px 18px;
-    border: none;
-    cursor: pointer;
+.inputError {
+    border: 2px solid red;
 }
 
-.deleteContainer {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.must {
-    color:rgb(187, 6, 6);
-}
-
-#error_msg1, #error_msg2, #error_msg3, #error_msg4, #error_msg5, #error_msg6, #not_send {
+.msg {
     color: red;
 }
 
-#pswmatch {
+.correct {
     color: green;
 }
+
+.radioButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  width: 160px;
+  justify-content: flex-start;
+  gap: 8px;                
+  cursor: pointer;
+}
+
+.data{ margin-bottom: 20px;}
 
 @media screen and (min-width: 350px){
 

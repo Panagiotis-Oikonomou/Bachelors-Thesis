@@ -42,7 +42,7 @@ function App() {
           <Route element={<RequiredAuth admin={false} />}>
             <Route path="/add_area" element={<AddArea />} />
             <Route path="/my_areas" element={<MyAreas />} />
-            <Route path="/manage_area" element={<ManageArea />} />
+            <Route path="/manage_area/:id" element={<ManageArea />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 
