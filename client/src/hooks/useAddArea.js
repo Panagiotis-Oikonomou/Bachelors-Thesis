@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate";
 
-export default function useUserAddArea() {
+export default function useAddArea() {
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const [areaData, setAreaData] = useState({
@@ -12,10 +12,10 @@ export default function useUserAddArea() {
         lat: "",
         lng: ""
     });
-    const [panelData, setPanelData] = useState({ panelType: "" });
+    const [panelData, setPanelData] = useState("");
 
-    const [formError, setFormError] = useState({ err: "" });
-    const [nameError, setNameError] = useState({ name: "" });
+    const [formError, setFormError] = useState("");
+    const [nameError, setNameError] = useState("");
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -25,7 +25,7 @@ export default function useUserAddArea() {
             validateField(name, value);
         }
 
-        if (name === "panelType") setPanelData(prev => ({ ...prev, [name]: value }));
+        if (name === "panelType") setPanelData(value);
     }
 
     function validateField(name, value) {
@@ -38,26 +38,25 @@ export default function useUserAddArea() {
             else if (len < 4 || len > 20) error = "Το όνομά περιοχής πρέπει να αποτελείται από 4 μέχρι 20 γράμματα";
 
             else if (regex.test(value)) error = "Το όνομά περιοχής δεν επιτρέπεται να περιέχει ψηφία";
-            setNameError(prev => ({ ...prev, [name]: error }));
+            setNameError(error);
         }
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const hasErrors = Object.values(nameError).some(err => err !== "");
         const fields = ["lat", "lng", "energy"];
         const isMissing = fields.some(field => areaData[field] === "");
 
-        if (hasErrors || isMissing) {
-            setFormError(prev => ({ ...prev, err: "Υπάρχουν κάποια λάθοι ή λείπουν στοιχεία από την φόρμα" }));
+        if (nameError || isMissing) {
+            setFormError("Υπάρχουν κάποια λάθοι ή λείπουν στοιχεία από την φόρμα");
             return;
         }
 
         const send = {
             ...areaData,
             size: Number(areaData.size),
-            paneltype: panelData.panelType,
+            paneltype: panelData,
             lat: Number(areaData.lat),
             lng: Number(areaData.lng),
             ac: Number(areaData.energy)

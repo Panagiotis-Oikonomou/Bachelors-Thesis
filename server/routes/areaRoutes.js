@@ -7,5 +7,6 @@ router.post("/", ver.verify, area.addArea);
 router.get("/", ver.verify, area.getAreas);
 router.get("/:id", ver.verify, area.getArea);
 router.delete("/:id", ver.verify, area.deleteArea);
+router.put("/:id", ver.verify, area.updateArea);
 
 module.exports = router;

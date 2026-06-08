@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from './AddArea.module.css';
 import MyComponent from "../../components/maps/MyComponent";
-import useUserAddArea from "../../hooks/useAddArea";
+import useAddArea from "../../hooks/useAddArea";
 import { Up } from "../../components/up/Up";
 
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
@@ -13,7 +13,7 @@ function AddArea() {
     const [location, setLocation] = useState(null);
     const {
         areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
-    } = useUserAddArea();
+    } = useAddArea();
 
     useEffect(() => {
         if (location) {
@@ -27,7 +27,7 @@ function AddArea() {
 
     useEffect(() => {
         if (areaData.lat && areaData.lng && areaData.size) {
-            if (panelData.panelType === "vertical") {
+            if (panelData === "vertical") {
                 axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
@@ -39,7 +39,7 @@ function AddArea() {
                     })
                     .catch((err) => console.log(err));
             }
-            else if (panelData.panelType == "inclined") {
+            else if (panelData == "inclined") {
                 axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
@@ -51,7 +51,7 @@ function AddArea() {
                     })
                     .catch((err) => console.log(err));
             }
-            else if (panelData.panelType == "two") {
+            else if (panelData == "two") {
                 axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
                     .then((res) => {
                         const energy = Number(res.data) * Number(areaData.size) * 0.2;
@@ -64,7 +64,7 @@ function AddArea() {
                     .catch((err) => console.log(err));
             }
         }
-    }, [areaData.lat, areaData.lng, panelData.panelType, areaData.size]);
+    }, [areaData.lat, areaData.lng, panelData, areaData.size]);
 
     return (
         <div className={styles.container}>
@@ -73,21 +73,25 @@ function AddArea() {
             <div className={styles.addArea}>
                 <p className={styles.titlee}>Δημιουργία καινούργιας περιοχής</p><br />
                 <form autoComplete="off" onSubmit={handleSubmit}>
-                    <div className={styles.data}>Όνομα περιοχής:<br />
+                    <div className={styles.data}>
+                        <label htmlFor="areaname">Όνομα περιοχής:</label><br />
                         <input
                             type="text"
+                            id="areaname"
                             name="name"
                             value={areaData.name}
                             onChange={handleChange}
-                            className={nameError.name ? styles.inputError : ""}
+                            className={nameError ? styles.inputError : ""}
                             required
                         />
-                        <div className={styles.msg}>{nameError.name}</div>
+                        <div className={styles.msg}>{nameError}</div>
                     </div>
 
-                    <div className={styles.data}>Μέγεθος έκτασης (σε m<sup>2</sup>):<br />
+                    <div className={styles.data}>
+                        <label htmlFor="size">Έκταση περιοχής (σε km<sup>2</sup>):</label><br />
                         <input
                             type="number"
+                            id="size"
                             name="size"
                             value={areaData.size}
                             min="1"
@@ -102,28 +106,29 @@ function AddArea() {
                             <label className={styles.radioLabel}>
                                 <input
                                     type="radio" name="panelType"
-                                    checked={panelData.panelType === 'vertical'}
+                                    checked={panelData === 'vertical'}
                                     onChange={handleChange} value="vertical" required
                                 />Vertical Axis
                             </label>
                             <label className={styles.radioLabel}>
                                 <input
                                     type="radio" name="panelType"
-                                    checked={panelData.panelType === 'inclined'}
+                                    checked={panelData === 'inclined'}
                                     onChange={handleChange} value="inclined" required
                                 />Inclined Axis
                             </label>
                             <label className={styles.radioLabel}>
                                 <input
                                     type="radio" name="panelType"
-                                    checked={panelData.panelType === 'two'}
+                                    checked={panelData === 'two'}
                                     onChange={handleChange} value="two" required
                                 />Two Axis
                             </label>
                         </div>
                     </div>
 
-                    <div className={styles.data}>Coordinates(lat, lng):<br />
+                    <div className={styles.data}>
+                        Coordinates(lat, lng):<br />
                         <input
                             type="text"
                             name="coordinates"
@@ -134,16 +139,17 @@ function AddArea() {
                     </div>
                     <div>Map&nbsp;&nbsp;&nbsp;<img src={map} className={styles.mapButton} /></div><br />
 
-                    <div className={styles.data}>Ετήσια παραγωγή PV ενέργειας(kWh):<br />
-                        <input type="text"
+                    <div className={styles.data}>
+                        Ετήσια παραγωγή PV ενέργειας(kWh):<br />
+                        <input
+                            type="text"
                             name="energy"
                             value={areaData.energy}
                             readOnly
                             required
                         />
                     </div>
-
-                    <div className={styles.msg}>{formError.err}</div>
+                    <div className={styles.msg}>{formError}</div>
                     <input type="submit" value="Δημιουργία" />
                 </form>
             </div>

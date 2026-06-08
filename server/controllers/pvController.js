@@ -24,6 +24,6 @@ exports.getPV = async (req, res) => {
 
     res.json(value ?? null);
   } catch (err) {
-    res.status(500).json({ error: "PV API failed" });
+    return res.status(500).json({ error: "PV API failed" });
   }
 };

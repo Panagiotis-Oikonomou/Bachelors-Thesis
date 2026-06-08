@@ -3,128 +3,96 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from './ManageArea.module.css';
 import { Up } from '../../components/up/Up';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useManageArea from "../../hooks/useManageArea";
 
 function ManageArea() {
-    const axiosPrivate = useAxiosPrivate();
-    const navigate = useNavigate();
     const { id } = useParams();
-
-    const [areaData, setAreaData] = useState({
-        name: "",
-        size: "",
-        paneltype: "",
-        lat: "",
-        lng: "",
-        ac: ""
-    });
-
-    useEffect(() => {
-        if (!id) {
-            navigate('/login');
-            return;
-        }
-
-        const fetchData = async () => {
-            try {
-                const res = await axiosPrivate.get(`/areas/${id}`);
-
-                if (res.data) setAreaData(res.data);
-
-                else navigate('/my_areas');
-            }
-            catch (err) {
-                if (err.response?.status === 404) {
-                    console.log(err.response.data.message);
-                    navigate('/my_areas');
-                    return;
-                }
-                console.log(err);
-            }
-        }
-
-        fetchData();
-
-    }, [id]);
+    const { areaData, nameError, formError, areaUpdated, handleChange, handleSubmit } = useManageArea(id);
 
     return (
         <div className={styles.container}>
             <Up></Up>
 
             <div className={styles.addArea}>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className={styles.data}>
-                    <label htmlFor="areaname">Όνομα περιοχής:</label><br />
-                    <input
-                        type="text"
-                        id="areaname"
-                        value={areaData.name}
-                        readOnly
-                    />
-                    <div id="error_msg1"></div>
+                        <label htmlFor="areaname">Όνομα περιοχής:</label><br />
+                        <input
+                            type="text"
+                            id="areaname"
+                            name="name"
+                            value={areaData.name}
+                            onChange={handleChange}
+                            className={nameError ? styles.inputError : ""}
+                            required
+                        />
+                        <div className={styles.msg}>{nameError}</div>
                     </div>
 
                     <div className={styles.data}>
-                    <label htmlFor="size">Έκταση περιοχής (σε km<sup>2</sup>):</label><br />
-                    <input
-                        type="number"
-                        id="size"
-                        value={areaData.size}
-                        readOnly
-                    />
-                    <div id="error_msg2"></div>
+                        <label htmlFor="size">Έκταση περιοχής (σε km<sup>2</sup>):</label><br />
+                        <input
+                            type="number"
+                            id="size"
+                            name="size"
+                            min="1"
+                            step="0.1"
+                            value={areaData.size}
+                            onChange={handleChange}
+                        />
                     </div>
-                   
 
                     <div className={styles.data}>
                         Είδος ηλιακού πάνελ:<br />
                         <div className={styles.radioButtonss}>
                             <label className={styles.radioLabel}>
                                 <input
-                                    type="radio" name="panelType"
+                                    type="radio" name="paneltype"
                                     checked={areaData.paneltype === 'vertical'}
                                     readOnly
-                                    // onChange={handleChange} value="vertical" required
+                                    onChange={handleChange} value="vertical"
                                 />Vertical Axis
                             </label>
                             <label className={styles.radioLabel}>
                                 <input
-                                    type="radio" name="panelType"
+                                    type="radio" name="paneltype"
                                     checked={areaData.paneltype === 'inclined'}
                                     readOnly
-                                    // onChange={handleChange} value="inclined" required
+                                    onChange={handleChange} value="inclined"
                                 />Inclined Axis
                             </label>
                             <label className={styles.radioLabel}>
                                 <input
-                                    type="radio" name="panelType"
+                                    type="radio" name="paneltype"
                                     checked={areaData.paneltype === 'two'}
                                     readOnly
-                                    // onChange={handleChange} value="two" required
+                                    onChange={handleChange} value="two"
                                 />Two Axis
                             </label>
                         </div>
                     </div>
 
                     <div className={styles.data}>
-                        <label htmlFor="coordinates">Coordinates(lat, lng):</label><br />
+                        Coordinates(lat, lng):<br />
                         <input
                             type="text"
-                            id="coordinates"
                             value={`${Number(areaData.lat).toFixed(4)}, ${Number(areaData.lng).toFixed(4)}`}
                             readOnly
                         />
                     </div>
 
                     <div className={styles.data}>
-                        <label htmlFor="ac">Ετήσια παραγωγή PV ενέργειας(kWh):</label><br />
-                        <input type="text"
-                            id="ac"
+                        Ετήσια παραγωγή PV ενέργειας(kWh):<br />
+                        <input
+                            type="text"
+                            name="ac"
                             value={areaData.ac}
                             readOnly
                             required
                         />
                     </div>
-
+                    <div className={styles.msg}>{formError}</div>
+                    <div className={styles.correct}>{areaUpdated}</div>
                     <input type="submit" value="Αποθήκευση αλλαγών" />
                 </form>
             </div>

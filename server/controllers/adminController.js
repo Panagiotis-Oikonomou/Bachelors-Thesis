@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 exports.getProfile = async (req, res) => {
     try {
-        const sql = "SELECT * FROM admins WHERE `adminid`=?";
+        const sql = "SELECT * FROM admins WHERE adminid=?";
 
         const id = req.user.id;
 
@@ -17,7 +17,7 @@ exports.getProfile = async (req, res) => {
 
 exports.updateAdmin = async (req, res) => {
     try {
-        const sql = "UPDATE admins SET `fname`=?, `lname`=?, `email`=?, `username`=?, `password`=? WHERE `adminid`=?";
+        const sql = "UPDATE admins SET fname=?, lname=?, email=?, username=?, password=? WHERE adminid=?";
         const values = [
             req.body.fname,
             req.body.lname,

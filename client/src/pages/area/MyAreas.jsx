@@ -99,10 +99,9 @@ function MyAreas() {
                                 Γεωγραφικό μήκος: {id.lng}<br />
 
                                 Ηλεκτρική ενέργεια: {id.ac}<br />
-
-                                <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
                             </div>
                         </Link>
+                        <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
                     </div>
                 })}
 

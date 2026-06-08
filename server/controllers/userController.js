@@ -4,7 +4,7 @@ const { removeRefreshToken, hasRefreshToken, clearRefreshCookie } = require('../
 
 exports.getProfile = async (req, res) => {
     try {
-        let sql = "SELECT * FROM users WHERE `userid`=?";
+        let sql = "SELECT * FROM users WHERE userid=?";
 
         const id = req.user.id;
 
@@ -18,7 +18,7 @@ exports.getProfile = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
-        const sql = "UPDATE users SET `fname`=?, `lname`=?, `clock`=?, `provider`=?, `email`=?, `username`=?, `password`=? WHERE `userid`=?";
+        const sql = "UPDATE users SET fname=?, lname=?, clock=?, provider=?, email=?, username=?, password=? WHERE userid=?";
         const values = [
             req.body.fname,
             req.body.lname,
