@@ -44,7 +44,7 @@
 .not {
     grid-column: 1 / 5;
     outline-style: groove;
-    outline-color: rgb(139, 134, 134);
+    outline-color: rgb(211, 28, 28);
     background-color: rgb(209, 205, 205);
     padding-top: 10px;
     padding-bottom: 10px;

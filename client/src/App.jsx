@@ -44,6 +44,7 @@ function App() {
             <Route path="/my_areas" element={<MyAreas />} />
             <Route path="/manage_area/:id" element={<ManageArea />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Route>
 
           <Route element={<RequiredAuth admin={true} />}>
@@ -59,7 +60,6 @@ function App() {
         <Route path="/matchings" element={<Matchings />} />
         <Route path="/criteria" element={<Criteria />} />
         <Route path="/match" element={<Match />} />
-        <Route path="/notifications" element={<Notifications />} />
         <Route path="/notifications/admin" element={<NotificationsAdmin />} />
 
       </Route>
