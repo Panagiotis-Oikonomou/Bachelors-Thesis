@@ -7,6 +7,7 @@ import useGetProvider from "./useGetProviders.js";
 import dataValidation from "../utils/dataValidation.js";
 import passwordChecking from "../utils/passwordChecking.js";
 import { getProviders } from "../api/getProviders.js";
+import resetTimer from "../utils/resetTimer.js";
 
 export default function useUserProfile() {
     const navigate = useNavigate();
@@ -61,21 +62,8 @@ export default function useUserProfile() {
     }, []);
 
     useEffect(() => {
-        if (saved !== "") {
-            const timer = setTimeout(() => {
-                setSaved("");
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
-
-        if (allError !== "") {
-            const timer = setTimeout(() => {
-                setAllError("");
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
+        resetTimer(saved, setSaved);
+        resetTimer(allError, setAllError);
     }, [saved, allError]);
 
     const checkEmail = useMemo(() => checkEmailApi(axiosPrivate, setErrors), []);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate";
+import resetTimer from "../utils/resetTimer";
 
 export default function useManageArea(id) {
     const axiosPrivate = useAxiosPrivate();
@@ -45,6 +46,11 @@ export default function useManageArea(id) {
         fetchData();
 
     }, [id]);
+
+    useEffect(() => {
+        resetTimer(formError, setFormError);
+        resetTimer(areaUpdated, setAreaUpdated);
+    }, [formError, areaUpdated]);
 
     useEffect(() => {
         const fetchAc = async () => {

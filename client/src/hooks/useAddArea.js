@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate";
+import resetTimer from "../utils/resetTimer";
 
 export default function useAddArea() {
     const navigate = useNavigate();
@@ -41,6 +42,10 @@ export default function useAddArea() {
             setNameError(error);
         }
     }
+
+    useEffect(() => {
+        resetTimer(formError, setFormError);
+    }, [formError]);
 
     async function handleSubmit(e) {
         e.preventDefault();

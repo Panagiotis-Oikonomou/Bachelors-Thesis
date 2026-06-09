@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi} from "../api/registerApiChecks.js";
 import dataValidation from "../utils/dataValidation.js";
 import useGetProvider from "./useGetProviders.js";
+import resetTimer from "../utils/resetTimer.js";
 
 export default function useRegister() {
     const navigate = useNavigate();
@@ -37,6 +38,10 @@ export default function useRegister() {
     const checkClock = checkClockApi(setErrors);
     const checkUsername = checkUsernameApi(setErrors);
     const checkEmail = checkEmailApi(setErrors);
+
+    useEffect(() => {
+        resetTimer(allError, setAllError);
+    }, [allError]);
 
     function handleChange(e) {
         const { name, value } = e.target;

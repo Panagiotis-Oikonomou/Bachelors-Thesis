@@ -3,6 +3,7 @@ import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from './LoginRegister.module.css';
 import axios from "../../api/axios";
+import resetTimer from "../../utils/resetTimer";
 
 function Login() {
     const { setAuth, persist, setPersist } = useAuth();
@@ -17,13 +18,7 @@ function Login() {
     });
 
     useEffect(() => {
-        if (notFound !== "") {
-            const timer = setTimeout(() => {
-                setNotFound("");
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
+        resetTimer(notFound, setNotFound);
     }, [notFound]);
 
     const togglePersist = () => {
