@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from './Notifications.module.css';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Swal from "sweetalert2";
 
 import matchings from '../../assets/images/mymatchings.png';
 import myareas from '../../assets/images/myareas.png';
@@ -14,9 +15,8 @@ import menu from '../../assets/images/menu.png';
 
 
 function Notifications() {
-    const [notifications, setNotifications] = useState([]);
     const axiosPrivate = useAxiosPrivate();
-    const [read, setRead] = useState([]);
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
         const getNotifications = async () => {
@@ -40,21 +40,33 @@ function Notifications() {
             )
         );
 
-        try{
+        try {
             await axiosPrivate.put(`/notifications/${id}`);
         }
-        catch(err){
+        catch (err) {
             console.log(err);
         }
     }
 
     async function deleteNotification(id) {
-        try{
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        });
+
+        if(!result.isConfirmed) return;
+
+        try {
             await axiosPrivate.delete(`/notifications/${id}`);
             setNotifications(prev => prev.filter(n => n.notid !== id));
         }
-        catch(err){
-            console.log(err);
+        catch (err) {
+            Swal.fire("Error", "Something went wrong", "error");
         }
     }
 
@@ -78,7 +90,7 @@ function Notifications() {
                         onClick={() => changeToRead(item.notid)}
                         key={item.notid}>
 
-                        <div className={styles.delete} onClick={() => deleteNotification(item.notid)}> X </div>
+                        <div className={styles.delete} onClick={(e) => {e.stopPropagation(); deleteNotification(item.notid)}}> X </div>
                         {item.message}
                     </div>
                 })}
