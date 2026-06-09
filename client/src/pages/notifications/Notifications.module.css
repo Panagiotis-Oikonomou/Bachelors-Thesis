@@ -41,14 +41,26 @@
     padding: 20px;
 }
 
-.not {
+.not, .read {
     grid-column: 1 / 5;
     outline-style: groove;
-    outline-color: rgb(211, 28, 28);
     background-color: rgb(209, 205, 205);
     padding-top: 10px;
     padding-bottom: 10px;
     margin-bottom: 30px;
+}
+
+.read {
+    outline-color: rgb(47, 36, 36);
+}
+
+.not {
+    outline-color: rgb(245, 75, 45);
+}
+
+.delete {
+    text-align: right;
+    float: right;
 }
 
 .menu {

@@ -4,5 +4,7 @@ const notification = require('../controllers/notificationController');
 const ver = require('../middleware/authMiddleware');
 
 router.get("/", ver.verify, notification.getNotifications);
+router.put("/:id", ver.verify, notification.readMessage);
+router.delete("/:id", ver.verify, notification.deleteMessage);
 
 module.exports = router;

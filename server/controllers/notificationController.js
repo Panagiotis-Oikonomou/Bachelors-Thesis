@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 exports.getNotifications = async (req, res) => {
     try {
-        const sql = "SELECT * FROM notifications WHERE userid = ?";
+        const sql = "SELECT * FROM notifications WHERE userid = ? ORDER BY notid DESC";
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
@@ -13,18 +13,30 @@ exports.getNotifications = async (req, res) => {
     }
 }
 
-// exports.updateArea = async (req, res) => {
-//     try {
-//         const sql = "UPDATE areas SET name = ?, size = ?, paneltype = ?, ac = ? WHERE userid = ? AND areaid = ?";
-//         const userid = req.user.id;
-//         const areaid = req.params.id;
-//         const { name, size, paneltype, ac } = req.body;
-//         const values = [name, size, paneltype, ac, userid, areaid];
+exports.readMessage = async (req, res) => {
+    try {
+        const sql = "UPDATE notifications SET is_read = TRUE WHERE userid = ? AND notid = ?";
+        const userid = req.user.id;
+        const notid = req.params.id;
 
-//         await db.query(sql, values);
-//         return res.sendStatus(200);
-//     }
-//     catch (err) {
-//         return res.sendStatus(500);
-//     }
-// }
+        await db.query(sql, [userid, notid]);
+        return res.sendStatus(200);
+    }
+    catch (err) {
+        return res.sendStatus(500);
+    }
+
+}
+exports.deleteMessage = async (req, res) => {
+    try {
+        const sql = "DELETE FROM notifications WHERE userid = ? AND notid = ?";
+        const userid = req.user.id;
+        const notid = req.params.id;
+
+        await db.query(sql, [userid, notid]);
+        return res.sendStatus(200);
+    }
+    catch (err) {
+        return res.sendStatus(500);
+    }
+}
