@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate";
 import resetTimer from "../utils/resetTimer";
+import useGetEnergy from "./useGetEnergy";
 
 export default function useManageArea(id) {
     const axiosPrivate = useAxiosPrivate();
@@ -52,60 +53,8 @@ export default function useManageArea(id) {
         resetTimer(areaUpdated, setAreaUpdated);
     }, [formError, areaUpdated]);
 
-    useEffect(() => {
-        const fetchAc = async () => {
-            if (areaData.paneltype === "vertical") {
-                try {
-                    const res = await axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`);
-                    if (res.data) {
-                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, ac: energy.toFixed(3) }));
-                        } else {
-                            console.log("PVcalc data missing:", res.data);
-                        }
-                    }
-                }
-                catch (err) {
-                    console.log(err);
-                }
-            }
-            else if (areaData.paneltype == "inclined") {
-                try {
-                    const res = await axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`);
-                    if (res.data) {
-                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, ac: energy.toFixed(3) }));
-                        } else {
-                            console.log("PVcalc data missing:", res.data);
-                        }
-                    }
-                }
-                catch (err) {
-                    console.log(err);
-                }
-            }
-            else if (areaData.paneltype == "two") {
-                try {
-                    const res = await axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`);
-                    if (res.data) {
-                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, ac: energy.toFixed(3) }));
-                        } else {
-                            console.log("PVcalc data missing:", res.data);
-                        }
-                    }
-                }
-                catch (err) {
-                    console.log(err);
-                }
-            }
-        }
-        fetchAc();
-    }, [areaData.paneltype, areaData.size]);
-
+    useGetEnergy(areaData.paneltype, setAreaData, areaData.size, areaData.lat, areaData.lng);
+    
     function handleChange(e) {
         const { name, value } = e.target;
 

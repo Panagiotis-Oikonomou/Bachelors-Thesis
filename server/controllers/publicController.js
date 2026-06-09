@@ -37,7 +37,10 @@ exports.login = async (req, res) => {
             const rt = cookies.jwt;
 
             jwt.verify(rt, process.env.SECRET_REFRESH_JWT_KEY, async (err, decoded) => {
-                if (err) console.log('Invalid refresh token');
+                if (err) {
+                    console.log('Invalid refresh token');
+                    return;
+                }
                 const tokenExists = await hasRefreshToken(decoded.id, rt);
                 if (!tokenExists) {
                     console.log('attempted refresh token reuse');

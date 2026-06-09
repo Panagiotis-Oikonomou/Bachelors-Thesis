@@ -7,13 +7,12 @@ import { Up } from "../../components/up/Up";
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import map from '../../assets/images/map.png';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useGetEnergy from "../../hooks/useGetEnergy";
 
 function AddArea() {
     const axiosPrivate = useAxiosPrivate();
     const [location, setLocation] = useState(null);
-    const {
-        areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit
-    } = useAddArea();
+    const { areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit } = useAddArea();
 
     useEffect(() => {
         if (location) {
@@ -25,46 +24,7 @@ function AddArea() {
         }
     }, [location]);
 
-    useEffect(() => {
-        if (areaData.lat && areaData.lng && areaData.size) {
-            if (panelData === "vertical") {
-                axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=1`)
-                    .then((res) => {
-                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
-                        } else {
-                            console.log("PVcalc data missing:", res.data);
-                        }
-                    })
-                    .catch((err) => console.log(err));
-            }
-            else if (panelData == "inclined") {
-                axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=2`)
-                    .then((res) => {
-                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
-                        } else {
-                            console.log("PVcalc data missing:", res.data);
-                        }
-                    })
-                    .catch((err) => console.log(err));
-            }
-            else if (panelData == "two") {
-                axiosPrivate.get(`/pv?lat=${areaData.lat}&lon=${areaData.lng}&type=3`)
-                    .then((res) => {
-                        const energy = Number(res.data) * Number(areaData.size) * 0.2;
-                        if (energy !== undefined) {
-                            setAreaData(prev => ({ ...prev, energy: energy.toFixed(3) }));
-                        } else {
-                            console.log("PVcalc data missing:", res.data);
-                        }
-                    })
-                    .catch((err) => console.log(err));
-            }
-        }
-    }, [areaData.lat, areaData.lng, panelData, areaData.size]);
+    useGetEnergy(panelData, setAreaData, areaData.size, areaData.lat, areaData.lng)
 
     return (
         <div className={styles.container}>
@@ -143,8 +103,8 @@ function AddArea() {
                         Ετήσια παραγωγή PV ενέργειας(kWh):<br />
                         <input
                             type="text"
-                            name="energy"
-                            value={areaData.energy}
+                            name="ac"
+                            value={areaData.ac}
                             readOnly
                             required
                         />

@@ -9,7 +9,7 @@ export default function useAddArea() {
     const [areaData, setAreaData] = useState({
         name: "",
         size: "",
-        energy: "",
+        ac: "",
         lat: "",
         lng: ""
     });
@@ -50,7 +50,7 @@ export default function useAddArea() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const fields = ["lat", "lng", "energy"];
+        const fields = ["lat", "lng", "ac"];
         const isMissing = fields.some(field => areaData[field] === "");
 
         if (nameError || isMissing) {
@@ -64,7 +64,7 @@ export default function useAddArea() {
             paneltype: panelData,
             lat: Number(areaData.lat),
             lng: Number(areaData.lng),
-            ac: Number(areaData.energy)
+            ac: Number(areaData.ac)
         };
         try {
             await axiosPrivate.post('/areas', send);
