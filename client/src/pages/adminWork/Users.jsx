@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Link } from "react-router-dom";
 import styles from './Users.module.css';
+import Swal from "sweetalert2";
 
 import paroxoi from '../../assets/images/paroxoi.png';
 import userss from '../../assets/images/usersVisit.png';
@@ -33,13 +34,25 @@ function Users() {
     }, []);
 
     async function deleteUser(userid) {
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await axiosPrivate.delete(`/admins/users/${userid}`);
             setUsers(prev => prev.filter(u => u.userid !== userid));
             setFilteredUsers(prev => prev.filter(u => u.userid !== userid));
         }
         catch (err) {
-            console.log(err);
+            Swal.fire("Error", "Something went wrong", "error");
         }
     }
 

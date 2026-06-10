@@ -4,6 +4,7 @@ import styles from './Providers.module.css';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useGetProvider from "../../hooks/useGetProviders";
 import axios from "../../api/axios";
+import Swal from "sweetalert2";
 
 import paroxoi from '../../assets/images/paroxoiVisit.png';
 import users from '../../assets/images/users.png';
@@ -26,12 +27,24 @@ function Providers() {
     }, [getproviders]);
 
     async function deleteProvider(providerid) {
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await axiosPrivate.delete(`/admins/providers/${providerid}`);
             setFilteredProviders(prev => prev.filter(p => p.providerid !== providerid));
         }
         catch (err) {
-            console.log(err);
+            Swal.fire("Error", "Something went wrong", "error");
         }
     }
 

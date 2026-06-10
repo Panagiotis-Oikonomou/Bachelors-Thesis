@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 import styles from './MyAreas.module.css'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Swal from "sweetalert2";
 
 import matchings from '../../assets/images/mymatchings.png';
 import myareas from '../../assets/images/myareasVisit.png';
@@ -38,13 +39,25 @@ function MyAreas() {
     }, []);
 
     async function deleteArea(id) {
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await axiosPrivate.delete(`/areas/${id}`);
             setAreas(prev => prev.filter(a => a.areaid !== id));
             setFilteredAreas(prev => prev.filter(a => a.areaid !== id));
         }
         catch (err) {
-            console.log(err);
+            Swal.fire("Error", "Something went wrong", "error");
         }
     }
 
