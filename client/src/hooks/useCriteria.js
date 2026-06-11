@@ -16,6 +16,11 @@ export default function useCriteria() {
     const [isSizeChecked, setIsSizeChecked] = useState(false);
     const [isEnergyChecked, setIsEnergyChecked] = useState(false);
     const [isIncomeChecked, setIsIncomeChecked] = useState(false);
+    const [formError, setFormError] = useState("");
+
+    useEffect(() => {
+        resetTimer(formError, setFormError);
+    }, [formError]);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -40,8 +45,18 @@ export default function useCriteria() {
 
     }
 
+    function handleSubmit(e){
+        e.preventDefault();
+        if(isEnergyChecked && isIncomeChecked && isSizeChecked){
+            setFormError("Πρέπει να έχεις επιλέξει κάποιο από τα τρία πρώτα κριτήρια");
+            return;
+        }
+        console.log("Submitted");
+    }
+
     return {
-        criteria, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
-        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked
+        criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
+        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
+        handleSubmit
     };
 }
