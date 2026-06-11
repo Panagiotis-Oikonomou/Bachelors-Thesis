@@ -1,5 +1,4 @@
 const db = require('../config/db');
-const jwt = require('jsonwebtoken');
 
 exports.getProfile = async (req, res) => {
     try {

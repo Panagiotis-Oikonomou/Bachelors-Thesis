@@ -1,6 +1,7 @@
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 const { generateAccessToken, generateRefreshToken, storeRefreshTokens, removeRefreshToken, hasRefreshToken, clearRefreshCookie, setRefreshCookie, removeAllUserTokens } = require('../services/tokenService');
+const { addCriteria } = require('../controllers/criteriaController');
 
 exports.register = async (req, res) => {
     try {
@@ -15,8 +16,9 @@ exports.register = async (req, res) => {
             req.body.password
         ];
 
-        await db.query(sql, values);
-        return res.status(201).json({ message: "User added successfully" });
+        const [result] = await db.query(sql, values);
+        await addCriteria(result.insertId);
+        return res.sendStatus(201);
     }
     catch (err) {
         return res.status(500).json({ error: "Wrong register" });

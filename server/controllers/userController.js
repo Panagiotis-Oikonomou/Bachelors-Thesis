@@ -1,6 +1,4 @@
 const db = require('../config/db');
-const jwt = require('jsonwebtoken');
-const { removeRefreshToken, hasRefreshToken, clearRefreshCookie } = require('../services/tokenService');
 
 exports.getProfile = async (req, res) => {
     try {

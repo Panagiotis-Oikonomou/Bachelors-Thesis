@@ -17,6 +17,7 @@ app.use("/api/pv", require('./routes/pvRoutes'));
 app.use("/api/users", require('./routes/userRoutes'));
 app.use("/api/areas", require('./routes/areaRoutes'));
 app.use("/api/notifications", require('./routes/notificationRoutes'));
+app.use("/api/criteria", require('./routes/criteriaRoutes'));
 app.use("/api/validate", require('./routes/validationRoutes'));
 
 app.use("/api/admins", require('./routes/adminRoutes'));

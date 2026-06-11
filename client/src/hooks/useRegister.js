@@ -131,8 +131,8 @@ export default function useRegister() {
         }
 
         try{
-            const res = await axios.post('/public/register', formData);
-            if(res.data) navigate('/login');
+            await axios.post('/public/register', formData);
+            navigate('/login');
         } catch(err){
             console.log(err);
         }
