@@ -15,7 +15,7 @@ function Criteria() {
     const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
         isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
         isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
-        havingArea, checkboxOptions, handleSubmit
+        havingArea, formSuccess, checkboxOptions, handleSubmit
     } = useCriteria();
     return (
         <div className={styles.container}>
@@ -42,7 +42,8 @@ function Criteria() {
                             required={!isSizeChecked}
                             value={criteria.minsize}
                             onChange={handleChange}
-                            id="size" max={Number(criteria.maxsize) - 1} min="0"
+                            id="size" step="0.1"
+                            max={Number(criteria.maxsize) - 1} min="0"
                         />
                         <input
                             type="number"
@@ -52,6 +53,7 @@ function Criteria() {
                             value={criteria.maxsize}
                             onChange={handleChange}
                             max="3000" min={Number(criteria.minsize) + 1}
+                            step="0.1"
                         /><br />
                         <label htmlFor="chsize">Δεν θέλω</label> <input type="checkbox" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
                     </div>
@@ -65,7 +67,8 @@ function Criteria() {
                             required={!isEnergyChecked}
                             value={criteria.minenergy}
                             onChange={handleChange}
-                            id="energy" max={Number(criteria.maxenergy) - 1} min="0"
+                            id="energy" step="0.1"
+                            max={Number(criteria.maxenergy) - 1} min="0"
                         />
                         <input
                             type="number"
@@ -75,6 +78,7 @@ function Criteria() {
                             value={criteria.maxenergy}
                             onChange={handleChange}
                             min={Number(criteria.minenergy) + 1}
+                            step="0.1"
                         /><br />
                         <label htmlFor="chenergy">Δεν θέλω</label> <input type="checkbox" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
                     </div>
@@ -88,7 +92,8 @@ function Criteria() {
                             required={!isIncomeChecked}
                             value={criteria.minincome}
                             onChange={handleChange}
-                            id="income" max={Number(criteria.maxincome) - 1} min="0"
+                            id="income" step="0.1"
+                            max={Number(criteria.maxincome) - 1} min="0"
                         />
                         <input
                             type="number"
@@ -98,22 +103,23 @@ function Criteria() {
                             value={criteria.maxincome}
                             onChange={handleChange}
                             min={Number(criteria.minincome) + 1} max="100"
+                            step="0.1"
                         /><br />
-                        <label htmlFor="chincome">Δεν θέλω</label> 
+                        <label htmlFor="chincome">Δεν θέλω</label>
                         <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
                     </div>
 
                     <div className={styles.criteria}>Τι προσφέρω:<br />
                         <div className={styles.checkboxButtons}>
-                            <label className={styles.checkboxLabel} htmlFor="money">
-                                <input type="checkbox" name="money" id="money" checked={isMoneyChecked} onChange={checkboxOptions} />Χρήματα 
-                                <input type="number" name="moneyM" min="1" required disabled={!isMoneyChecked} onChange={handleChange}/>
-                                </label>
+                            <label className={styles.checkboxLabel} htmlFor="moneyM">
+                                <input type="checkbox" name="moneyM" id="moneyM" checked={isMoneyChecked} onChange={checkboxOptions} />Χρήματα
+                                <input type="number" name="money" value={criteria.money} min="1" required disabled={!isMoneyChecked} onChange={handleChange} />
+                            </label>
 
                             <label className={styles.checkboxLabel} htmlFor="area">
-                                <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions}/>Έκταση</label>
-                            <label htmlFor="areaname">
-                                <select id="areaname" name="areaname" onChange={handleChange} disabled={!isAreaChecked} required={isAreaChecked}>
+                                <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση</label>
+                            <label htmlFor="areaid">
+                                <select id="areaid" name="areaid" onChange={handleChange} disabled={!isAreaChecked}>
                                     <option defaultValue={""}></option>
                                     {areas.map((item) => {
                                         return (
@@ -125,14 +131,15 @@ function Criteria() {
                             </label>
 
                             <label className={styles.checkboxLabel} htmlFor="papers">
-                                <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions}/>Διαδικαστικά</label>
+                                <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions} />Διαδικαστικά</label>
 
                             <label className={styles.checkboxLabel} htmlFor="other">
-                                <input type="checkbox" name="other" id="other" checked={isOtherChecked} onChange={checkboxOptions}/>Άλλο</label>
+                                <input type="checkbox" name="other" id="other" checked={isOtherChecked} onChange={checkboxOptions} />Άλλο</label>
                         </div>
                     </div>
 
                     <div className={styles.msg}>{formError}</div>
+                    <div className={styles.success}>{formSuccess}</div>
                     <input type="submit" value="Αποθήκευση αλλαγών" />
                 </form>
             </div>

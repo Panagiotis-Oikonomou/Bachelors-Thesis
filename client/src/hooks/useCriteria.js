@@ -11,10 +11,10 @@ export default function useCriteria() {
         maxenergy: "",
         minincome: "",
         maxincome: "",
-        moneyM:"",
-        areaname: "",
-        papers:false,
-        other:false
+        money: "",
+        areaid: "",
+        papers: false,
+        other: false
     });
     const [isSizeChecked, setIsSizeChecked] = useState(false);
     const [isEnergyChecked, setIsEnergyChecked] = useState(false);
@@ -26,10 +26,12 @@ export default function useCriteria() {
     const [havingArea, setHavingArea] = useState(true);
     const [areas, setAreas] = useState([]);
     const [formError, setFormError] = useState("");
+    const [formSuccess, setFormSuccess] = useState("");
 
     useEffect(() => {
         resetTimer(formError, setFormError);
-    }, [formError]);
+        resetTimer(formSuccess, setFormSuccess);
+    }, [formError, formSuccess]);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -40,42 +42,64 @@ export default function useCriteria() {
     function setMinMaxToZero(e) {
         const { name, checked } = e.target;
         if (name === "chsize") {
-            setCriteria(prev => ({...prev, minsize: "", maxsize: "" }));
+            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "" }));
             setIsSizeChecked(checked);
         }
         else if (name === "chenergy") {
-            setCriteria(prev => ({...prev,  minenergy: "", maxenergy: "" }));
+            setCriteria(prev => ({ ...prev, minenergy: "", maxenergy: "" }));
             setIsEnergyChecked(checked);
         }
         else if (name === "chincome") {
-            setCriteria(prev => ({...prev,  minincome: "", maxincome: "" }));
+            setCriteria(prev => ({ ...prev, minincome: "", maxincome: "" }));
             setIsIncomeChecked(checked);
         }
 
     }
 
-    function checkboxOptions(e){
-        const {name, checked } = e.target;
-        if(name === "money"){
-            setCriteria(prev => ({...prev, money: checked }));
+    function checkboxOptions(e) {
+        const { name, checked } = e.target;
+        if (name === "moneyM") {
+            setCriteria(prev => ({ ...prev, money: "" }));
             setIsMoneyChecked(checked);
         }
-        else if(name === "area") {
+        else if (name === "area") {
             setIsAreaChecked(checked);
             setIsSizeChecked(checked);
             setIsEnergyChecked(checked);
-            setCriteria(prev => ({...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "" }));
+            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "" }));
         }
-
-        else if(name === "papers"){
-            setCriteria(prev => ({...prev, papers: checked }));
+        else if (name === "papers") {
+            setCriteria(prev => ({ ...prev, papers: checked }));
             setIsPapersChecked(checked);
         }
-        else if(name === "other"){
-            setCriteria(prev => ({...prev, other: checked }));
+        else if (name === "other") {
+            setCriteria(prev => ({ ...prev, other: checked }));
             setIsOtherChecked(checked);
         }
     }
+
+    useEffect(() => {
+        const getCriteria = async () => {
+            try {
+                const res = await axiosPrivate.get('/criteria');
+                if (res.data) {
+                    setCriteria(prev => ({
+                        ...prev, ...Object.fromEntries(Object.entries(res.data ?? {}).map(([key, value]) => [key, value ?? ""])
+                        )
+                    }));
+                    setIsMoneyChecked(res.data.money != null);
+                    setIsAreaChecked(res.data.areaid != null);
+                    setIsPapersChecked(res.data.papers);
+                    setIsOtherChecked(res.data.other);
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+        getCriteria();
+    }, []);
 
     useEffect(() => {
         const getAreas = async () => {
@@ -92,29 +116,50 @@ export default function useCriteria() {
         getAreas();
     }, []);
 
-    function handleSubmit(e){
+    async function handleSubmit(e) {
         e.preventDefault();
-        if(isEnergyChecked && isIncomeChecked && isSizeChecked){
+        if (isEnergyChecked && isIncomeChecked && isSizeChecked) {
             setFormError("Πρέπει να έχεις επιλέξει κάποιο από τα τρία πρώτα κριτήρια.");
             return;
         }
 
-        if(!isMoneyChecked && !isAreaChecked && !isPapersChecked && !isOtherChecked){
+        if (!isMoneyChecked && !isAreaChecked && !isPapersChecked && !isOtherChecked) {
             setFormError("Πρέπει να έχεις επιλέξει κάποια, από τις τέσσερις επιλογές το τι προσφέρεις.");
             return;
         }
 
-        if(isAreaChecked && criteria.areaname === ""){
+        if (isAreaChecked && criteria.areaname === "") {
             setFormError("Πρέπει να έχεις επιλέξει κάποια από τις περιοχές σου, για να προσφέρεις.");
             return;
         }
-        console.log("Submitted");
+
+        const send = {
+            ...criteria,
+            areaid: !criteria.areaid ? null : Number(criteria.areaid),
+            minsize: !criteria.minsize ? null : Number(criteria.minsize),
+            maxsize: !criteria.maxsize ? null : Number(criteria.maxsize),
+            minenergy: !criteria.minenergy ? null : Number(criteria.minenergy),
+            maxenergy: !criteria.maxenergy ? null : Number(criteria.maxenergy),
+            minincome: !criteria.minincome ? null : Number(criteria.minincome),
+            maxincome: !criteria.maxincome ? null : Number(criteria.maxincome),
+            money: !criteria.money ? null : Number(criteria.money),
+        }
+
+        try {
+            await axiosPrivate.put('/criteria', send);
+            setFormSuccess("Οι αλλαγές αποθυκεύτικαν με επιτυχία");
+            console.log(criteria);
+            console.log(send);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     return {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
         isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
         isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
-        havingArea, checkboxOptions, handleSubmit
+        havingArea, formSuccess, checkboxOptions, handleSubmit
     };
 }
