@@ -14,7 +14,8 @@ import menu from '../../assets/images/menu.png';
 function Criteria() {
     const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
         isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
-        handleSubmit
+        isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
+        havingArea, checkboxOptions, handleSubmit
     } = useCriteria();
     return (
         <div className={styles.container}>
@@ -52,7 +53,7 @@ function Criteria() {
                             onChange={handleChange}
                             max="3000" min={Number(criteria.minsize) + 1}
                         /><br />
-                        <label htmlFor="chsize">Δεν θέλω</label> <input type="checkbox" checked={isSizeChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
+                        <label htmlFor="chsize">Δεν θέλω</label> <input type="checkbox" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
                     </div>
 
                     <div className={styles.criteria}>
@@ -75,7 +76,7 @@ function Criteria() {
                             onChange={handleChange}
                             min={Number(criteria.minenergy) + 1}
                         /><br />
-                        <label htmlFor="chenergy">Δεν θέλω</label> <input type="checkbox" checked={isEnergyChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
+                        <label htmlFor="chenergy">Δεν θέλω</label> <input type="checkbox" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
                     </div>
 
                     <div className={styles.criteria}>
@@ -98,18 +99,38 @@ function Criteria() {
                             onChange={handleChange}
                             min={Number(criteria.minincome) + 1} max="100"
                         /><br />
-                        <label htmlFor="chincome">Δεν θέλω</label> <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
+                        <label htmlFor="chincome">Δεν θέλω</label> 
+                        <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
                     </div>
 
-                    {/* Τι προσφέρω:<br />
-                    <div className={styles.offer}>
-                        <input type="radio" name="give" id="money" /><label htmlFor="money">Χρήματα</label>
-                        <input type="radio" name="give" id="area" /><label htmlFor="area">Έκταση</label>
-                        <input type="radio" name="give" id="other" /><label htmlFor="other">Άλλο</label>
-                    </div> */}
+                    <div className={styles.criteria}>Τι προσφέρω:<br />
+                        <div className={styles.checkboxButtons}>
+                            <label className={styles.checkboxLabel} htmlFor="money">
+                                <input type="checkbox" name="money" id="money" checked={isMoneyChecked} onChange={checkboxOptions} />Χρήματα 
+                                <input type="number" name="moneyM" min="1" required disabled={!isMoneyChecked} onChange={handleChange}/>
+                                </label>
 
-                    {/* <input type="radio" value="Εκταση" name="give" /><br />
-                    <input type="radio" value="Αλλο" name="give" /><br /> */}
+                            <label className={styles.checkboxLabel} htmlFor="area">
+                                <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions}/>Έκταση</label>
+                            <label htmlFor="areaname">
+                                <select id="areaname" name="areaname" onChange={handleChange} disabled={!isAreaChecked} required={isAreaChecked}>
+                                    <option defaultValue={""}></option>
+                                    {areas.map((item) => {
+                                        return (
+                                            <option key={item.areaid} value={item.areaid}>
+                                                {item.name}
+                                            </option>);
+                                    })}
+                                </select>
+                            </label>
+
+                            <label className={styles.checkboxLabel} htmlFor="papers">
+                                <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions}/>Διαδικαστικά</label>
+
+                            <label className={styles.checkboxLabel} htmlFor="other">
+                                <input type="checkbox" name="other" id="other" checked={isOtherChecked} onChange={checkboxOptions}/>Άλλο</label>
+                        </div>
+                    </div>
 
                     <div className={styles.msg}>{formError}</div>
                     <input type="submit" value="Αποθήκευση αλλαγών" />
