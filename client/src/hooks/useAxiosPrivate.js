@@ -35,10 +35,7 @@ const useAxiosPrivate = () => {
 
                     } catch (err) {
                         setAuth({});
-                        navigate('/login', {
-                            state: { from: location },
-                            replace: true
-                        });
+                        navigate('/login', { state: { from: location }, replace: true });
                         return Promise.reject(err);
                     }
                 }

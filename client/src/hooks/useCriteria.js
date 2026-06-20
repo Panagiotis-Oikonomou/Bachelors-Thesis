@@ -66,7 +66,7 @@ export default function useCriteria() {
             setIsAreaChecked(checked);
             setIsSizeChecked(checked);
             setIsEnergyChecked(checked);
-            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "" }));
+            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "", areaid: "" }));
         }
         else if (name === "papers") {
             setCriteria(prev => ({ ...prev, papers: checked }));
@@ -87,8 +87,10 @@ export default function useCriteria() {
                         ...prev, ...Object.fromEntries(Object.entries(res.data ?? {}).map(([key, value]) => [key, value ?? ""])
                         )
                     }));
-                    setIsMoneyChecked(res.data.money != null);
-                    setIsAreaChecked(res.data.areaid != null);
+                    setIsMoneyChecked(res.data.money !== null);
+                    setIsSizeChecked(res.data.areaid !== null);
+                    setIsEnergyChecked(res.data.areaid !== null);
+                    setIsAreaChecked(res.data.areaid !== null);
                     setIsPapersChecked(res.data.papers);
                     setIsOtherChecked(res.data.other);
                 }

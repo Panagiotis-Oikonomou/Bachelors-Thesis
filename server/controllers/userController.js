@@ -10,7 +10,7 @@ exports.getProfile = async (req, res) => {
         res.json(rows[0] || null);
     }
     catch (err) {
-        return res.status(500).json({ error: "Wrong get profile" });
+        return res.status(500).json({ err });
     }
 }
 
@@ -31,6 +31,6 @@ exports.updateUser = async (req, res) => {
         res.json(req.body);
     }
     catch (err) {
-        return res.status(500).json({ error: "Wrong edit user" });
+        return res.status(500).json({ err });
     }
 }

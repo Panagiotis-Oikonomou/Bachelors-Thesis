@@ -8,6 +8,7 @@ import dataValidation from "../utils/dataValidation.js";
 import passwordChecking from "../utils/passwordChecking.js";
 import { getProviders } from "../api/getProviders.js";
 import resetTimer from "../utils/resetTimer.js";
+import Swal from "sweetalert2";
 
 export default function useUserProfile() {
     const navigate = useNavigate();
@@ -112,10 +113,21 @@ export default function useUserProfile() {
         }
 
         if (name !== "provider") setErrors(prev => ({ ...prev, [name]: error }));
-        
+
     }
 
     async function signOut() {
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Logout"
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             await logout();
             navigate('/');

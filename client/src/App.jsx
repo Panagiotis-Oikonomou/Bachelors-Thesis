@@ -31,8 +31,6 @@ import PersistLogin from "./pages/PersistLogin";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-
         {/* Public Routes */}
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
@@ -45,24 +43,22 @@ function App() {
             <Route path="/manage_area/:id" element={<ManageArea />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/criteria" element={<Criteria />} />
+
+            <Route path="/my_chats" element={<MyChats />} />
+            <Route path="/chatroom" element={<ChatRoom />} />
+            <Route path="/matchings" element={<Matchings />} />
+            <Route path="/match" element={<Match />} />
           </Route>
 
           <Route element={<RequiredAuth admin={true} />}>
             <Route path="/users" element={<Users />} />
             <Route path="/profile/admin" element={<ProfileAdmin />} />
             <Route path="/providers" element={<Providers />} />
+
+            <Route path="/notifications/admin" element={<NotificationsAdmin />} />
           </Route>
         </Route>
-
-
-        <Route path="/my_chats" element={<MyChats />} />
-        <Route path="/chatroom" element={<ChatRoom />} />
-        <Route path="/matchings" element={<Matchings />} />
-        <Route path="/criteria" element={<Criteria />} />
-        <Route path="/match" element={<Match />} />
-        <Route path="/notifications/admin" element={<NotificationsAdmin />} />
-
-      </Route>
     </Routes>
   );
 }

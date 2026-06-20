@@ -99,7 +99,6 @@ function Providers() {
         }
     }
 
-
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />

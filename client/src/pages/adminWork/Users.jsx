@@ -36,12 +36,11 @@ function Users() {
     async function deleteUser(userid) {
         const result = await Swal.fire({
             title: "Are you sure?",
-            text: "You won't be able to revert this!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: "Yes, delete him!"
         });
 
         if (!result.isConfirmed) return;
@@ -89,26 +88,26 @@ function Users() {
                     <table>
                         <thead>
                             <tr>
+                                <th> Διαγραφή </th>
                                 <th> Όνομα </th>
                                 <th> Επώνυμο </th>
                                 <th> Α.Π.Ρ </th>
                                 <th> Πάροχος </th>
                                 <th> Email </th>
                                 <th> Username </th>
-                                <th> Διαγραφή </th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {filteredUsers.map((item) => {
                                 return <tr key={item.userid}>
+                                    <td> <button onClick={() => deleteUser(item.userid)}>Διαγραφή</button> </td>
                                     <td> {item.fname} </td>
                                     <td> {item.lname} </td>
                                     <td> {item.clock} </td>
                                     <td> {item.provider} </td>
                                     <td> {item.email} </td>
                                     <td> {item.username} </td>
-                                    <td> <button onClick={() => deleteUser(item.userid)}>Διαγραφή</button> </td>
                                 </tr>
                             })}
                         </tbody>

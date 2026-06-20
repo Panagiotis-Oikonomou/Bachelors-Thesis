@@ -7,6 +7,6 @@ exports.getProviders = async (req, res) => {
         return res.json(rows);
     }
     catch (err) {
-        return res.status(500).json({ error: "Wrong get providers" });
+        return res.status(500).json({err});
     }
 }

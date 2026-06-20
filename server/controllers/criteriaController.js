@@ -34,8 +34,8 @@ exports.updateCriteria = async (req, res) => {
 exports.getCriteria = async (req, res) => {
     try{
         const sql = "SELECT * FROM criterias WHERE userid = ? LIMIT 1";
-        const [result] = await db.query(sql, [req.user.id]);
-        return res.json(result[0] ?? null);
+        const [rows] = await db.query(sql, [req.user.id]);
+        return res.json(rows[0] ?? null);
     }
     catch(err){
         console.log(err);

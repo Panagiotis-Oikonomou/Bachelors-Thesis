@@ -17,6 +17,7 @@ function Criteria() {
         isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
         havingArea, formSuccess, checkboxOptions, handleSubmit
     } = useCriteria();
+
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -117,9 +118,8 @@ function Criteria() {
                             </label>
 
                             <label className={styles.checkboxLabel} htmlFor="area">
-                                <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση</label>
-                            <label htmlFor="areaid">
-                                <select id="areaid" name="areaid" onChange={handleChange} disabled={!isAreaChecked}>
+                                <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
+                                <select name="areaid" onChange={handleChange} disabled={!isAreaChecked}>
                                     <option defaultValue={""}></option>
                                     {areas.map((item) => {
                                         return (

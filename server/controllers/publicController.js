@@ -16,8 +16,8 @@ exports.register = async (req, res) => {
             req.body.password
         ];
 
-        const [result] = await db.query(sql, values);
-        await addCriteria(result.insertId);
+        const [rows] = await db.query(sql, values);
+        await addCriteria(rows.insertId);
         return res.sendStatus(201);
     }
     catch (err) {

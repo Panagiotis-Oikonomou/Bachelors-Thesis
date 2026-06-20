@@ -42,9 +42,9 @@ const hasRefreshToken = async (id, token) => {
 
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-        const [result] = await db.query(sql, [id, hashedToken]);
+        const [rows] = await db.query(sql, [id, hashedToken]);
 
-        return result.length > 0;
+        return rows.length > 0;
     }
     catch(err){
         console.error(err);
@@ -69,9 +69,9 @@ const findUserByRefreshToken = async (token) => {
 
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-        const [result] = await db.query(sql, [hashedToken]);
+        const [rows] = await db.query(sql, [hashedToken]);
         
-        if(result.length > 0) return result[0].userid;
+        if(rows.length > 0) return rows[0].userid;
 
         return null;
     }

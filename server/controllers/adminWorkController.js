@@ -5,10 +5,10 @@ exports.getUsers = async (req, res) => {
         const sql = "SELECT userid, fname, lname, clock, provider, email, username FROM users ORDER BY username";
 
         const [rows] = await db.query(sql);
-        res.json(rows);
+        res.status(200).json(rows);
     }
     catch (err) {
-        return res.status(500).json({ error: "Wrong get users" });
+        return res.status(500).json({ err });
     }
 }
 
@@ -38,11 +38,11 @@ exports.deleteProvider = async (req, res) => {
         const sqlUpdate = "UPDATE users SET provider = '' WHERE provider = ?";
         const id = req.params.providerid;
 
-        const [result] =  await db.query(sqlProviderId, [id]);
-        if (result.length === 0) return res.sendStatus(404);
+        const [rows] =  await db.query(sqlProviderId, [id]);
+        if (rows.length === 0) return res.sendStatus(404);
 
         await db.query(sql, [id]);
-        await db.query(sqlUpdate, [result[0].providername]);
+        await db.query(sqlUpdate, [rows[0].providername]);
         return res.sendStatus(200);
     }
     catch(err){

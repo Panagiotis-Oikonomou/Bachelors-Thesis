@@ -5,6 +5,8 @@ import useAxiosPrivate from "./useAxiosPrivate.js";
 import useLogout from "./useLogout.js";
 import dataValidation from "../utils/dataValidation.js";
 import passwordChecking from "../utils/passwordChecking.js";
+import Swal from "sweetalert2";
+import resetTimer from "../utils/resetTimer.js";
 
 export default function useAdminProfile() {
     const navigate = useNavigate();
@@ -55,21 +57,8 @@ export default function useAdminProfile() {
     }, []);
 
     useEffect(() => {
-        if (saved !== "") {
-            const timer = setTimeout(() => {
-                setSaved("");
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
-
-        if (allError !== "") {
-            const timer = setTimeout(() => {
-                setAllError("");
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
+        resetTimer(saved, setSaved);
+        resetTimer(allError, setAllError);
     }, [saved, allError]);
 
     const checkEmail = useMemo(() => checkEmailApi(axiosPrivate, setErrors), []);
@@ -116,6 +105,16 @@ export default function useAdminProfile() {
     }
 
     async function signOut() {
+        const result = await Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Logout"
+        });
+
+        if (!result.isConfirmed) return;
         try {
             await logout();
             navigate('/');
