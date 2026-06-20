@@ -116,8 +116,6 @@ function MyAreas() {
                         <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
                     </div>
                 })}
-
-
             </div>
         </div>
     )

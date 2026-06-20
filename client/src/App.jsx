@@ -24,7 +24,6 @@ import Register from './pages/public/Register';
 import Users from "./pages/adminWork/Users";
 import Providers from "./pages/adminWork/Providers";
 
-import Layout from "./layouts/Layout";
 import RequiredAuth from "./pages/RequiredAuth";
 import PersistLogin from "./pages/PersistLogin";
 

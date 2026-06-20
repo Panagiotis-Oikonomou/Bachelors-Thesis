@@ -18,12 +18,14 @@ exports.deleteUser = async (req, res) => {
         const sqlArea = "DELETE FROM areas WHERE userid = ?";
         const sqlCriteria = "DELETE FROM criterias WHERE userid = ?";
         const sqlNotification = "DELETE FROM notifications WHERE userid = ?";
+        const sqlMatchings = "DELETE FROM matchings WHERE userid = ?";
         const userid = req.params.userid;
 
         await db.query(sql, [userid]);
         await db.query(sqlArea, [userid]);
         await db.query(sqlCriteria, [userid]);
         await db.query(sqlNotification, [userid]);
+        await db.query(sqlMatchings, [userid]);
         return res.sendStatus(200);
     }
     catch(err){
