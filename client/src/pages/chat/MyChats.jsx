@@ -1,18 +1,40 @@
-import React, { useState } from "react";
-import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
-import './MyChats.module.css';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+
 import styles from './MyChats.module.css';
 import matchings from '../../assets/images/mymatchings.png';
 import myareas from '../../assets/images/myareas.png';
 import criteria from '../../assets/images/criteria.png';
 import match from '../../assets/images/match.png';
-import chats from '../../assets/images/chatsVisit.png';
+import chatss from '../../assets/images/chatsVisit.png';
 import notifications from '../../assets/images/notifications.png';
 import profile from '../../assets/images/profile.png';
 import menu from '../../assets/images/menu.png';
 
 function MyChats() {
+    const axiosPrivate = useAxiosPrivate();
+    const [chats, setChats] = useState([]);
+    const grouped = chats.reduce((acc, item) => {
+        if (!acc[item.chatid]) acc[item.chatid] = [];
+
+        acc[item.chatid].push(item);
+        return acc;
+    }, {});
+
+    useEffect(() => {
+        const getChats = async () => {
+            try {
+                const res = await axiosPrivate.get('/chats');
+                if (res.data) setChats(res.data);
+                console.log(res.data);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        getChats();
+    }, []);
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -21,34 +43,23 @@ function MyChats() {
                 <Link to='/my_areas'><img src={myareas} /></Link>
                 <Link to='/criteria'><img src={criteria} /></Link>
                 <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
+                <Link to='/my_chats'><img src={chatss} /></Link>
                 <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
+
             <div className={styles.chats}>
-                <div className={styles.chat}>
-                    <Link to='/chatroom' className={styles.alink}>
-                        <div className={styles.chatData}>
-                            Username1 Username2 Username3 Username4 Username5 Username6 Username7
+                {Object.entries(grouped).map(([chatid, members]) => (
+                    <Link to='/chatroom' className={styles.alink} key={chatid}>
+                        <div className={styles.chat} >
+                            {members.map(member => (
+                                <div className={styles.chatData} key={member.username}>
+                                    {member.username}
+                                </div>
+                            ))}
                         </div>
                     </Link>
-                </div>
-
-                <div className={styles.chat}>
-                    <Link to='/chatroom' className={styles.alink}>
-                        <div className={styles.chatData}>
-                            Username1 Username2 Username3 Username4 Username5 Username6 Username7
-                        </div>
-                    </Link>
-                </div>
-
-                <div className={styles.chat}>
-                    <Link to='/chatroom' className={styles.alink}>
-                        <div className={styles.chatData}>
-                            Username1 Username2 Username3 Username4 Username5 Username6 Username7
-                        </div>
-                    </Link>
-                </div>                
+                ))}
             </div>
         </div>
     )

@@ -150,8 +150,6 @@ export default function useCriteria() {
         try {
             await axiosPrivate.put('/criteria', send);
             setFormSuccess("Οι αλλαγές αποθυκεύτικαν με επιτυχία");
-            console.log(criteria);
-            console.log(send);
         }
         catch (err) {
             console.log(err);

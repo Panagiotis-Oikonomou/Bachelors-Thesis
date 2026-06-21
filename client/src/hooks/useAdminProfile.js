@@ -117,7 +117,7 @@ export default function useAdminProfile() {
         if (!result.isConfirmed) return;
         try {
             await logout();
-            navigate('/');
+            navigate('/login');
         } catch (err) {
             console.error("Logout failed:", err.response?.data || err.message);
         }

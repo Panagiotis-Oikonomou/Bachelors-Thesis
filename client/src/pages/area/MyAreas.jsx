@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from 'axios';
 import { Link } from "react-router-dom";
 import styles from './MyAreas.module.css'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -96,8 +95,8 @@ function MyAreas() {
             <div className={styles.areas}>
                 <p>Δημιουργία νέας έκτασης <Link to='/add_area'><img src={plus} className={styles.plus} /></Link></p>
 
-                {filteredAreas.map((id) => {
-                    return <div className={styles.area} key={id.areaid}>
+                {filteredAreas.map((id) => (
+                    <div className={styles.area} key={id.areaid}>
                         <Link to={`/manage_area/${id.areaid}`} className={styles.alink}>
                             <div className={styles.areaData}>
                                 Όνομα περιοχής: {id.name}<br />
@@ -115,7 +114,7 @@ function MyAreas() {
                         </Link>
                         <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
                     </div>
-                })}
+                ))}
             </div>
         </div>
     )

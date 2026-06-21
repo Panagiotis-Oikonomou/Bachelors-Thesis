@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import styles from './ChatRoom.module.css'
 import { Up } from "../../components/up/Up";
 
@@ -8,16 +7,6 @@ function ChatRoom() {
     return (
         <div className={styles.container}>
             <Up></Up>
-            {/* <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteria} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div> */}
 
             <div className={styles.chatName}><p>To id</p></div>
             <div className={styles.otherChats}>

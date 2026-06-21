@@ -58,7 +58,7 @@ function Notifications() {
             confirmButtonText: "Yes, delete it!"
         });
 
-        if(!result.isConfirmed) return;
+        if (!result.isConfirmed) return;
 
         try {
             await axiosPrivate.delete(`/notifications/${id}`);
@@ -83,16 +83,16 @@ function Notifications() {
             </div>
 
             <div className={styles.notifications}>
-                {notifications.map((item) => {
-                    return <div
+                {notifications.map((item) => (
+                    <div
                         className={item.is_read ? styles.read : styles.not}
                         onClick={() => changeToRead(item.notid)}
                         key={item.notid}>
 
-                        <div className={styles.delete} onClick={(e) => {e.stopPropagation(); deleteNotification(item.notid)}}> X </div>
+                        <div className={styles.delete} onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}> X </div>
                         {item.message}
                     </div>
-                })}
+                ))}
             </div>
         </div>
     )

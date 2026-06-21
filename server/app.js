@@ -20,6 +20,7 @@ app.use("/api/notifications", require('./routes/notificationRoutes'));
 app.use("/api/criteria", require('./routes/criteriaRoutes'));
 app.use("/api/validate", require('./routes/validationRoutes'));
 app.use("/api/matchings", require('./routes/matchingRoutes'));
+app.use("/api/chats", require('./routes/chatRoutes'));
 
 app.use("/api/admins", require('./routes/adminRoutes'));
 

@@ -121,12 +121,11 @@ function Criteria() {
                                 <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
                                 <select name="areaid" onChange={handleChange} disabled={!isAreaChecked}>
                                     <option defaultValue={""}></option>
-                                    {areas.map((item) => {
-                                        return (
-                                            <option key={item.areaid} value={item.areaid}>
-                                                {item.name}
-                                            </option>);
-                                    })}
+                                    {areas.map((item) => (
+                                        <option key={item.areaid} value={item.areaid}>
+                                            {item.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </label>
 

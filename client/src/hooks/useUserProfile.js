@@ -130,7 +130,7 @@ export default function useUserProfile() {
 
         try {
             await logout();
-            navigate('/');
+            navigate('/login');
         } catch (err) {
             console.error("Logout failed:", err.response?.data || err.message);
         }
