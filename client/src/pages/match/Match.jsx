@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import axios from 'axios';
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import useMatch from "../../hooks/useMatch";
 import styles from './Match.module.css';
 
 import matchings from '../../assets/images/mymatchings.png';
 import myareas from '../../assets/images/myareas.png';
-import criteria from '../../assets/images/criteria.png';
+import criterias from '../../assets/images/criteria.png';
 import match from '../../assets/images/matchVisit.png';
 import chats from '../../assets/images/chats.png';
 import notifications from '../../assets/images/notifications.png';
@@ -16,13 +16,14 @@ import rarrow from '../../assets/images/rightArrowBlack.png';
 
 
 function Match() {
+    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSubmit, setMinMaxToZero } = useMatch();
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
             <div className={styles.up}>
                 <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteria} /></Link>
+                <Link to='/criteria'><img src={criterias} /></Link>
                 <Link to='/match'><img src={match} /></Link>
                 <Link to='/my_chats'><img src={chats} /></Link>
                 <Link to='/notifications'><img src={notifications} /></Link>
@@ -31,17 +32,123 @@ function Match() {
 
             <div className={styles.searchArea}>
                 <div className={styles.search}>
-                    <form>
-                        Έκταση(σε km<sup>2</sup>):<br /><input type="number" value="0" id="area1" min="0" /> &nbsp;&nbsp;&nbsp; <input type="number" value="5.4" id="area2" max="5.4" /><br />
-                        Δεν θέλω <input type="checkbox" id="charea" /><br /><br />
+                    <form onSubmit={handleSubmit}>
+                        <div className={styles.criteria}>
+                            <label htmlFor="size">Έκταση(km<sup>2</sup>):<br /></label>
+                            <input
+                                type="number"
+                                name="minsize"
+                                id="size"
+                                value={criteria.minsize}
+                                disabled={isSizeChecked}
+                                required={!isSizeChecked}
+                                onChange={handleChange}
+                                step="0.1" min="0"
+                                max={Number(criteria.maxsize) - 1}
+                            />
+                            <input
+                                type="number"
+                                value={criteria.maxsize}
+                                disabled={isSizeChecked}
+                                required={!isSizeChecked}
+                                onChange={handleChange}
+                                name="maxsize"
+                                min={Number(criteria.minsize) + 1}
+                                max="3000" step="0.1"
+                            /><br />
+                            <label htmlFor="chsize">Δεν θέλω</label>
+                            <input type="checkbox" checked={isSizeChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
+                        </div>
 
-                        Ποσοστό ηλίου:<br /><input type="number" value="0" id="sun1" min="0" /> &nbsp;&nbsp;&nbsp; <input type="number" value="100" id="sun2" max="100" /><br />
-                        Δεν θέλω <input type="checkbox" id="chsun" readOnly /><br /><br />
+                        <div className={styles.criteria}>
+                            <label htmlFor="energy">Ποσότητα PV ενέργειας(kwh):<br /></label>
+                            <input
+                                type="number"
+                                name="minenergy"
+                                id="energy"
+                                disabled={isEnergyChecked}
+                                required={!isEnergyChecked}
+                                value={criteria.minenergy}
+                                onChange={handleChange}
+                                step="0.1" min="0"
+                                max={Number(criteria.maxenergy) - 1}
+                            />
+                            <input
+                                type="number"
+                                disabled={isEnergyChecked}
+                                required={!isEnergyChecked}
+                                value={criteria.maxenergy}
+                                onChange={handleChange}
+                                min={Number(criteria.minenergy) + 1}
+                                step="0.1" name="maxenergy"
+                            /><br />
+                            <label htmlFor="chenergy">Δεν θέλω</label>
+                            <input type="checkbox" checked={isEnergyChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
+                        </div>
 
-                        Ποσοστό που θα έχεις:<br /><input type="number" value="0" id="per1" min="0" /> &nbsp;&nbsp;&nbsp; <input type="number" value="100" id="per2" max="100" /><br />
-                        Δεν θέλω <input type="checkbox" id="chper" readOnly /><br /><br />
+                        <div className={styles.criteria}>
+                            <label htmlFor="income">Ποσοστό εσόδων:<br /></label>
+                            <input
+                                type="number"
+                                name="minincome"
+                                id="income"
+                                disabled={isIncomeChecked}
+                                required={!isIncomeChecked}
+                                value={criteria.minincome}
+                                onChange={handleChange}
+                                step="0.1" min="0"
+                                max={Number(criteria.maxincome) - 1}
+                            />
+                            <input
+                                type="number"
+                                name="maxincome"
+                                disabled={isIncomeChecked}
+                                required={!isIncomeChecked}
+                                value={criteria.maxincome}
+                                onChange={handleChange}
+                                min={Number(criteria.minincome) + 1} max="100"
+                                step="0.1"
+                            /><br />
+                            <label htmlFor="chincome">Δεν θέλω</label>
+                            <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
+                        </div>
 
-                        <div id="msg"> </div><br />
+                        <div className={styles.criteria}>
+                            <label htmlFor="money">Αριθμός χρημάτων:<br /></label>
+                            <input
+                                type="number"
+                                name="minmoney"
+                                id="money"
+                                disabled={isMoneyChecked}
+                                required={!isMoneyChecked}
+                                value={criteria.minmoney}
+                                onChange={handleChange}
+                                max={Number(criteria.maxmoney) - 1} min="0"
+                            />
+                            <input
+                                type="number"
+                                name="maxmoney"
+                                disabled={isMoneyChecked}
+                                required={!isMoneyChecked}
+                                value={criteria.maxmoney}
+                                onChange={handleChange}
+                                min={Number(criteria.minmoney) + 1}
+                            /><br />
+                            <label htmlFor="chmoney">Δεν θέλω</label>
+                            <input type="checkbox" checked={isMoneyChecked} onChange={setMinMaxToZero} name="chmoney" id="chmoney" />
+                        </div>
+
+                        <div className={styles.criteria}>
+                            <label className={styles.checkboxLabel} htmlFor="papers">
+                                <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions} />Διαδικαστικά</label>
+                        </div>
+
+                        <div className={styles.criteria}>
+                            <label className={styles.checkboxLabel} htmlFor="other">
+                                <input type="checkbox" name="other" id="other" checked={isOtherChecked} onChange={checkboxOptions} />Άλλο</label>
+                        </div>
+
+                        <div className={styles.msg}>{formError}</div>
                         <input type="submit" value="Αναζήτηση" />
                     </form>
                 </div>

@@ -42,7 +42,12 @@
     overflow-x:auto;
     overflow-y: hidden;
     scrollbar-width: thin;
+    padding: 10px;
     scrollbar-color: #888 #1b2632;
+}
+
+.criteria {
+    padding-bottom: 10px;
 }
 
 /* .main-hidden .search-area {
@@ -77,10 +82,6 @@ input[type="number"] {
     width: 50px;
 }
 
-.search {
-    padding: 10px;
-}
-
 .rArrow {
     grid-column: 5 / 7;
     grid-row: 3 / 4;
@@ -97,7 +98,7 @@ input[type="number"] {
     grid-column: 6;
 }
 
-#msg {
+.msg {
     color: red;
 }
 
@@ -137,10 +138,6 @@ input[type="number"] {
         margin-top: 20%;
         grid-column: 1 / 4;
         grid-row: 6 / 7;
-    }
-
-    .search {
-        padding-top: 50px;
     }
 
     .rArrow {
