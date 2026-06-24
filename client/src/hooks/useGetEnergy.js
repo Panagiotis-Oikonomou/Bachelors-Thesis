@@ -1,21 +1,14 @@
 import { useEffect } from "react";
 import useAxiosPrivate from "./useAxiosPrivate";
 
-export default function useGetEnergy(panelType, setAreaData, size, lat, lng) {
+export default function useGetEnergy(setAreaData, size, lat, lng) {
     const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
         if (!lat || !lng || !size) return;
 
-        let type;
-
-        if (panelType === "vertical") type = 1;
-        else if (panelType === "inclined") type = 2;
-        else if (panelType === "two") type = 3;
-        else return;
-
         axiosPrivate
-            .get(`/pv?lat=${lat}&lon=${lng}&type=${type}`)
+            .get(`/pv?lat=${lat}&lon=${lng}`)
             .then((res) => {
                 const energy = Number(res.data) * Number(size) * 0.2;
 
@@ -25,5 +18,5 @@ export default function useGetEnergy(panelType, setAreaData, size, lat, lng) {
                 }));
             })
             .catch(console.error);
-    }, [panelType, size, lat, lng, axiosPrivate, setAreaData]);
+    }, [size, lat, lng, axiosPrivate, setAreaData]);
 }

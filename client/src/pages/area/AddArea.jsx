@@ -12,7 +12,7 @@ import useGetEnergy from "../../hooks/useGetEnergy";
 function AddArea() {
     const axiosPrivate = useAxiosPrivate();
     const [location, setLocation] = useState(null);
-    const { areaData, setAreaData, nameError, formError, panelData, handleChange, handleSubmit } = useAddArea();
+    const { areaData, setAreaData, nameError, formError, handleChange, handleSubmit } = useAddArea();
 
     useEffect(() => {
         if (location) {
@@ -24,7 +24,7 @@ function AddArea() {
         }
     }, [location]);
 
-    useGetEnergy(panelData, setAreaData, areaData.size, areaData.lat, areaData.lng)
+    useGetEnergy(setAreaData, areaData.size, areaData.lat, areaData.lng)
 
     return (
         <div className={styles.container}>
@@ -59,32 +59,6 @@ function AddArea() {
                             onChange={handleChange}
                             required
                         />
-                    </div>
-
-                    <div className={styles.data}>Είδος ηλιακού πάνελ:<br />
-                        <div className={styles.radioButtons}>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="radio" name="panelType"
-                                    checked={panelData === 'vertical'}
-                                    onChange={handleChange} value="vertical" required
-                                />Vertical Axis
-                            </label>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="radio" name="panelType"
-                                    checked={panelData === 'inclined'}
-                                    onChange={handleChange} value="inclined" required
-                                />Inclined Axis
-                            </label>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="radio" name="panelType"
-                                    checked={panelData === 'two'}
-                                    onChange={handleChange} value="two" required
-                                />Two Axis
-                            </label>
-                        </div>
                     </div>
 
                     <div className={styles.data}>

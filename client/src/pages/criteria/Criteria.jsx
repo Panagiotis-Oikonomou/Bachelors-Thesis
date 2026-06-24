@@ -15,7 +15,7 @@ function Criteria() {
     const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
         isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
         isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
-        havingArea, formSuccess, checkboxOptions, handleSubmit
+        havingArea, formSuccess, checkboxOptions, handleSubmit, selectedArea
     } = useCriteria();
 
     return (
@@ -119,8 +119,8 @@ function Criteria() {
 
                             <label className={styles.checkboxLabel} htmlFor="area">
                                 <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
-                                <select name="areaid" onChange={handleChange} disabled={!isAreaChecked}>
-                                    <option defaultValue={""}></option>
+                                <select name="areaid" onChange={handleChange} disabled={!isAreaChecked} value={selectedArea}>
+                                    <option value="">Select area</option>
                                     {areas.map((item) => (
                                         <option key={item.areaid} value={item.areaid}>
                                             {item.name}

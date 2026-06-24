@@ -43,36 +43,6 @@ function ManageArea() {
                     </div>
 
                     <div className={styles.data}>
-                        Είδος ηλιακού πάνελ:<br />
-                        <div className={styles.radioButtonss}>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="radio" name="paneltype"
-                                    checked={areaData.paneltype === 'vertical'}
-                                    readOnly
-                                    onChange={handleChange} value="vertical"
-                                />Vertical Axis
-                            </label>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="radio" name="paneltype"
-                                    checked={areaData.paneltype === 'inclined'}
-                                    readOnly
-                                    onChange={handleChange} value="inclined"
-                                />Inclined Axis
-                            </label>
-                            <label className={styles.radioLabel}>
-                                <input
-                                    type="radio" name="paneltype"
-                                    checked={areaData.paneltype === 'two'}
-                                    readOnly
-                                    onChange={handleChange} value="two"
-                                />Two Axis
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className={styles.data}>
                         Coordinates(lat, lng):<br />
                         <input
                             type="text"

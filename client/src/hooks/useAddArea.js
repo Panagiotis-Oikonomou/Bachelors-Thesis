@@ -13,7 +13,6 @@ export default function useAddArea() {
         lat: "",
         lng: ""
     });
-    const [panelData, setPanelData] = useState("");
 
     const [formError, setFormError] = useState("");
     const [nameError, setNameError] = useState("");
@@ -25,8 +24,6 @@ export default function useAddArea() {
             setAreaData(prev => ({ ...prev, [name]: value }));
             validateField(name, value);
         }
-
-        if (name === "panelType") setPanelData(value);
     }
 
     function validateField(name, value) {
@@ -61,7 +58,6 @@ export default function useAddArea() {
         const send = {
             ...areaData,
             size: Number(areaData.size),
-            paneltype: panelData,
             lat: Number(areaData.lat),
             lng: Number(areaData.lng),
             ac: Number(areaData.ac)
@@ -76,6 +72,6 @@ export default function useAddArea() {
 
     return {
         areaData, setAreaData, nameError, formError,
-        panelData, handleChange, handleSubmit
+        handleChange, handleSubmit
     };
 }

@@ -2,10 +2,10 @@ const db = require('../config/db');
 
 exports.addArea = async (req, res) => {
     try {
-        const sql = "INSERT INTO areas (userid, name, size, paneltype, lat, lng,  ac) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        const { size, paneltype, lat, lng, ac, name } = req.body;
+        const sql = "INSERT INTO areas (userid, name, size, lat, lng,  ac) VALUES (?, ?, ?, ?, ?, ?)";
+        const { size, lat, lng, ac, name } = req.body;
         const userid = req.user.id;
-        const values = [userid, name, size, paneltype, lat, lng, ac];
+        const values = [userid, name, size, lat, lng, ac];
 
         await db.query(sql, values);
         res.sendStatus(201);
@@ -58,11 +58,11 @@ exports.deleteArea = async (req, res) => {
 
 exports.updateArea = async (req, res) => {
     try {
-        const sql = "UPDATE areas SET name = ?, size = ?, paneltype = ?, ac = ? WHERE userid = ? AND areaid = ?";
+        const sql = "UPDATE areas SET name = ?, size = ?, ac = ? WHERE userid = ? AND areaid = ?";
         const userid = req.user.id;
         const areaid = req.params.id;
-        const { name, size, paneltype, ac } = req.body;
-        const values = [name, size, paneltype, ac, userid, areaid];
+        const { name, size, ac } = req.body;
+        const values = [name, size, ac, userid, areaid];
 
         await db.query(sql, values);
         return res.sendStatus(200);

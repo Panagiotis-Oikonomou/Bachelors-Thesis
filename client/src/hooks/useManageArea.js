@@ -11,7 +11,6 @@ export default function useManageArea(id) {
     const [areaData, setAreaData] = useState({
         name: "",
         size: "",
-        paneltype: "",
         lat: "",
         lng: "",
         ac: ""
@@ -53,7 +52,7 @@ export default function useManageArea(id) {
         resetTimer(areaUpdated, setAreaUpdated);
     }, [formError, areaUpdated]);
 
-    useGetEnergy(areaData.paneltype, setAreaData, areaData.size, areaData.lat, areaData.lng);
+    useGetEnergy(setAreaData, areaData.size, areaData.lat, areaData.lng);
     
     function handleChange(e) {
         const { name, value } = e.target;

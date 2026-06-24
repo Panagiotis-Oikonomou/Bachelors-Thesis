@@ -103,8 +103,6 @@ function MyAreas() {
 
                                 Έκταση περιοχής: {id.size}<br />
 
-                                Τύπος πάνελ: {id.paneltype}<br />
-
                                 Γεωγραφικό πλάτος: {id.lat}<br />
 
                                 Γεωγραφικό μήκος: {id.lng}<br />

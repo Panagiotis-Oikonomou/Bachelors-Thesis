@@ -33,7 +33,7 @@ exports.updateCriteria = async (req, res) => {
 
 exports.getCriteria = async (req, res) => {
     try{
-        const sql = "SELECT * FROM criterias WHERE userid = ? LIMIT 1";
+        const sql = "SELECT c.*, a.name FROM criterias c LEFT JOIN areas a ON c.userid = a.userid WHERE c.userid = ?";
         const [rows] = await db.query(sql, [req.user.id]);
         return res.json(rows[0] ?? null);
     }

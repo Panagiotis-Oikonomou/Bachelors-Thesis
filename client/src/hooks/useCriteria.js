@@ -27,6 +27,7 @@ export default function useCriteria() {
     const [areas, setAreas] = useState([]);
     const [formError, setFormError] = useState("");
     const [formSuccess, setFormSuccess] = useState("");
+    const [selectedArea, setSelectedArea] = useState("");
 
     useEffect(() => {
         resetTimer(formError, setFormError);
@@ -104,6 +105,12 @@ export default function useCriteria() {
     }, []);
 
     useEffect(() => {
+        if (criteria.areaid !== undefined) {
+            setSelectedArea(criteria.areaid ?? "");
+        }
+    }, [criteria.areaid]);
+
+    useEffect(() => {
         const getAreas = async () => {
             try {
                 const res = await axiosPrivate.get('/areas');
@@ -149,6 +156,7 @@ export default function useCriteria() {
 
         try {
             await axiosPrivate.put('/criteria', send);
+            setSelectedArea(areas.find(a => a.areaid === criteria.areaid));
             setFormSuccess("Οι αλλαγές αποθυκεύτικαν με επιτυχία");
         }
         catch (err) {
@@ -160,6 +168,6 @@ export default function useCriteria() {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
         isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
         isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
-        havingArea, formSuccess, checkboxOptions, handleSubmit
+        havingArea, formSuccess, checkboxOptions, handleSubmit, selectedArea
     };
 }
