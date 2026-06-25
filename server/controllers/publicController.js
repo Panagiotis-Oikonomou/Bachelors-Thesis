@@ -27,8 +27,8 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const sql = "SELECT userid FROM users WHERE `username`=? AND `password`=? LIMIT 1";
-        const sql2 = "SELECT adminid FROM admins WHERE `username`=? AND `password`=? LIMIT 1";
+        const sql = "SELECT userid, username FROM users WHERE username=? AND password=? LIMIT 1";
+        const sql2 = "SELECT adminid, username FROM admins WHERE username=? AND password=? LIMIT 1";
         const { usr, psw, persist } = req.body;
 
         const [rows] = await db.query(sql, [usr, psw]);
@@ -54,9 +54,9 @@ exports.login = async (req, res) => {
         }
 
         if (rows.length > 0) {
-            const accessToken = generateAccessToken(rows[0].userid, false);
+            const accessToken = generateAccessToken(rows[0].userid, rows[0].username, false);
             if (persist) {
-                const refreshToken = generateRefreshToken(rows[0].userid, false);
+                const refreshToken = generateRefreshToken(rows[0].userid, rows[0].username, false);
                 await storeRefreshTokens(refreshToken, rows[0].userid);
                 setRefreshCookie(res, refreshToken);
             }
@@ -64,9 +64,9 @@ exports.login = async (req, res) => {
             res.json({ exists: true, isAdmin: false, accessToken });
         }
         else if (rows2.length > 0) {
-            const accessToken = generateAccessToken(rows2[0].adminid, true);
+            const accessToken = generateAccessToken(rows2[0].adminid, rows2[0].username, true);
             if (persist) {
-                const refreshToken = generateRefreshToken(rows2[0].adminid, true);
+                const refreshToken = generateRefreshToken(rows2[0].adminid, rows2[0].username, true);
                 await storeRefreshTokens(refreshToken, rows2[0].adminid);
                 setRefreshCookie(res, refreshToken);
             }

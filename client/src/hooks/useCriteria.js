@@ -105,9 +105,7 @@ export default function useCriteria() {
     }, []);
 
     useEffect(() => {
-        if (criteria.areaid !== undefined) {
-            setSelectedArea(criteria.areaid ?? "");
-        }
+        if (criteria.areaid !== undefined) setSelectedArea(criteria.areaid ?? "");
     }, [criteria.areaid]);
 
     useEffect(() => {

@@ -16,7 +16,7 @@ import rarrow from '../../assets/images/rightArrowBlack.png';
 
 
 function Match() {
-    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSubmit, setMinMaxToZero } = useMatch();
+    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser } = useMatch();
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -30,9 +30,17 @@ function Match() {
                 <Link to='/profile'><img src={profile} /></Link>
             </div>
 
+            <div className={styles.users}>
+                {users.map((user, index) => (
+                    <div className={styles.user} key={index}>{user} {index > 0 && ( <img src={larrow} className={styles.x} onClick={() => removeSelectedUser(index)}/>)}</div>
+                ))}
+
+                <form className={styles.user} onSubmit={handleCreationSubmit}> <input type="submit" value="Δημιουργία"/></form>
+            </div>
+
             <div className={styles.searchArea}>
                 <div className={styles.search}>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSearchSubmit}>
                         <div className={styles.criteria}>
                             <label htmlFor="size">Έκταση(km<sup>2</sup>):<br /></label>
                             <input
@@ -57,7 +65,7 @@ function Match() {
                                 max="3000" step="0.1"
                             /><br />
                             <label htmlFor="chsize">Δεν θέλω</label>
-                            <input type="checkbox" checked={isSizeChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
+                            <input type="checkbox" checked={isSizeChecked} onChange={setMinMaxToZero} disabled={isAreaChecked} name="chsize" id="chsize" />
                         </div>
 
                         <div className={styles.criteria}>
@@ -83,7 +91,7 @@ function Match() {
                                 step="0.1" name="maxenergy"
                             /><br />
                             <label htmlFor="chenergy">Δεν θέλω</label>
-                            <input type="checkbox" checked={isEnergyChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
+                            <input type="checkbox" checked={isEnergyChecked} onChange={setMinMaxToZero} disabled={isAreaChecked} name="chenergy" id="chenergy" />
                         </div>
 
                         <div className={styles.criteria}>
@@ -138,6 +146,18 @@ function Match() {
                             <input type="checkbox" checked={isMoneyChecked} onChange={setMinMaxToZero} name="chmoney" id="chmoney" />
                         </div>
 
+                        <label className={styles.checkboxLabel} htmlFor="area">
+                            <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
+                            <select name="areaid" onChange={handleChange} disabled={!isAreaChecked} value={selectedArea} required>
+                                <option value="">Select area</option>
+                                {areas.map((item) => (
+                                    <option key={item.areaid} value={item.areaid}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+
                         <div className={styles.criteria}>
                             <label className={styles.checkboxLabel} htmlFor="papers">
                                 <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions} />Διαδικαστικά</label>
@@ -153,7 +173,6 @@ function Match() {
                     </form>
                 </div>
             </div>
-            <div className={styles.lArrow}>Πάτα για απόρριψη<img src={larrow} /></div>
             <div className={styles.match}>
                 <div className={styles.area}>
                     Όνομα: Κάτι <br /><br />
@@ -164,8 +183,9 @@ function Match() {
 
                     Τοποθεσία:
                 </div>
+                <div className={styles.choices}>No<img src={larrow} className={styles.images}/></div>
+                <div className={styles.choices}>Yes<img src={rarrow} className={styles.images} onClick={() => addUser("yser")}/></div>
             </div>
-            <div className={styles.rArrow}>Πάτα για αποδοχή<img src={rarrow} /></div>
         </div>
     )
 }

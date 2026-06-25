@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import resetTimer from "../utils/resetTimer.js";
 import useAxiosPrivate from './useAxiosPrivate.js';
+import Swal from "sweetalert2";
+import useAuth from "./useAuth.js";
+import { jwtDecode } from "jwt-decode";
 
 export default function useMatch() {
     const axiosPrivate = useAxiosPrivate();
+    const { auth } = useAuth();
     const [criteria, setCriteria] = useState({
         minsize: "",
         maxsize: "",
@@ -22,14 +26,49 @@ export default function useMatch() {
     const [isMoneyChecked, setIsMoneyChecked] = useState(false);
     const [isPapersChecked, setIsPapersChecked] = useState(false);
     const [isOtherChecked, setIsOtherChecked] = useState(false);
+    const [isAreaChecked, setIsAreaChecked] = useState(false);
+    const [havingArea, setHavingArea] = useState(true);
+    const [areas, setAreas] = useState([]);
     const [formError, setFormError] = useState("");
+    const [selectedArea, setSelectedArea] = useState("");
+    const [users, setUsers] = useState([]);
 
+    useEffect(() => {
+        if (!auth?.accessToken) return;
+        const decoded = jwtDecode(auth.accessToken);
+        setUsers([decoded.username]);
+    }, [auth.accessToken]);
 
-    // const [havingArea, setHavingArea] = useState(true);
+    function addUser(name) {
+        setUsers([...users, name]);
+    }
 
     useEffect(() => {
         resetTimer(formError, setFormError);
     }, [formError]);
+
+    function removeSelectedUser(i) {
+        setUsers(users.filter((_, index) => index !== i));
+    }
+
+    useEffect(() => {
+        const getAreas = async () => {
+            try {
+                const res = await axiosPrivate.get('/areas');
+                if (Array.isArray(res.data) && res.data.length > 0) setAreas(res.data);
+                else setHavingArea(false);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+        getAreas();
+    }, []);
+
+    useEffect(() => {
+        if (criteria.areaid !== undefined) setSelectedArea(criteria.areaid ?? "");
+    }, [criteria.areaid]);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -68,20 +107,43 @@ export default function useMatch() {
             setCriteria(prev => ({ ...prev, other: checked }));
             setIsOtherChecked(checked);
         }
+        else if (name === "area") {
+            setIsAreaChecked(checked);
+            setIsSizeChecked(checked);
+            setIsEnergyChecked(checked);
+            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "", areaid: "" }));
+        }
     }
 
-    async function handleSubmit(e) {
+    async function handleSearchSubmit(e) {
         e.preventDefault();
-        if (isEnergyChecked && isIncomeChecked && isSizeChecked && isMoneyChecked && !isPapersChecked && !isOtherChecked) {
+        if (isEnergyChecked && isIncomeChecked && isSizeChecked && isMoneyChecked && !isPapersChecked && !isOtherChecked && !isAreaChecked) {
             setFormError("Πρέπει να έχεις επιλέξει κάποιο από τα κριτήρια.");
             return;
         }
         console.log(criteria);
     }
 
+    async function handleCreationSubmit(e) {
+        e.preventDefault();
+        if (users.length < 5) {
+            Swal.fire({
+                title: "You need at least 5 members",
+                icon: "warning",
+                showConfirmButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Ok"
+            });
+            return;
+        }
+        console.log("created");
+    }
+
     return {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
-        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked, 
-        isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, handleSubmit
+        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
+        isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, handleSearchSubmit,
+        areas, isAreaChecked, havingArea, selectedArea, handleCreationSubmit, users,
+        removeSelectedUser, addUser
     };
 }

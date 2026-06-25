@@ -34,8 +34,8 @@ const refresh = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        const newAccessToken = generateAccessToken(user.id, user.isAdmin);
-        const newRefreshToken = generateRefreshToken(user.id, user.isAdmin);
+        const newAccessToken = generateAccessToken(user.id, user.username, user.isAdmin);
+        const newRefreshToken = generateRefreshToken(user.id, user.username, user.isAdmin);
         await storeRefreshTokens(newRefreshToken, user.id);
         await removeRefreshToken(user.id, refreshToken);
         clearRefreshCookie(res);

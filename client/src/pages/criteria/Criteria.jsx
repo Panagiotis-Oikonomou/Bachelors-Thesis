@@ -119,7 +119,7 @@ function Criteria() {
 
                             <label className={styles.checkboxLabel} htmlFor="area">
                                 <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
-                                <select name="areaid" onChange={handleChange} disabled={!isAreaChecked} value={selectedArea}>
+                                <select name="areaid" onChange={handleChange} disabled={!isAreaChecked} value={selectedArea} required>
                                     <option value="">Select area</option>
                                     {areas.map((item) => (
                                         <option key={item.areaid} value={item.areaid}>
