@@ -39,6 +39,7 @@ export default function useMatch() {
     const [formError, setFormError] = useState("");
     const [selectedArea, setSelectedArea] = useState("");
     const [users, setUsers] = useState([]);
+    const [areaId, setAreaId] = useState(null);
     const [searchedUsers, setSearchedUsers] = useState([]);
     const [currentIndex, setCurrectIndex] = useState(0);
     let visibleUser = searchedUsers[currentIndex];
@@ -46,25 +47,12 @@ export default function useMatch() {
     useEffect(() => {
         if (!auth?.accessToken) return;
         const decoded = jwtDecode(auth.accessToken);
-        setUsers([decoded.username]);
+        setUsers([{ username: decoded.username }]);
     }, [auth.accessToken]);
-
-    function addUser(name) {
-        if (users.includes(name)) {
-            nextUser();
-            return;
-        }
-        setUsers([...users, name]);
-        nextUser();
-    }
 
     useEffect(() => {
         resetTimer(formError, setFormError);
     }, [formError]);
-
-    function removeSelectedUser(i) {
-        setUsers(users.filter((_, index) => index !== i));
-    }
 
     useEffect(() => {
         const getAreas = async () => {
@@ -138,6 +126,33 @@ export default function useMatch() {
         }
     }
 
+    function addUser(user) {
+        if (users.some(u => u.username === user.username)) {
+            nextUser();
+            return;
+        }
+        if (user.areaid && areaId && user.areaid !== areaId) {
+            nextUser();
+            return;
+        }
+        if (user.areaid && !areaId) {
+            setAreaId(user.areaid);
+            setHavingArea(false);
+        }
+        setUsers([...users, { username: user.username, areaid: user.areaid }]);
+        nextUser();
+    }
+
+    function removeSelectedUser(i) {
+        const removed = users[i];
+        const newUsers = users.filter((_, index) => index !== i);
+        setUsers(newUsers);
+        if (removed.areaid && !newUsers.some(u => u.areaid)) {
+            setAreaId(null);
+            setHavingArea(true);
+        }
+    }
+
     async function handleSearchSubmit(e) {
         e.preventDefault();
         if (isEnergyChecked && isIncomeChecked && isSizeChecked && isMoneyChecked && !isPapersChecked && !isOtherChecked && !isAreaChecked) {
@@ -146,13 +161,32 @@ export default function useMatch() {
         }
 
         const send = {
-            ...criteria,
-            area: readyToGo.area
+            area: readyToGo.area,
+            minsize: criteria.minsize === "" ? false : Number(criteria.minsize),
+            maxsize: criteria.maxsize === "" ? false : Number(criteria.maxsize),
+            minenergy: criteria.minenergy === "" ? false : Number(criteria.minenergy),
+            maxenergy: criteria.maxenergy === "" ? false : Number(criteria.maxenergy),
+            minincome: criteria.minincome === "" ? false : Number(criteria.minincome),
+            maxincome: criteria.maxincome === "" ? false : Number(criteria.maxincome),
+            minmoney: criteria.minmoney === "" ? false : Number(criteria.minmoney),
+            maxmoney: criteria.maxmoney === "" ? false : Number(criteria.maxmoney),
+            papers: criteria.papers,
+            other: criteria.other
         };
 
         try {
             const res = await axiosPrivate.post('/match', send);
 
+            if (res.data.length === 0) {
+                Swal.fire({
+                    title: "There were no users with that criteria",
+                    icon: "warning",
+                    showConfirmButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Ok"
+                });
+                return;
+            }
             if (res.data) {
                 setSearchedUsers(res.data);
                 setCurrectIndex(0)

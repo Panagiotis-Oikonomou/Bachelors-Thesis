@@ -32,7 +32,7 @@ function Match() {
 
             <div className={styles.users}>
                 {users.map((user, index) => (
-                    <div className={styles.user} key={index}>{user} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
+                    <div className={styles.user} key={index}>{user.username} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
                         {/* // ( <img src={larrow} className={styles.x} onClick={() => removeSelectedUser(index)}/>)} */}
                     </div>
                 ))}
@@ -179,8 +179,9 @@ function Match() {
                 {visibleUser && (
                     <>
                         <div className={styles.area}>
-                            {/* Username: {visibleUser.username !== null }<br /> */}
                             {visibleUser.username !== null && (<>Username: {visibleUser.username}<br/></>)}
+                            
+                            {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br/></>}
 
                             {visibleUser.minsize !== null && visibleUser.maxsize !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.minsize} : {visibleUser.maxsize}<br /></>)}
 
@@ -197,7 +198,7 @@ function Match() {
 
                         <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={nextUser}/></div>
 
-                        <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser.username)}/></div>
+                        <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser)}/></div>
                     </>
                 )}
             </div>
