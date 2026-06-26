@@ -18,6 +18,7 @@ app.use("/api/users", require('./routes/userRoutes'));
 app.use("/api/areas", require('./routes/areaRoutes'));
 app.use("/api/notifications", require('./routes/notificationRoutes'));
 app.use("/api/criteria", require('./routes/criteriaRoutes'));
+app.use("/api/match", require('./routes/matchRoutes'));
 app.use("/api/validate", require('./routes/validationRoutes'));
 app.use("/api/matchings", require('./routes/matchingRoutes'));
 app.use("/api/chats", require('./routes/chatRoutes'));

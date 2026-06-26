@@ -20,6 +20,13 @@ export default function useMatch() {
         papers: false,
         other: false
     });
+
+    const [readyToGo, setReadyToGo] = useState({
+        area: false,
+        money: false,
+        papers: false,
+        other: false
+    });
     const [isSizeChecked, setIsSizeChecked] = useState(false);
     const [isEnergyChecked, setIsEnergyChecked] = useState(false);
     const [isIncomeChecked, setIsIncomeChecked] = useState(false);
@@ -32,6 +39,9 @@ export default function useMatch() {
     const [formError, setFormError] = useState("");
     const [selectedArea, setSelectedArea] = useState("");
     const [users, setUsers] = useState([]);
+    const [searchedUsers, setSearchedUsers] = useState([]);
+    const [currentIndex, setCurrectIndex] = useState(0);
+    const visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
         if (!auth?.accessToken) return;
@@ -111,6 +121,7 @@ export default function useMatch() {
             setIsAreaChecked(checked);
             setIsSizeChecked(checked);
             setIsEnergyChecked(checked);
+            setReadyToGo(prev => ({ ...prev, area: checked }));
             setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "", areaid: "" }));
         }
     }
@@ -120,6 +131,25 @@ export default function useMatch() {
         if (isEnergyChecked && isIncomeChecked && isSizeChecked && isMoneyChecked && !isPapersChecked && !isOtherChecked && !isAreaChecked) {
             setFormError("Πρέπει να έχεις επιλέξει κάποιο από τα κριτήρια.");
             return;
+        }
+
+        const send = {
+            ...criteria,
+            area: readyToGo.area
+        };
+        // setSearchedUsers([]);
+        // visibleUser = null;
+
+        try {
+            const res = await axiosPrivate.post('/match', send);
+
+            if (res.data) {
+                setSearchedUsers(res.data);
+                setCurrectIndex(0)
+            }
+        }
+        catch (err) {
+            console.log(err);
         }
         console.log(criteria);
     }
@@ -136,14 +166,25 @@ export default function useMatch() {
             });
             return;
         }
+        if (!readyToGo.area || !readyToGo.money || !readyToGo.papers || !readyToGo.other) {
+            Swal.fire({
+                title: "You need at least 1 of each requirments",
+                icon: "warning",
+                showConfirmButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Ok"
+            });
+            console.log(readyToGo);
+            return;
+        }
         console.log("created");
     }
 
     return {
-        criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
-        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
+        criteria, formError, handleChange, setMinMaxToZero, isSizeChecked,
+        isEnergyChecked, isIncomeChecked,
         isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, handleSearchSubmit,
         areas, isAreaChecked, havingArea, selectedArea, handleCreationSubmit, users,
-        removeSelectedUser, addUser
+        removeSelectedUser, addUser, searchedUsers, visibleUser
     };
 }

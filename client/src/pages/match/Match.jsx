@@ -11,12 +11,12 @@ import chats from '../../assets/images/chats.png';
 import notifications from '../../assets/images/notifications.png';
 import profile from '../../assets/images/profile.png';
 import menu from '../../assets/images/menu.png';
-import larrow from '../../assets/images/leftArrowBlack.png';
-import rarrow from '../../assets/images/rightArrowBlack.png';
+import checkMark from '../../assets/images/checkMark.png';
+import xMark from '../../assets/images/xMark.png';
 
 
 function Match() {
-    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser } = useMatch();
+    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser } = useMatch();
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -32,10 +32,12 @@ function Match() {
 
             <div className={styles.users}>
                 {users.map((user, index) => (
-                    <div className={styles.user} key={index}>{user} {index > 0 && ( <img src={larrow} className={styles.x} onClick={() => removeSelectedUser(index)}/>)}</div>
+                    <div className={styles.user} key={index}>{user} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
+                        {/* // ( <img src={larrow} className={styles.x} onClick={() => removeSelectedUser(index)}/>)} */}
+                    </div>
                 ))}
 
-                <form className={styles.user} onSubmit={handleCreationSubmit}> <input type="submit" value="Δημιουργία"/></form>
+                <form className={styles.user} onSubmit={handleCreationSubmit}> <input type="submit" value="Δημιουργία" /></form>
             </div>
 
             <div className={styles.searchArea}>
@@ -174,17 +176,30 @@ function Match() {
                 </div>
             </div>
             <div className={styles.match}>
-                <div className={styles.area}>
-                    Όνομα: Κάτι <br /><br />
+                {visibleUser && (
+                    <>
+                        <div className={styles.area}>
+                            {/* Username: {visibleUser.username !== null }<br /> */}
+                            {visibleUser.username !== null && (<>Username: {visibleUser.usernmae}<br/></>)}
 
-                    Έκταση(σε km<sup>2</sup>): 23 <br /><br />
+                            {visibleUser.minsize !== null && visibleUser.maxsize !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.minsize} : {visibleUser.maxsize}<br /></>)}
 
-                    Ποσοστό ηλειοφάνειας: 23% <br /><br />
+                            {visibleUser.minenergy !== null && visibleUser.maxenergy !== null && (<>Ποσότητα PV ενέργειας(kwh) : {visibleUser.minenergy} : {visibleUser.maxenergy}<br /></>)}
 
-                    Τοποθεσία:
-                </div>
-                <div className={styles.choices}>No<img src={larrow} className={styles.images}/></div>
-                <div className={styles.choices}>Yes<img src={rarrow} className={styles.images} onClick={() => addUser("yser")}/></div>
+                            {visibleUser.minincome !== null && visibleUser.maxincome !== null && (<>Ποσοστό εσόδων: {visibleUser.minincome} : {visibleUser.maxincome}<br /></>)}
+
+                            {visibleUser.money !== null && (<>Χρήματα: {visibleUser.money}<br /></>)}
+
+                            {visibleUser.papers !== null && (<>Χαρτιά: {visibleUser.papers ? "Ναι" : "Όχι"}<br /></>)}
+
+                            {visibleUser.other !== null && (<>Άλλα: {visibleUser.other ? "Ναι" : "Όχι"}<br /></>)}
+                        </div>
+
+                        <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={() => console.log(searchedUsers)}/></div>
+
+                        <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser.username)}/></div>
+                    </>
+                )}
             </div>
         </div>
     )
