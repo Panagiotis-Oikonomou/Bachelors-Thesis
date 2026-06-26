@@ -16,7 +16,7 @@ import xMark from '../../assets/images/xMark.png';
 
 
 function Match() {
-    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser } = useMatch();
+    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser, nextUser } = useMatch();
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -180,7 +180,7 @@ function Match() {
                     <>
                         <div className={styles.area}>
                             {/* Username: {visibleUser.username !== null }<br /> */}
-                            {visibleUser.username !== null && (<>Username: {visibleUser.usernmae}<br/></>)}
+                            {visibleUser.username !== null && (<>Username: {visibleUser.username}<br/></>)}
 
                             {visibleUser.minsize !== null && visibleUser.maxsize !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.minsize} : {visibleUser.maxsize}<br /></>)}
 
@@ -195,7 +195,7 @@ function Match() {
                             {visibleUser.other !== null && (<>Άλλα: {visibleUser.other ? "Ναι" : "Όχι"}<br /></>)}
                         </div>
 
-                        <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={() => console.log(searchedUsers)}/></div>
+                        <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={nextUser}/></div>
 
                         <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser.username)}/></div>
                     </>

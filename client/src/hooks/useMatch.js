@@ -41,7 +41,7 @@ export default function useMatch() {
     const [users, setUsers] = useState([]);
     const [searchedUsers, setSearchedUsers] = useState([]);
     const [currentIndex, setCurrectIndex] = useState(0);
-    const visibleUser = searchedUsers[currentIndex];
+    let visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
         if (!auth?.accessToken) return;
@@ -50,7 +50,12 @@ export default function useMatch() {
     }, [auth.accessToken]);
 
     function addUser(name) {
+        if (users.includes(name)) {
+            nextUser();
+            return;
+        }
         setUsers([...users, name]);
+        nextUser();
     }
 
     useEffect(() => {
@@ -126,6 +131,13 @@ export default function useMatch() {
         }
     }
 
+    function nextUser() {
+        if (currentIndex + 1 <= searchedUsers.length) {
+            visibleUser = searchedUsers[currentIndex + 1];
+            setCurrectIndex(currentIndex + 1);
+        }
+    }
+
     async function handleSearchSubmit(e) {
         e.preventDefault();
         if (isEnergyChecked && isIncomeChecked && isSizeChecked && isMoneyChecked && !isPapersChecked && !isOtherChecked && !isAreaChecked) {
@@ -137,8 +149,6 @@ export default function useMatch() {
             ...criteria,
             area: readyToGo.area
         };
-        // setSearchedUsers([]);
-        // visibleUser = null;
 
         try {
             const res = await axiosPrivate.post('/match', send);
@@ -151,7 +161,6 @@ export default function useMatch() {
         catch (err) {
             console.log(err);
         }
-        console.log(criteria);
     }
 
     async function handleCreationSubmit(e) {
@@ -185,6 +194,6 @@ export default function useMatch() {
         isEnergyChecked, isIncomeChecked,
         isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, handleSearchSubmit,
         areas, isAreaChecked, havingArea, selectedArea, handleCreationSubmit, users,
-        removeSelectedUser, addUser, searchedUsers, visibleUser
+        removeSelectedUser, addUser, searchedUsers, visibleUser, nextUser
     };
 }
