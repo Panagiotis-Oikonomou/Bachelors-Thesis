@@ -13,6 +13,7 @@ export default function useMatch() {
         energy: "",
         income: "",
         money: "",
+        areaid: "",
         papers: false,
         other: false
     });
@@ -30,6 +31,7 @@ export default function useMatch() {
     const [isPapersChecked, setIsPapersChecked] = useState(false);
     const [isOtherChecked, setIsOtherChecked] = useState(false);
     const [isAreaChecked, setIsAreaChecked] = useState(false);
+
     const [havingArea, setHavingArea] = useState(true);
     const [areas, setAreas] = useState([]);
     const [formError, setFormError] = useState("");
@@ -38,12 +40,14 @@ export default function useMatch() {
     const [areaId, setAreaId] = useState(null);
     const [searchedUsers, setSearchedUsers] = useState([]);
     const [currentIndex, setCurrectIndex] = useState(0);
+    const [username, setUsername] = useState("");
     let visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
         if (!auth?.accessToken) return;
         const decoded = jwtDecode(auth.accessToken);
         setUsers([{ username: decoded.username }]);
+        setUsername(decoded.username);
     }, [auth.accessToken]);
 
     useEffect(() => {
@@ -73,8 +77,9 @@ export default function useMatch() {
         const { name, value } = e.target;
 
         if (name === "areaid") {
-            areaId(value === "" ? null : value);
-            return;
+            setAreaId(value === "" ? null : value);
+            setHavingArea(true)
+            setUsers(prev => prev.map(u => u.username === username ? { ...u, areaid: value } : u));
         }
 
         setCriteria(prev => ({ ...prev, [name]: value }));
@@ -116,6 +121,7 @@ export default function useMatch() {
             setIsEnergyChecked(checked);
             setReadyToGo(prev => ({ ...prev, area: checked }));
             setCriteria(prev => ({ ...prev, size: "", energy: "", areaid: "" }));
+            if(!checked) setAreaId(null);
         }
     }
 
@@ -138,6 +144,7 @@ export default function useMatch() {
         if (user.areaid && !areaId) {
             setAreaId(user.areaid);
             setHavingArea(false);
+            setReadyToGo(prev => ({ ...prev, area: true }));
         }
         setUsers([...users, { username: user.username, areaid: user.areaid }]);
         nextUser();
@@ -150,6 +157,8 @@ export default function useMatch() {
         if (removed.areaid && !newUsers.some(u => u.areaid)) {
             setAreaId(null);
             setHavingArea(true);
+            setReadyToGo(prev => ({ ...prev, area: false }));
+            console.log("here");
         }
     }
 
@@ -161,7 +170,6 @@ export default function useMatch() {
         }
 
         const send = {
-            area: readyToGo.area,
             size: criteria.size === "" ? false : Number(criteria.size),
             energy: criteria.energy === "" ? false : Number(criteria.energy),
             income: criteria.income === "" ? false : Number(criteria.income),

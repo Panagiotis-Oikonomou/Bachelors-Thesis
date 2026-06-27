@@ -2,30 +2,24 @@ const db = require('../config/db');
 
 exports.getMatches = async (req, res) => {
     try {
-        const { area, size, energy, income, money, papers, other } = req.body;
-        let sql = "SELECT c.*, u.username FROM users u JOIN criterias c ON u.userid = c.userid ";
+        const { size, energy, income, money, papers, other } = req.body;
+        let sql = "SELECT c.*, u.username, a.size, a.ac FROM users u JOIN criterias c ON u.userid = c.userid LEFT JOIN areas a ON u.userid = a.userid WHERE u.userid != ? ";
         const values = [req.user.id];
 
-        if (area) sql += "WHERE c.areaid IS NULL AND u.userid != ? ";
-
-        else {
-            sql += "JOIN areas a ON c.areaid = a.areaid WHERE c.areaid IS NOT NULL AND u.userid != ? ";
-
-            if (size !== false) {
-                sql += "AND a.size >= ? ";
-                values.push(size);
-            }
-
-            if (energy !== false) {
-                sql += "AND a.ac >= ? ";
-                values.push(energy);
-            }
+        if (size !== false) {
+            sql += "AND a.size >= ? ";
+            values.push(size);
         }
 
-        // if (minincome !== false && maxincome !== false) {
-        //     sql += "AND c.minincome <= ? AND c.maxincome <= ? ";
-        //     values.push(minincome, maxincome);
-        // }
+        if (energy !== false) {
+            sql += "AND a.ac >= ? ";
+            values.push(energy);
+        }
+
+        if (income !== false) {
+            sql += "AND c.income >= ? ";
+            values.push(income);
+        }
 
         if (money !== false) {
             sql += "AND c.money >= ? ";
@@ -35,12 +29,7 @@ exports.getMatches = async (req, res) => {
         if (papers) sql += "AND c.papers = 1 ";
         if (other) sql += "AND c.other = 1";
 
-        // console.log(sql);
-        // console.log(values);
-        // console.log(values.length);
-
         const [rows] = await db.query(sql, values);
-        console.log(rows.length);
 
         return res.json(rows);
     }
