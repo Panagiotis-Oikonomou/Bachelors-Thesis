@@ -47,25 +47,14 @@ function Match() {
                             <label htmlFor="size">Έκταση(km<sup>2</sup>):<br /></label>
                             <input
                                 type="number"
-                                name="minsize"
+                                name="size"
                                 id="size"
-                                value={criteria.minsize}
+                                value={criteria.size}
                                 disabled={isSizeChecked}
                                 required={!isSizeChecked}
                                 onChange={handleChange}
-                                step="0.1" min="0"
-                                max={Number(criteria.maxsize) - 1}
+                                step="0.1" min="0" max="131.000"
                             />
-                            <input
-                                type="number"
-                                value={criteria.maxsize}
-                                disabled={isSizeChecked}
-                                required={!isSizeChecked}
-                                onChange={handleChange}
-                                name="maxsize"
-                                min={Number(criteria.minsize) + 1}
-                                max="3000" step="0.1"
-                            /><br />
                             <label htmlFor="chsize">Δεν θέλω</label>
                             <input type="checkbox" checked={isSizeChecked} onChange={setMinMaxToZero} disabled={isAreaChecked} name="chsize" id="chsize" />
                         </div>
@@ -74,24 +63,14 @@ function Match() {
                             <label htmlFor="energy">Ποσότητα PV ενέργειας(kwh):<br /></label>
                             <input
                                 type="number"
-                                name="minenergy"
+                                name="energy"
                                 id="energy"
                                 disabled={isEnergyChecked}
                                 required={!isEnergyChecked}
-                                value={criteria.minenergy}
+                                value={criteria.energy}
                                 onChange={handleChange}
                                 step="0.1" min="0"
-                                max={Number(criteria.maxenergy) - 1}
                             />
-                            <input
-                                type="number"
-                                disabled={isEnergyChecked}
-                                required={!isEnergyChecked}
-                                value={criteria.maxenergy}
-                                onChange={handleChange}
-                                min={Number(criteria.minenergy) + 1}
-                                step="0.1" name="maxenergy"
-                            /><br />
                             <label htmlFor="chenergy">Δεν θέλω</label>
                             <input type="checkbox" checked={isEnergyChecked} onChange={setMinMaxToZero} disabled={isAreaChecked} name="chenergy" id="chenergy" />
                         </div>
@@ -100,25 +79,14 @@ function Match() {
                             <label htmlFor="income">Ποσοστό εσόδων:<br /></label>
                             <input
                                 type="number"
-                                name="minincome"
+                                name="income"
                                 id="income"
                                 disabled={isIncomeChecked}
                                 required={!isIncomeChecked}
-                                value={criteria.minincome}
+                                value={criteria.income}
                                 onChange={handleChange}
-                                step="0.1" min="0"
-                                max={Number(criteria.maxincome) - 1}
+                                step="0.1" min="0" max="100"
                             />
-                            <input
-                                type="number"
-                                name="maxincome"
-                                disabled={isIncomeChecked}
-                                required={!isIncomeChecked}
-                                value={criteria.maxincome}
-                                onChange={handleChange}
-                                min={Number(criteria.minincome) + 1} max="100"
-                                step="0.1"
-                            /><br />
                             <label htmlFor="chincome">Δεν θέλω</label>
                             <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
                         </div>
@@ -127,23 +95,14 @@ function Match() {
                             <label htmlFor="money">Αριθμός χρημάτων:<br /></label>
                             <input
                                 type="number"
-                                name="minmoney"
+                                name="money"
                                 id="money"
                                 disabled={isMoneyChecked}
                                 required={!isMoneyChecked}
-                                value={criteria.minmoney}
+                                value={criteria.money}
                                 onChange={handleChange}
-                                max={Number(criteria.maxmoney) - 1} min="0"
+                                min="0"
                             />
-                            <input
-                                type="number"
-                                name="maxmoney"
-                                disabled={isMoneyChecked}
-                                required={!isMoneyChecked}
-                                value={criteria.maxmoney}
-                                onChange={handleChange}
-                                min={Number(criteria.minmoney) + 1}
-                            /><br />
                             <label htmlFor="chmoney">Δεν θέλω</label>
                             <input type="checkbox" checked={isMoneyChecked} onChange={setMinMaxToZero} name="chmoney" id="chmoney" />
                         </div>
@@ -183,11 +142,11 @@ function Match() {
                             
                             {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br/></>}
 
-                            {visibleUser.minsize !== null && visibleUser.maxsize !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.minsize} : {visibleUser.maxsize}<br /></>)}
+                            {visibleUser.size !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.size}<br /></>)}
 
-                            {visibleUser.minenergy !== null && visibleUser.maxenergy !== null && (<>Ποσότητα PV ενέργειας(kwh) : {visibleUser.minenergy} : {visibleUser.maxenergy}<br /></>)}
+                            {visibleUser.energy !== null && (<>Ποσότητα PV ενέργειας(kwh): {visibleUser.energy}<br /></>)}
 
-                            {visibleUser.minincome !== null && visibleUser.maxincome !== null && (<>Ποσοστό εσόδων: {visibleUser.minincome} : {visibleUser.maxincome}<br /></>)}
+                            {visibleUser.income !== null && (<>Ποσοστό εσόδων: {visibleUser.income}<br /></>)}
 
                             {visibleUser.money !== null && (<>Χρήματα: {visibleUser.money}<br /></>)}
 

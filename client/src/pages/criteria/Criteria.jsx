@@ -38,24 +38,13 @@ function Criteria() {
                         <label htmlFor="size">Έκταση(km<sup>2</sup>):<br /></label>
                         <input
                             type="number"
-                            name="minsize"
+                            name="size"
                             disabled={isSizeChecked}
                             required={!isSizeChecked}
-                            value={criteria.minsize}
+                            value={criteria.size}
                             onChange={handleChange}
-                            id="size" step="0.1"
-                            max={Number(criteria.maxsize) - 1} min="0"
-                        />
-                        <input
-                            type="number"
-                            name="maxsize"
-                            disabled={isSizeChecked}
-                            required={!isSizeChecked}
-                            value={criteria.maxsize}
-                            onChange={handleChange}
-                            max="3000" min={Number(criteria.minsize) + 1}
-                            step="0.1"
-                        /><br />
+                            id="size" step="0.1" min="0"
+                        /><br/>
                         <label htmlFor="chsize">Δεν θέλω</label> <input type="checkbox" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
                     </div>
 
@@ -63,24 +52,15 @@ function Criteria() {
                         <label htmlFor="energy">Ποσότητα PV ενέργειας(kwh):<br /></label>
                         <input
                             type="number"
-                            name="minenergy"
+                            name="energy"
                             disabled={isEnergyChecked}
                             required={!isEnergyChecked}
-                            value={criteria.minenergy}
+                            value={criteria.energy}
                             onChange={handleChange}
                             id="energy" step="0.1"
-                            max={Number(criteria.maxenergy) - 1} min="0"
-                        />
-                        <input
-                            type="number"
-                            name="maxenergy"
-                            disabled={isEnergyChecked}
-                            required={!isEnergyChecked}
-                            value={criteria.maxenergy}
-                            onChange={handleChange}
-                            min={Number(criteria.minenergy) + 1}
-                            step="0.1"
-                        /><br />
+                            // max={Number(criteria.maxenergy) - 1} 
+                            min="0"
+                        /><br/>
                         <label htmlFor="chenergy">Δεν θέλω</label> <input type="checkbox" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
                     </div>
 
@@ -88,24 +68,14 @@ function Criteria() {
                         <label htmlFor="income">Ποσοστό εσόδων:<br /></label>
                         <input
                             type="number"
-                            name="minincome"
+                            name="income"
                             disabled={isIncomeChecked}
                             required={!isIncomeChecked}
-                            value={criteria.minincome}
+                            value={criteria.income}
                             onChange={handleChange}
                             id="income" step="0.1"
-                            max={Number(criteria.maxincome) - 1} min="0"
-                        />
-                        <input
-                            type="number"
-                            name="maxincome"
-                            disabled={isIncomeChecked}
-                            required={!isIncomeChecked}
-                            value={criteria.maxincome}
-                            onChange={handleChange}
-                            min={Number(criteria.minincome) + 1} max="100"
-                            step="0.1"
-                        /><br />
+                            max="100" min="0"
+                        /><br/>
                         <label htmlFor="chincome">Δεν θέλω</label>
                         <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
                     </div>

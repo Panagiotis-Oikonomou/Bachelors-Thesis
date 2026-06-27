@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 exports.getMatches = async (req, res) => {
     try {
-        const { area, minsize, maxsize, minenergy, maxenergy, minincome, maxincome, minmoney, maxmoney, papers, other } = req.body;
+        const { area, size, energy, income, money, papers, other } = req.body;
         let sql = "SELECT c.*, u.username FROM users u JOIN criterias c ON u.userid = c.userid ";
         const values = [req.user.id];
 
@@ -11,14 +11,14 @@ exports.getMatches = async (req, res) => {
         else {
             sql += "JOIN areas a ON c.areaid = a.areaid WHERE c.areaid IS NOT NULL AND u.userid != ? ";
 
-            if (minsize !== false && maxsize !== false) {
-                sql += "AND a.size >= ? AND a.size <= ? ";
-                values.push(minsize, maxsize);
+            if (size !== false) {
+                sql += "AND a.size >= ? ";
+                values.push(size);
             }
 
-            if (minenergy !== false && maxenergy !== false) {
-                sql += "AND a.ac >= ? AND a.ac <= ? ";
-                values.push(minenergy, maxenergy);
+            if (energy !== false) {
+                sql += "AND a.ac >= ? ";
+                values.push(energy);
             }
         }
 
@@ -27,9 +27,9 @@ exports.getMatches = async (req, res) => {
         //     values.push(minincome, maxincome);
         // }
 
-        if (minmoney !== false && maxmoney !== false) {
-            sql += "AND c.money >= ? AND c.money <= ? ";
-            values.push(minmoney, maxmoney);
+        if (money !== false) {
+            sql += "AND c.money >= ? ";
+            values.push(money);
         }
 
         if (papers) sql += "AND c.papers = 1 ";

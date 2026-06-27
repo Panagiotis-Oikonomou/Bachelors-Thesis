@@ -9,14 +9,10 @@ export default function useMatch() {
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
     const [criteria, setCriteria] = useState({
-        minsize: "",
-        maxsize: "",
-        minenergy: "",
-        maxenergy: "",
-        minincome: "",
-        maxincome: "",
-        minmoney: "",
-        maxmoney: "",
+        size: "",
+        energy: "",
+        income: "",
+        money: "",
         papers: false,
         other: false
     });
@@ -76,28 +72,32 @@ export default function useMatch() {
     function handleChange(e) {
         const { name, value } = e.target;
 
+        if (name === "areaid") {
+            areaId(value === "" ? null : value);
+            return;
+        }
+
         setCriteria(prev => ({ ...prev, [name]: value }));
     }
 
     function setMinMaxToZero(e) {
         const { name, checked } = e.target;
         if (name === "chsize") {
-            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "" }));
+            setCriteria(prev => ({ ...prev, size: "" }));
             setIsSizeChecked(checked);
         }
         else if (name === "chenergy") {
-            setCriteria(prev => ({ ...prev, minenergy: "", maxenergy: "" }));
+            setCriteria(prev => ({ ...prev, energy: "" }));
             setIsEnergyChecked(checked);
         }
         else if (name === "chincome") {
-            setCriteria(prev => ({ ...prev, minincome: "", maxincome: "" }));
+            setCriteria(prev => ({ ...prev, income: "" }));
             setIsIncomeChecked(checked);
         }
         else if (name === "chmoney") {
-            setCriteria(prev => ({ ...prev, minmoney: "", maxmoney: "" }));
+            setCriteria(prev => ({ ...prev, money: "" }));
             setIsMoneyChecked(checked);
         }
-
     }
 
     function checkboxOptions(e) {
@@ -115,7 +115,7 @@ export default function useMatch() {
             setIsSizeChecked(checked);
             setIsEnergyChecked(checked);
             setReadyToGo(prev => ({ ...prev, area: checked }));
-            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "", areaid: "" }));
+            setCriteria(prev => ({ ...prev, size: "", energy: "", areaid: "" }));
         }
     }
 
@@ -162,14 +162,10 @@ export default function useMatch() {
 
         const send = {
             area: readyToGo.area,
-            minsize: criteria.minsize === "" ? false : Number(criteria.minsize),
-            maxsize: criteria.maxsize === "" ? false : Number(criteria.maxsize),
-            minenergy: criteria.minenergy === "" ? false : Number(criteria.minenergy),
-            maxenergy: criteria.maxenergy === "" ? false : Number(criteria.maxenergy),
-            minincome: criteria.minincome === "" ? false : Number(criteria.minincome),
-            maxincome: criteria.maxincome === "" ? false : Number(criteria.maxincome),
-            minmoney: criteria.minmoney === "" ? false : Number(criteria.minmoney),
-            maxmoney: criteria.maxmoney === "" ? false : Number(criteria.maxmoney),
+            size: criteria.size === "" ? false : Number(criteria.size),
+            energy: criteria.energy === "" ? false : Number(criteria.energy),
+            income: criteria.income === "" ? false : Number(criteria.income),
+            money: criteria.money === "" ? false : Number(criteria.money),
             papers: criteria.papers,
             other: criteria.other
         };

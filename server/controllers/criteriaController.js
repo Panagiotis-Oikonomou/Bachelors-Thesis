@@ -7,15 +7,12 @@ exports.addCriteria = async (userid) => {
 
 exports.updateCriteria = async (req, res) => {
     try{
-        const sql = "UPDATE criterias SET areaid = ?, minsize = ?, maxsize = ?, minenergy = ?, maxenergy = ?, minincome = ?, maxincome = ?, money = ?, papers = ?, other = ? WHERE userid = ?";
+        const sql = "UPDATE criterias SET areaid = ?, size = ?, energy = ?, income = ?, money = ?, papers = ?, other = ? WHERE userid = ?";
         const values = [
             req.body.areaid,
-            req.body.minsize,
-            req.body.maxsize,
-            req.body.minenergy,
-            req.body.maxenergy,
-            req.body.minincome,
-            req.body.maxincome,
+            req.body.size,
+            req.body.energy,
+            req.body.income,
             req.body.money,
             req.body.papers,
             req.body.other,

@@ -5,12 +5,9 @@ import useAxiosPrivate from './useAxiosPrivate.js';
 export default function useCriteria() {
     const axiosPrivate = useAxiosPrivate();
     const [criteria, setCriteria] = useState({
-        minsize: "",
-        maxsize: "",
-        minenergy: "",
-        maxenergy: "",
-        minincome: "",
-        maxincome: "",
+        size: "",
+        energy: "",
+        income: "",
         money: "",
         areaid: "",
         papers: false,
@@ -43,15 +40,15 @@ export default function useCriteria() {
     function setMinMaxToZero(e) {
         const { name, checked } = e.target;
         if (name === "chsize") {
-            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "" }));
+            setCriteria(prev => ({ ...prev, size: "" }));
             setIsSizeChecked(checked);
         }
         else if (name === "chenergy") {
-            setCriteria(prev => ({ ...prev, minenergy: "", maxenergy: "" }));
+            setCriteria(prev => ({ ...prev, energy: "" }));
             setIsEnergyChecked(checked);
         }
         else if (name === "chincome") {
-            setCriteria(prev => ({ ...prev, minincome: "", maxincome: "" }));
+            setCriteria(prev => ({ ...prev, income: "" }));
             setIsIncomeChecked(checked);
         }
 
@@ -67,7 +64,7 @@ export default function useCriteria() {
             setIsAreaChecked(checked);
             setIsSizeChecked(checked);
             setIsEnergyChecked(checked);
-            setCriteria(prev => ({ ...prev, minsize: "", maxsize: "", minenergy: "", maxenergy: "", areaid: "" }));
+            setCriteria(prev => ({ ...prev, size: "", energy: "", areaid: "" }));
         }
         else if (name === "papers") {
             setCriteria(prev => ({ ...prev, papers: checked }));
@@ -135,7 +132,7 @@ export default function useCriteria() {
             return;
         }
 
-        if (isAreaChecked && criteria.areaname === "") {
+        if (isAreaChecked && criteria.areaid === "") {
             setFormError("Πρέπει να έχεις επιλέξει κάποια από τις περιοχές σου, για να προσφέρεις.");
             return;
         }
@@ -143,12 +140,9 @@ export default function useCriteria() {
         const send = {
             ...criteria,
             areaid: !criteria.areaid ? null : Number(criteria.areaid),
-            minsize: !criteria.minsize ? null : Number(criteria.minsize),
-            maxsize: !criteria.maxsize ? null : Number(criteria.maxsize),
-            minenergy: !criteria.minenergy ? null : Number(criteria.minenergy),
-            maxenergy: !criteria.maxenergy ? null : Number(criteria.maxenergy),
-            minincome: !criteria.minincome ? null : Number(criteria.minincome),
-            maxincome: !criteria.maxincome ? null : Number(criteria.maxincome),
+            size: !criteria.size ? null : Number(criteria.size),
+            energy: !criteria.energy ? null : Number(criteria.energy),
+            income: !criteria.income ? null : Number(criteria.income),
             money: !criteria.money ? null : Number(criteria.money),
         }
 
