@@ -44,13 +44,6 @@ export default function useMatch() {
     let visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
-        if (!auth?.accessToken) return;
-        const decoded = jwtDecode(auth.accessToken);
-        setUsers([{ username: decoded.username }]);
-        setUsername(decoded.username);
-    }, [auth.accessToken]);
-
-    useEffect(() => {
         resetTimer(formError, setFormError);
     }, [formError]);
 
@@ -72,6 +65,34 @@ export default function useMatch() {
     useEffect(() => {
         if (criteria.areaid !== undefined) setSelectedArea(criteria.areaid ?? "");
     }, [criteria.areaid]);
+
+    useEffect(() => {
+        const getMyOffers = async () => {
+            try {
+                if (!auth?.accessToken) return;
+                const decoded = jwtDecode(auth.accessToken);
+
+                const res = await axiosPrivate.get('/criteria/my_offers');
+                if (res.data) {
+                    const area = res.data.areaid !== null;
+                    const money = res.data.money !== null;
+                    const papers = res.data.papers !== null && res.data.papers !== 0;
+                    const other = res.data.other !== null && res.data.other !== 0;
+                    setReadyToGo(prev => ({ ...prev, area }));
+                    setReadyToGo(prev => ({ ...prev, money }));
+                    setReadyToGo(prev => ({ ...prev, papers }));
+                    setReadyToGo(prev => ({ ...prev, other }));
+                    setUsers([{ username: decoded.username, money, papers, other }]);
+                    setUsername(decoded.username);
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+        getMyOffers();
+    }, []);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -121,7 +142,7 @@ export default function useMatch() {
             setIsEnergyChecked(checked);
             setReadyToGo(prev => ({ ...prev, area: checked }));
             setCriteria(prev => ({ ...prev, size: "", energy: "", areaid: "" }));
-            if(!checked) setAreaId(null);
+            if (!checked) setAreaId(null);
         }
     }
 
@@ -130,6 +151,20 @@ export default function useMatch() {
             visibleUser = searchedUsers[currentIndex + 1];
             setCurrectIndex(currentIndex + 1);
         }
+    }
+
+    function fixReadyToGoForAdd(user) {
+        if (readyToGo.area && readyToGo.money && readyToGo.papers && readyToGo.other) return;
+
+        if (!readyToGo.money && user.money) setReadyToGo(prev => ({ ...prev, money: true }));
+        if (!readyToGo.papers && user.papers) setReadyToGo(prev => ({ ...prev, papers: true }));
+        if (!readyToGo.other && user.other) setReadyToGo(prev => ({ ...prev, other: true }));
+    }
+
+    function fixReadyToGoForRemove(user) {
+        setReadyToGo(prev => ({ ...prev, money: users.some(u => u.money) }));
+        setReadyToGo(prev => ({ ...prev, papers: users.some(u => u.papers) }));
+        setReadyToGo(prev => ({ ...prev, other: users.some(u => u.other) }));
     }
 
     function addUser(user) {
@@ -146,7 +181,8 @@ export default function useMatch() {
             setHavingArea(false);
             setReadyToGo(prev => ({ ...prev, area: true }));
         }
-        setUsers([...users, { username: user.username, areaid: user.areaid }]);
+        fixReadyToGoForAdd(user);
+        setUsers([...users, { username: user.username, areaid: user.areaid, money: user.money, papers: user.papers, other: user.other }]);
         nextUser();
     }
 
@@ -158,8 +194,8 @@ export default function useMatch() {
             setAreaId(null);
             setHavingArea(true);
             setReadyToGo(prev => ({ ...prev, area: false }));
-            console.log("here");
         }
+        fixReadyToGoForRemove(i);
     }
 
     async function handleSearchSubmit(e) {
@@ -221,7 +257,6 @@ export default function useMatch() {
                 confirmButtonColor: "#3085d6",
                 confirmButtonText: "Ok"
             });
-            console.log(readyToGo);
             return;
         }
         console.log("created");

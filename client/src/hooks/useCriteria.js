@@ -85,9 +85,10 @@ export default function useCriteria() {
                         ...prev, ...Object.fromEntries(Object.entries(res.data ?? {}).map(([key, value]) => [key, value ?? ""])
                         )
                     }));
+                    setIsSizeChecked(res.data.areasize === null);
+                    setIsEnergyChecked(res.data.energy === null);
+                    setIsIncomeChecked(res.data.income === null);
                     setIsMoneyChecked(res.data.money !== null);
-                    setIsSizeChecked(res.data.areaid !== null);
-                    setIsEnergyChecked(res.data.areaid !== null);
                     setIsAreaChecked(res.data.areaid !== null);
                     setIsPapersChecked(res.data.papers);
                     setIsOtherChecked(res.data.other);

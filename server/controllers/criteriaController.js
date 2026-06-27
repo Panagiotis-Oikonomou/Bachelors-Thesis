@@ -7,7 +7,7 @@ exports.addCriteria = async (userid) => {
 
 exports.updateCriteria = async (req, res) => {
     try{
-        const sql = "UPDATE criterias SET areaid = ?, size = ?, energy = ?, income = ?, money = ?, papers = ?, other = ? WHERE userid = ?";
+        const sql = "UPDATE criterias SET areaid = ?, areasize = ?, energy = ?, income = ?, money = ?, papers = ?, other = ? WHERE userid = ?";
         const values = [
             req.body.areaid,
             req.body.size,
@@ -32,7 +32,19 @@ exports.getCriteria = async (req, res) => {
     try{
         const sql = "SELECT c.*, a.name FROM criterias c LEFT JOIN areas a ON c.userid = a.userid WHERE c.userid = ?";
         const [rows] = await db.query(sql, [req.user.id]);
-        return res.json(rows[0] ?? null);
+        return res.json(rows[0]);
+    }
+    catch(err){
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+exports.getMyOffers = async (req, res) => {
+    try{
+        const sql = "SELECT areaid, money, papers, other FROM criterias WHERE userid = ?";
+        const [rows] = await db.query(sql, [req.user.id]);
+        return res.json(rows[0]);
     }
     catch(err){
         console.log(err);

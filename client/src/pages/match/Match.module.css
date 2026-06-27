@@ -161,7 +161,7 @@ input[type="number"] {
     .searchArea {
         margin-top: 20%;
         grid-column: 1 / 4;
-        grid-row: 6 / 7;
+        grid-row: 6 / auto;
     }
 
     /* .rArrow {
@@ -192,12 +192,12 @@ input[type="number"] {
     }
 
     .match {
-        grid-column: 6 / 9;
+        grid-column: 6 / 10;
         height: 45vh;
     }
 
     .area {
-        margin-top: 15%;
+        margin-top: 10%;
     }
 
     .searchArea {

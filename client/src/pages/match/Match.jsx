@@ -138,11 +138,19 @@ function Match() {
                 {visibleUser && (
                     <>
                         <div className={styles.area}>
-                            {visibleUser.username !== null && (<>Username: {visibleUser.username}<br/></>)}
-                            
-                            {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br/></>}
+                            {visibleUser.username !== null && (<>Username: {visibleUser.username}<br /><br/></>)}
 
-                            {visibleUser.size !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.size}<br /></>)}
+                            {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br /></>}
+
+                            {visibleUser.areaid !== null && (
+                                <>
+                                    Έκταση περιοχής(km<sup>2</sup>): {visibleUser.size}<br /> 
+                                    Ποσότητα PV ενέργειας(kwh): {visibleUser.ac}<br />
+                                </>)}<br/>
+
+                            Ζήτηση και Προσφορά<br/>
+
+                            {visibleUser.areasize !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.size}<br /></>)}
 
                             {visibleUser.energy !== null && (<>Ποσότητα PV ενέργειας(kwh): {visibleUser.energy}<br /></>)}
 
@@ -155,9 +163,9 @@ function Match() {
                             {visibleUser.other !== null && (<>Άλλα: {visibleUser.other ? "Ναι" : "Όχι"}<br /></>)}
                         </div>
 
-                        <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={nextUser}/></div>
+                        <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={nextUser} /></div>
 
-                        <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser)}/></div>
+                        <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser)} /></div>
                     </>
                 )}
             </div>
