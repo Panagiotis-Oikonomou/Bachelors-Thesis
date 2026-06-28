@@ -185,7 +185,6 @@ export default function useMatch() {
             setReadyToGo(prev => ({ ...prev, area: true }));
         }
         fixReadyToGoForAdd(user);
-        console.log(user);
         setUsers([...users, { username: user.username, userid: user.userid, areaid: user.areaid, money: user.money, papers: user.papers, other: user.other }]);
         nextUser();
     }
