@@ -158,9 +158,9 @@ function Match() {
 
                             {visibleUser.money !== null && (<>Χρήματα: {visibleUser.money}<br /></>)}
 
-                            {visibleUser.papers !== null && (<>Χαρτιά: {visibleUser.papers ? "Ναι" : "Όχι"}<br /></>)}
+                            Χαρτιά: {visibleUser.papers !== null && visibleUser.papers ? "Ναι" : "Όχι"}<br />
 
-                            {visibleUser.other !== null && (<>Άλλα: {visibleUser.other ? "Ναι" : "Όχι"}<br /></>)}
+                            Άλλα: {visibleUser.other !== null && visibleUser.other ? "Ναι" : "Όχι"}<br />
                         </div>
 
                         <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={nextUser} /></div>

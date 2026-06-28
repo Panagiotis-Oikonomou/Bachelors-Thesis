@@ -82,7 +82,10 @@ export default function useMatch() {
                     setReadyToGo(prev => ({ ...prev, money }));
                     setReadyToGo(prev => ({ ...prev, papers }));
                     setReadyToGo(prev => ({ ...prev, other }));
-                    setUsers([{ username: decoded.username, money, papers, other }]);
+                    const m = money ? res.data.money : null;
+                    const p = papers ? res.data.papers : 0;
+                    const o = other ? res.data.other : 0;
+                    setUsers([{ username: decoded.username, userid: decoded.id, areaid: null, money: m, papers: p, other: o }]);
                     setUsername(decoded.username);
                 }
             }
@@ -182,7 +185,8 @@ export default function useMatch() {
             setReadyToGo(prev => ({ ...prev, area: true }));
         }
         fixReadyToGoForAdd(user);
-        setUsers([...users, { username: user.username, areaid: user.areaid, money: user.money, papers: user.papers, other: user.other }]);
+        console.log(user);
+        setUsers([...users, { username: user.username, userid: user.userid, areaid: user.areaid, money: user.money, papers: user.papers, other: user.other }]);
         nextUser();
     }
 
@@ -259,7 +263,39 @@ export default function useMatch() {
             });
             return;
         }
-        console.log("created");
+
+        try {
+            await axiosPrivate.post('notifications', users);
+
+            Swal.fire({
+                title: "A invitation has been send to the other users",
+                icon: "success",
+                showConfirmButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Ok"
+            });
+        } catch (err) {
+            console.log(err);
+            Swal.fire({
+                title: "There was a problem with the server",
+                icon: "warning",
+                showConfirmButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Ok"
+            });
+        }
+        setUsers(prev => prev.filter(u => u.username === username).map(u => ({ ...u, areaid: null })));
+        setCriteria(prev => ({ ...prev, areaid: "", size: "", energy: "", income: "", money: "", papers: "", other: "" }));
+        setIsPapersChecked(false);
+        setIsAreaChecked(false);
+        setIsOtherChecked(false);
+        setIsSizeChecked(false);
+        setIsEnergyChecked(false);
+        setIsIncomeChecked(false);
+        setIsMoneyChecked(false);
+        setHavingArea(true);
+        setSearchedUsers([]);
+        setAreaId(null);
     }
 
     return {
