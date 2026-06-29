@@ -17,12 +17,13 @@ import menu from '../../assets/images/menu.png';
 function Notifications() {
     const axiosPrivate = useAxiosPrivate();
     const [notifications, setNotifications] = useState([]);
+    const [expandedId, setExpandedId] = useState(null);
 
     useEffect(() => {
         const getNotifications = async () => {
             try {
                 const res = await axiosPrivate.get('/notifications');
-                if (res.data) setNotifications(res.data);
+                if (res.data) setNotifications(res.data.map(n => ({...n, expanded:false})));
             }
             catch (err) {
                 console.log(err);
@@ -31,11 +32,12 @@ function Notifications() {
         getNotifications();
     }, []);
 
+
     async function changeToRead(id) {
         setNotifications(prev =>
-            prev.map(notification =>
+            prev.map(notification => 
                 notification.notid === id
-                    ? { ...notification, is_read: true }
+                    ? { ...notification, is_read: true, expanded: notification.type === "conf" ? !notification.expanded : false }
                     : notification
             )
         );
@@ -83,16 +85,29 @@ function Notifications() {
             </div>
 
             <div className={styles.notifications}>
-                {notifications.map((item) => (
-                    <div
-                        className={item.is_read ? styles.read : styles.not}
-                        onClick={() => changeToRead(item.notid)}
-                        key={item.notid}>
+                {notifications.map((item) => {
+                    if (item.type === "info") {
+                        return (<div
+                            className={item.is_read ? styles.read : styles.not}
+                            onClick={() => changeToRead(item.notid)}
+                            key={item.notid}>
 
-                        <div className={styles.delete} onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}> X </div>
-                        {item.message}
-                    </div>
-                ))}
+                            <div className={styles.delete} onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}> X </div>
+                            asd{item.message}
+                        </div>)
+                    }
+                    else if (item.type === "conf") {
+                        return (<div
+                            className={`${item.is_read ? styles.read : styles.not} ${item.expanded ? styles.open : ""}`}
+                            onClick={() => changeToRead(item.notid)}
+                            key={item.notid}>
+
+                            <div className={styles.delete} onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}> X </div>
+                            {item.message}
+                            <button className={styles.accept}>Accept</button> <button className={styles.decline}>Decline</button>
+                        </div>)
+                    }
+                })}
             </div>
         </div>
     )

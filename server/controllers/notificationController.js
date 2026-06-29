@@ -6,6 +6,7 @@ exports.getNotifications = async (req, res) => {
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
+        console.log(rows);
         return res.json(rows);
     }
     catch (err) {
