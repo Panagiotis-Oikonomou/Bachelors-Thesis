@@ -61,8 +61,8 @@ exports.createInvitationNotification = async (req, res) => {
 
         const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
         let sum = 0;
-        for(let i = 0;i < users.length;i++){
-            const [essentialsRows] = await db.query(essentialsSql, [users[i].userid]);
+        for(const user of users){
+            const [essentialsRows] = await db.query(essentialsSql, [user.userid]);
             if (essentialsRows[0]?.money !== null) sum += Number(essentialsRows[0].money);
         }
 
@@ -70,19 +70,22 @@ exports.createInvitationNotification = async (req, res) => {
         notification += `Τι ζητάει ο κάθε χρήστης:\n`;
 
         const userCriteriaSql = "SELECT areasize, energy, income FROM criterias WHERE userid = ?";
-        for(let i = 0;i < users.length;i++){
-            const [userCriteriaRows] = await db.query(userCriteriaSql, [users[i].userid]);
-            notification += `${users[i].username}\n`;
+        for(const user of users){
+            const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
+            notification += `${user.username}\n`;
             if (userCriteriaRows[0]?.areasize !== null) notification += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}km²\n`;
             if (userCriteriaRows[0]?.energy !== null) notification += `Ελάχιστη ποσότητα PV ενέργειας: ${userCriteriaRows[0].energy}kwh\n`;
             if (userCriteriaRows[0]?.income !== null) notification += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
             notification += '\n';
         }
-        const addNotificationSql = "INSERT INTO notifications (userid, message, is_read, type) VALUES (?, ?, ?, ?)";
-        for(let i = 1;i < users.length;i++){
-            await db.query(addNotificationSql, [users[i].userid, notification, false, "conf"]);
+        const newGroupSql = "INSERT INTO groups VALUES ()";
+
+        const [create] = await db.query(newGroupSql);
+        const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, is_read, type) VALUES (?, ?, ?, ?, ?)";
+        for(const user of users){
+            await db.query(addNotificationSql, [user.userid, create.insertId, notification, false, "conf"]);
         }
-        res.sendStatus(200);
+        res.status(201).json({groupid: create.insertId});
 
     } catch (err) {
         console.log(err);

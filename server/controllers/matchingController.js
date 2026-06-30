@@ -13,3 +13,32 @@ exports.getMatchings = async (req, res) => {
         return res.status(500).json({ err });
     }
 }
+
+exports.createMatchings = async (req, res) => {
+    try {
+        const sql = "INSERT INTO matchings (groupid, userid) VALUES (?, ?)";
+        const {users, groupid } = req.body;
+        for (const user of users) {
+            await db.query(sql, [groupid, user.userid]);
+        }
+        return res.sendStatus(201);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: err.message });
+    }
+}
+
+exports.updateAgrees = async (req, res) => {
+    try {
+        const sql = "UPDATE matchings SET agrees = ? WHERE userid = ? AND groupid = ?";
+        const getGroupIdSql = "SELECT userid, groupid FROM notifications WHERE notid=?";
+        const {notid, agrees} = req.body;
+        const [gi] = await db.query(getGroupIdSql, [notid]);
+        await db.query(sql, [agrees, gi[0].userid, gi[0].groupid])
+        res.sendStatus(201);
+    }
+    catch (err) {
+        return res.status(500).json({ err });
+    }
+}

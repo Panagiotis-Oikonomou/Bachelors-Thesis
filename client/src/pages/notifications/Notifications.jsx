@@ -84,6 +84,7 @@ function Notifications() {
 
         try {
             await axiosPrivate.put(`/notifications/disabled/${id}`);
+            await axiosPrivate.put('/matchings', {notid: id, agrees: 1});
         }
         catch (err) {
             console.log(err);
@@ -95,6 +96,7 @@ function Notifications() {
 
         try {
             await axiosPrivate.put(`/notifications/disabled/${id}`);
+            await axiosPrivate.put('/matchings', {notid: id, agrees: 0});
         }
         catch (err) {
             console.log(err);
@@ -122,7 +124,7 @@ function Notifications() {
                             key={item.notid}>
 
                             <div className={styles.delete} onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}> X </div>
-                            asd{item.message}
+                            {item.message}
                         </div>)
                     }
                     else if (item.type === "conf") {

@@ -264,7 +264,8 @@ export default function useMatch() {
         }
 
         try {
-            await axiosPrivate.post('notifications', users);
+            const res = await axiosPrivate.post('/notifications', users);
+            if(res.data) await axiosPrivate.post('/matchings', {users, groupid: res.data.groupid});
 
             Swal.fire({
                 title: "A invitation has been send to the other users",
