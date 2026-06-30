@@ -35,7 +35,27 @@ exports.updateAgrees = async (req, res) => {
         const getGroupIdSql = "SELECT userid, groupid FROM notifications WHERE notid=?";
         const {notid, agrees} = req.body;
         const [gi] = await db.query(getGroupIdSql, [notid]);
-        await db.query(sql, [agrees, gi[0].userid, gi[0].groupid])
+        await db.query(sql, [agrees, gi[0].userid, gi[0].groupid]);
+
+        const getAllMembersSql = "SELECT agrees, userid FROM matchings WHERE groupid = ?";
+        const [result] = await db.query(getAllMembersSql, [gi[0].groupid]);
+        let allAgree;
+        for(const r of result){
+            if(!r.agrees){
+                allAgree = 0;
+                break;
+            }
+            allAgree = 1;
+        }
+        console.log(allAgree);
+        if(allAgree){
+            const chatCreationSql = "INSERT INTO chats VALUES ()";
+            const [chat] = await db.query(chatCreationSql);
+            const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
+            for(const r of result){
+                await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
+            }
+        }
         res.sendStatus(201);
     }
     catch (err) {
