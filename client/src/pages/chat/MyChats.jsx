@@ -27,7 +27,6 @@ function MyChats() {
             try {
                 const res = await axiosPrivate.get('/chats');
                 if (res.data) setChats(res.data);
-                console.log(res.data);
             }
             catch (err) {
                 console.log(err);
