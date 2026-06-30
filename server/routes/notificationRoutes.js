@@ -7,5 +7,6 @@ router.get("/", ver.verify, notification.getNotifications);
 router.put("/:id", ver.verify, notification.readMessage);
 router.delete("/:id", ver.verify, notification.deleteMessage);
 router.post("/", ver.verify, notification.createInvitationNotification);
+router.put("/disabled/:id", ver.verify, notification.updateDisabled);
 
 module.exports = router;

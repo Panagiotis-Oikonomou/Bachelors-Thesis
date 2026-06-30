@@ -17,13 +17,12 @@ import menu from '../../assets/images/menu.png';
 function Notifications() {
     const axiosPrivate = useAxiosPrivate();
     const [notifications, setNotifications] = useState([]);
-    const [expandedId, setExpandedId] = useState(null);
 
     useEffect(() => {
         const getNotifications = async () => {
             try {
                 const res = await axiosPrivate.get('/notifications');
-                if (res.data) setNotifications(res.data.map(n => ({...n, expanded:false})));
+                if (res.data) setNotifications(res.data.map(n => ({ ...n, expanded: false })));
             }
             catch (err) {
                 console.log(err);
@@ -32,10 +31,9 @@ function Notifications() {
         getNotifications();
     }, []);
 
-
     async function changeToRead(id) {
         setNotifications(prev =>
-            prev.map(notification => 
+            prev.map(notification =>
                 notification.notid === id
                     ? { ...notification, is_read: true, expanded: notification.type === "conf" ? !notification.expanded : false }
                     : notification
@@ -71,6 +69,37 @@ function Notifications() {
         }
     }
 
+    function setDisabled(id) {
+        setNotifications(prev =>
+            prev.map(notification =>
+                notification.notid === id
+                    ? { ...notification, disabled: true }
+                    : notification
+            )
+        );
+    }
+
+    async function accept(id) {
+        setDisabled(id);
+
+        try {
+            await axiosPrivate.put(`/notifications/disabled/${id}`);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function decline(id) {
+        setDisabled(id);
+
+        try {
+            await axiosPrivate.put(`/notifications/disabled/${id}`);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
     return (
         <div className={styles.container}>
             <img src={menu} className={styles.menu} />
@@ -104,7 +133,7 @@ function Notifications() {
 
                             <div className={styles.delete} onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}> X </div>
                             {item.message}
-                            <button className={styles.accept}>Accept</button> <button className={styles.decline}>Decline</button>
+                            <button className={styles.accept} disabled={item.disabled} onClick={() => accept(item.notid)}>Accept</button> <button className={styles.decline} disabled={item.disabled} onClick={() => decline(item.notid)}>Decline</button>
                         </div>)
                     }
                 })}

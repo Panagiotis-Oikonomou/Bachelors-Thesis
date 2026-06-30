@@ -6,7 +6,6 @@ exports.getNotifications = async (req, res) => {
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
-        console.log(rows);
         return res.json(rows);
     }
     catch (err) {
@@ -28,6 +27,7 @@ exports.readMessage = async (req, res) => {
     }
 
 }
+
 exports.deleteMessage = async (req, res) => {
     try {
         const sql = "DELETE FROM notifications WHERE userid = ? AND notid = ?";
@@ -86,5 +86,16 @@ exports.createInvitationNotification = async (req, res) => {
 
     } catch (err) {
         console.log(err);
+    }
+}
+
+exports.updateDisabled = async (req, res) => {
+    try {
+        const sql = "UPDATE notifications SET disabled=true WHERE notid=?";
+        await db.query(sql, [req.params.id]);
+        res.sendStatus(200);
+    }
+    catch (err) {
+        return res.status(500).json({ err });
     }
 }
