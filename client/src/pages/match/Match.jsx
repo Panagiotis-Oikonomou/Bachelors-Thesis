@@ -2,33 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import useMatch from "../../hooks/useMatch";
 import styles from './Match.module.css';
+import { Up } from "../../components/up/Up";
 
-import matchings from '../../assets/images/mymatchings.png';
-import myareas from '../../assets/images/myareas.png';
-import criterias from '../../assets/images/criteria.png';
-import match from '../../assets/images/matchVisit.png';
-import chats from '../../assets/images/chats.png';
-import notifications from '../../assets/images/notifications.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
 import checkMark from '../../assets/images/checkMark.png';
 import xMark from '../../assets/images/xMark.png';
-
 
 function Match() {
     const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser, nextUser } = useMatch();
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criterias} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div>
+            <Up></Up>
 
             <div className={styles.users}>
                 {users.map((user, index) => (

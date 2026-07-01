@@ -144,7 +144,7 @@ table, td, th{
 
     .main {
         grid-column: 2 / 12;
-        height: 78vh;
+        height: 76vh;
     }
 
     .users {

@@ -2,24 +2,12 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { Link, useNavigate, useNavigation } from "react-router-dom";
 import styles from './NotificationsAdmin.module.css';
-
-import paroxoi from '../../assets/images/paroxoi.png';
-import users from '../../assets/images/users.png';
-import notifications from '../../assets/images/notificationsVisit.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
-
+import { UpAdmin } from "../../components/up/UpAdmin";
 
 function Notifications() {
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/providers'><img src={paroxoi} /></Link>
-                <Link to='/users'><img src={users} /></Link>
-                <Link to='/notifications/admin'><img src={notifications} /></Link>
-                <Link to='/profile/admin'><img src={profile} /></Link>
-            </div>
+            <UpAdmin></UpAdmin>
 
             <div className={styles.notifications}>
                 <div className={styles.not}>

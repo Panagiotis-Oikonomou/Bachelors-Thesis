@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import MyAreas from "./pages/area/MyAreas";
 import AddArea from "./pages/area/AddArea";
@@ -57,6 +57,8 @@ function App() {
 
             <Route path="/notifications/admin" element={<NotificationsAdmin />} />
           </Route>
+
+          <Route path="/*" element={<Navigate to="/" />} />
         </Route>
     </Routes>
   );

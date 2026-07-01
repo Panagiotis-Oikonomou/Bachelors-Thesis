@@ -3,13 +3,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Link } from "react-router-dom";
 import styles from './Users.module.css';
 import Swal from "sweetalert2";
-
-import paroxoi from '../../assets/images/paroxoi.png';
-import userss from '../../assets/images/usersVisit.png';
-import notifications from '../../assets/images/notifications.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
-
+import { UpAdmin } from "../../components/up/UpAdmin";
 
 function Users() {
     const [users, setUsers] = useState([]);
@@ -65,13 +59,8 @@ function Users() {
 
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/providers'><img src={paroxoi} /></Link>
-                <Link to='/users'><img src={userss} /></Link>
-                <Link to='/notifications/admin'><img src={notifications} /></Link>
-                <Link to='/profile/admin'><img src={profile} /></Link>
-            </div>
+            <UpAdmin></UpAdmin>
+
             <div className={styles.searchBar}>
                 <form >
                     <input

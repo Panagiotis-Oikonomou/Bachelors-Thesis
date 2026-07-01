@@ -1,15 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from './Criteria.module.css';
 import useCriteria from "../../hooks/useCriteria";
-
-import matchings from '../../assets/images/mymatchings.png';
-import myareas from '../../assets/images/myareas.png';
-import criteriaimg from '../../assets/images/criteriaVisit.png';
-import match from '../../assets/images/match.png';
-import chats from '../../assets/images/chats.png';
-import notifications from '../../assets/images/notifications.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
+import { Up } from "../../components/up/Up";
 
 function Criteria() {
     const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
@@ -20,16 +12,7 @@ function Criteria() {
 
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteriaimg} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div>
+            <Up></Up>
 
             <div className={styles.criterias}>
                 <p className={styles.titlee}>Βάλε από ένα εύρος τιμών για το τι θέλεις</p><br /><br />

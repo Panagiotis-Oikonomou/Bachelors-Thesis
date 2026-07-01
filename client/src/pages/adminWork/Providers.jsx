@@ -5,14 +5,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useGetProvider from "../../hooks/useGetProviders";
 import axios from "../../api/axios";
 import Swal from "sweetalert2";
-
-import paroxoi from '../../assets/images/paroxoiVisit.png';
-import users from '../../assets/images/users.png';
-import notifications from '../../assets/images/notifications.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
-import plus from '../../assets/images/plus.png';
-
+import { UpAdmin } from "../../components/up/UpAdmin";
 
 function Providers() {
     const axiosPrivate = useAxiosPrivate();
@@ -101,13 +94,7 @@ function Providers() {
 
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/paroxoi'><img src={paroxoi} /></Link>
-                <Link to='/users'><img src={users} /></Link>
-                <Link to='/notifications/admin'><img src={notifications} /></Link>
-                <Link to='/profile/admin'><img src={profile} /></Link>
-            </div>
+            <UpAdmin></UpAdmin>
 
             <div className={styles.searchBar}>
                 <form>
@@ -122,9 +109,7 @@ function Providers() {
 
             <div className={styles.main}>
                 <div className={styles.paroxos}>
-                    <p>Προσθήκη νέου Πάροχου Ενέργειας:
-                        {/* <Link to='/add_paroxo'><img src={plus} className={styles.plus} /></Link> */}
-                    </p>
+                    <p>Προσθήκη νέου Πάροχου Ενέργειας:</p>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="providername">Όνομα παρόχου</label>
                         <input
@@ -140,8 +125,6 @@ function Providers() {
                         <input type="submit" value="Πρόσθεσε" />
                     </form>
                 </div>
-
-
 
                 {filteredProviders.map((item) => {
                     return <div className={styles.area} key={item.providerid}>

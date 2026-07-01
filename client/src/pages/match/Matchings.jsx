@@ -2,15 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from './Matchings.module.css';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { Up } from "../../components/up/Up";
 
-import matchings from '../../assets/images/mymatchingsVisit.png';
-import myareas from '../../assets/images/myareas.png';
-import criteria from '../../assets/images/criteria.png';
-import match from '../../assets/images/match.png';
-import chats from '../../assets/images/chats.png';
-import notifications from '../../assets/images/notifications.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
 import check from '../../assets/images/CheckmarkNew.png'
 
 function Matchings() {
@@ -38,16 +31,7 @@ function Matchings() {
 
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteria} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div>
+            <Up></Up>
 
             <div className={styles.matchings}>
                 {Object.entries(grouped).map(([groupId, members]) => (

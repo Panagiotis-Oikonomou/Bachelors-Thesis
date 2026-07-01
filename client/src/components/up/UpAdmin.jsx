@@ -12,7 +12,7 @@ export function UpAdmin() {
         <>
             <img src={menu} className={styles.menu} alt="menu" />
             <div className={styles.up}>
-                <Link to='/paroxoi'><img src={paroxoi} /></Link>
+                <Link to='/providers'><img src={paroxoi} /></Link>
                 <Link to='/users'><img src={users} /></Link>
                 <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>

@@ -2,16 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from './MyAreas.module.css'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { Up } from "../../components/up/Up";
 import Swal from "sweetalert2";
 
-import matchings from '../../assets/images/mymatchings.png';
-import myareas from '../../assets/images/myareasVisit.png';
-import criteria from '../../assets/images/criteria.png';
-import match from '../../assets/images/match.png';
-import chats from '../../assets/images/chats.png';
-import notifications from '../../assets/images/notifications.png';
-import profile from '../../assets/images/profile.png';
-import menu from '../../assets/images/menu.png';
 import plus from '../../assets/images/plus.png';
 
 function MyAreas() {
@@ -67,19 +60,9 @@ function MyAreas() {
         else setFilteredAreas(areas.filter(a => a.name.toLowerCase().includes(value.toLowerCase())));
     }
 
-
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to='/matchings'><img src={matchings} /></Link>
-                <Link to='/my_areas'><img src={myareas} /></Link>
-                <Link to='/criteria'><img src={criteria} /></Link>
-                <Link to='/match'><img src={match} /></Link>
-                <Link to='/my_chats'><img src={chats} /></Link>
-                <Link to='/notifications'><img src={notifications} /></Link>
-                <Link to='/profile'><img src={profile} /></Link>
-            </div>
+            <Up></Up>
 
             <div className={styles.searchBar}>
                 <form>

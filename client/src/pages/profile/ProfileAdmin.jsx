@@ -1,12 +1,7 @@
 import { Link } from "react-router-dom";
 import useAdminProfile from "../../hooks/useAdminProfile";
 import styles from "./ProfileAdmin.module.css";
-
-import paroxoi from "../../assets/images/paroxoi.png";
-import users from "../../assets/images/users.png";
-import notifications from "../../assets/images/notifications.png";
-import profile from "../../assets/images/profileVisit.png";
-import menu from "../../assets/images/menu.png";
+import { UpAdmin } from "../../components/up/UpAdmin";
 
 function ProfileAdmin() {
     const {
@@ -18,13 +13,7 @@ function ProfileAdmin() {
 
     return (
         <div className={styles.container}>
-            <img src={menu} className={styles.menu} />
-            <div className={styles.up}>
-                <Link to="/providers"><img src={paroxoi} /></Link>
-                <Link to="/users"><img src={users} /></Link>
-                <Link to="/notifications/admin"><img src={notifications} /></Link>
-                <Link to="/profile/admin"><img src={profile} /></Link>
-            </div>
+            <UpAdmin></UpAdmin>
 
             <div className={styles.profile}>
                 <div className={styles.logoutContainer}>
