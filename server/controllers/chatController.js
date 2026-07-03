@@ -7,9 +7,30 @@ exports.getChats = async (req, res) => {
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
-        res.json(rows);
+        return res.status(200).json(rows);
     }
     catch (err) {
         return res.status(500).json({ err });
+    }
+}
+
+exports.createMessage = async (req, res) => {
+    try {
+        const sql = "INSERT INTO messages (chatid, userid, message) VALUES (?, ?, ?)";
+        const {chatid, userid, message} = req.body;
+        await db.query(sql, [chatid, userid, message]);
+        return res.sendStatus(201);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.getMessages = async (req, res) => {
+    try {
+        const sql = "SELECT m.*, u.username FROM messages m JOIN users u ON u.userid = m.userid WHERE m.chatid = ?";
+        const [rows] = await db.query(sql, [req.params.chatid]);
+        return res.status(201).json(rows);
+    } catch (error) {
+        console.log(error);
     }
 }
