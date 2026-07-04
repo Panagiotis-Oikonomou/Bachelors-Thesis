@@ -32,7 +32,7 @@ function MyChats() {
 
             <div className={styles.chats}>
                 {Object.entries(grouped).map(([chatid, members]) => (
-                    <Link to='/chatroom' className={styles.alink} key={chatid}>
+                    <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid}>
                         <div className={styles.chat} >
                             {members.map(member => (
                                 <div className={styles.chatData} key={member.username}>

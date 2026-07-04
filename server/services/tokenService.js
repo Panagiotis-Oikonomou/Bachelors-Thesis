@@ -3,11 +3,11 @@ const crypto = require('crypto');
 const db = require('../config/db');
 
 const generateAccessToken = (id, username, isAdmin) => {
-    return jwt.sign({ id, username, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_JWT_KEY, { expiresIn: "15m" });
+    return jwt.sign({ id, username, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_JWT_KEY, { expiresIn: "2h" });
 }
 
 const generateRefreshToken = (id, username, isAdmin) => {
-    return jwt.sign({ id, username, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn: '1d'});
+    return jwt.sign({ id, username, isAdmin, jti:crypto.randomUUID() }, process.env.SECRET_REFRESH_JWT_KEY, {expiresIn: '3h'});
 }
 
 const storeRefreshTokens = async (token, id) => {

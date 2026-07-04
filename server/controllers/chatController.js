@@ -18,8 +18,9 @@ exports.createMessage = async (req, res) => {
     try {
         const sql = "INSERT INTO messages (chatid, userid, message) VALUES (?, ?, ?)";
         const {chatid, userid, message} = req.body;
-        await db.query(sql, [chatid, userid, message]);
-        return res.sendStatus(201);
+        const [rows] = await db.query(sql, [chatid, userid, message]);
+        const [messageRow] = await db.query("SELECT * FROM messages WHERE messageid = ?", [rows.insertId]);
+        return res.status(201).json(messageRow[0]);
     } catch (error) {
         console.log(error);
     }

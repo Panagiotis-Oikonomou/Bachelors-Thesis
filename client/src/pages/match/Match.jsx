@@ -16,7 +16,6 @@ function Match() {
             <div className={styles.users}>
                 {users.map((user, index) => (
                     <div className={styles.user} key={index}>{user.username} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
-                        {/* // ( <img src={larrow} className={styles.x} onClick={() => removeSelectedUser(index)}/>)} */}
                     </div>
                 ))}
 

@@ -18,5 +18,5 @@
 }
 
 @media screen and (min-width: 768px) {
-    .up {grid-column: 2 / 13;}
+    .up {grid-column: 2 / 10;}
 }

@@ -45,7 +45,7 @@ function App() {
             <Route path="/criteria" element={<Criteria />} />
 
             <Route path="/my_chats" element={<MyChats />} />
-            <Route path="/chatroom" element={<ChatRoom />} />
+            <Route path="/chatroom/:chatid" element={<ChatRoom />} />
             <Route path="/matchings" element={<Matchings />} />
             <Route path="/match" element={<Match />} />
           </Route>
