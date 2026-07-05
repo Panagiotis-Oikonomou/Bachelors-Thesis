@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styles from './ChatRoom.module.css'
 import { Up } from "../../components/up/Up";
@@ -8,7 +8,8 @@ import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 import InputEmoji from 'react-input-emoji';
 import 'bootstrap';
-import {BsSendFill} from 'react-icons/bs';
+import { BsEmojiSmile, BsSendFill } from 'react-icons/bs';
+import EmojiPicker from 'emoji-picker-react';
 
 function ChatRoom() {
     const axiosPrivate = useAxiosPrivate();
@@ -18,6 +19,9 @@ function ChatRoom() {
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
     const [text, setText] = useState("");
+
+    const [showPicker, setShowPicker] = useState(false);
+    const textareaRef = useRef(null);
 
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
@@ -50,16 +54,28 @@ function ChatRoom() {
         setUserId(decoded.id);
     }, [chatid]);
 
-    async function sendText(txt){
-        if(!txt) return;
+    async function sendText() {
+        if (!text.trim()) return;
         try {
-            const res = await axiosPrivate.post('/chats', {chatid, userid: userId, message: txt});
+            const res = await axiosPrivate.post('/chats', { chatid, userid: userId, message: text });
             setChat((prev) => [...prev, res.data]);
             setText("");
         } catch (error) {
             console.log(error);
         }
     }
+
+    function keyPressed(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendText();
+        }
+    }
+
+    const onEmojiClick = (emojiData) => {
+        setText((prev) => prev + emojiData.emoji);
+        textareaRef.current?.focus();
+    };
 
     return (
         <div className={styles.container}>
@@ -89,9 +105,21 @@ function ChatRoom() {
                     </div>
                 ))}
             </div>
+
             <div className={styles.type}>
-                <InputEmoji value={text} onChange={setText} fontFamily="nunito" background="rgba(68, 156, 14, 0.2)" />
-                <button className={styles.sendButton} onClick={() => sendText(text)}><BsSendFill size={18}/></button>
+                {/* <InputEmoji value={text} onChange={setText} shouldReturn onEnter={sendText} fontFamily="nunito" background="rgba(68, 156, 14, 0.2)" /> */}
+                <textarea ref={textareaRef} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={keyPressed} />
+
+                <button onClick={() => setShowPicker((p) => !p)}>
+                    <BsEmojiSmile />
+                </button>
+
+                {showPicker && (
+                    <div className={styles.picker}>
+                        <EmojiPicker onEmojiClick={onEmojiClick} />
+                    </div>
+                )}
+                <button className={styles.sendButton} onClick={() => sendText()}><BsSendFill size={18} /></button>
             </div>
         </div>
     )

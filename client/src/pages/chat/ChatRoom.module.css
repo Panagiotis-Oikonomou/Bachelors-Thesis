@@ -36,27 +36,27 @@
 .type {
     grid-column: 1 / 7;
     grid-row: 4;
+
+    position: relative;
+
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
 }
 
+.picker {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  z-index: 1000;
+  transform: scale(0.75);
+    transform-origin: bottom left;
+}
+
 .type > :first-child {
     flex: 1;
 }
-
-/* .myMessage {
-    float: right;
-    margin-bottom: 10px;
-    padding: 5px 5px 5px 5px;
-}
-
-.otherMessage {
-    float: left;
-    margin-bottom: 10px;
-    padding: 5px 5px 5px 5px;
-} */
 
 .myMessage, .otherMessage {
     max-width: 50%;
@@ -64,6 +64,7 @@
     margin: 8px;
     border-radius: 15px;
     word-break: break-word;
+    white-space: pre-wrap;
 }
 
 .myMessage {
@@ -166,10 +167,6 @@
 
     .myMessage, .otherMessage {
         max-width: 40%;
-        padding: 10px;
-        margin: 8px;
-        border-radius: 15px;
-        word-break: break-word;
     }
 }
 
@@ -195,19 +192,19 @@
     }
 
     .type {
-        grid-column: 4 / 10;
+        grid-column: 5 / 10;
     }
 
     .type > :first-child {
         flex: 1;
     }
 
+    .picker {
+        transform: scale(0.90);
+    }
+
     .myMessage, .otherMessage {
         max-width: 70%;
-        padding: 10px;
-        margin: 8px;
-        border-radius: 15px;
-        word-break: break-word;
     }
     
     .userName {
