@@ -10,6 +10,7 @@ import InputEmoji from 'react-input-emoji';
 import 'bootstrap';
 import { BsEmojiSmile, BsSendFill } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
+import { io } from 'socket.io-client';
 
 function ChatRoom() {
     const axiosPrivate = useAxiosPrivate();
@@ -19,9 +20,13 @@ function ChatRoom() {
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
     const [text, setText] = useState("");
+    const socketRef = useRef(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
 
     const [showPicker, setShowPicker] = useState(false);
     const textareaRef = useRef(null);
+
+    console.log("Online users", onlineUsers);
 
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
@@ -29,6 +34,25 @@ function ChatRoom() {
         acc[item.chatid].push(item);
         return acc;
     }, {});
+
+    useEffect(() => {
+        if (socketRef.current) return;
+        const newSocket = io("http://localhost:5000");
+
+        socketRef.current = newSocket;
+
+        newSocket.on("connect", () => {
+            console.log("connected:", newSocket.id);
+            newSocket.emit("addNewUser", userId);
+            newSocket.on("getOnlineUsers", (res) => { setOnlineUsers(res); });
+        });
+
+
+        return () => {
+            newSocket.disconnect();
+            socketRef.current = null;
+        };
+    }, [userId]);
 
     useEffect(() => {
         const getChats = async () => {

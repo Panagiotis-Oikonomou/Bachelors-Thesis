@@ -25,6 +25,7 @@
     "react-input-emoji": "^5.9.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^7.13.1",
+    "socket.io-client": "^4.8.3",
     "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
