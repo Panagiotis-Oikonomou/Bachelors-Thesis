@@ -28,6 +28,8 @@ function initSocket(server) {
 
             onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
 
+            io.emit("getOnlineUsers", onlineUsers);
+
             console.log("onlineUsers after disconnect", onlineUsers);
         });
     });

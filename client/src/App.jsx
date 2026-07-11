@@ -26,17 +26,19 @@ import Providers from "./pages/adminWork/Providers";
 
 import RequiredAuth from "./pages/RequiredAuth";
 import PersistLogin from "./pages/PersistLogin";
+import { SocketProvider } from "./context/SocketContext";
 
 function App() {
   return (
     <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      {/* Public Routes */}
+      <Route path="/" element={<Index />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-        <Route element={<PersistLogin />}>
-          <Route element={<RequiredAuth admin={false} />}>
+      <Route element={<PersistLogin />}>
+        <Route element={<RequiredAuth admin={false} />}>
+          <Route element={<SocketProvider />}>
             <Route path="/add_area" element={<AddArea />} />
             <Route path="/my_areas" element={<MyAreas />} />
             <Route path="/manage_area/:id" element={<ManageArea />} />
@@ -49,17 +51,20 @@ function App() {
             <Route path="/matchings" element={<Matchings />} />
             <Route path="/match" element={<Match />} />
           </Route>
+        </Route>
 
-          <Route element={<RequiredAuth admin={true} />}>
+        <Route element={<RequiredAuth admin={true} />}>
+          <Route element={<SocketProvider />}>
             <Route path="/users" element={<Users />} />
             <Route path="/profile/admin" element={<ProfileAdmin />} />
             <Route path="/providers" element={<Providers />} />
 
             <Route path="/notifications/admin" element={<NotificationsAdmin />} />
           </Route>
-
-          <Route path="/*" element={<Navigate to="/" />} />
         </Route>
+
+        <Route path="/*" element={<Navigate to="/" />} />
+      </Route>
     </Routes>
   );
 }

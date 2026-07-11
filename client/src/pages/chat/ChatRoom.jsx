@@ -4,24 +4,24 @@ import styles from './ChatRoom.module.css'
 import { Up } from "../../components/up/Up";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
+import { useSocket } from "../../context/SocketContext";
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 import InputEmoji from 'react-input-emoji';
 import 'bootstrap';
 import { BsEmojiSmile, BsSendFill } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 
 function ChatRoom() {
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
+    const {onlineUsers, socket} = useSocket();
     const { chatid } = useParams();
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
     const [text, setText] = useState("");
-    const socketRef = useRef(null);
-    const [onlineUsers, setOnlineUsers] = useState([]);
 
     const [showPicker, setShowPicker] = useState(false);
     const textareaRef = useRef(null);
@@ -34,25 +34,6 @@ function ChatRoom() {
         acc[item.chatid].push(item);
         return acc;
     }, {});
-
-    useEffect(() => {
-        if (socketRef.current) return;
-        const newSocket = io("http://localhost:5000");
-
-        socketRef.current = newSocket;
-
-        newSocket.on("connect", () => {
-            console.log("connected:", newSocket.id);
-            newSocket.emit("addNewUser", userId);
-            newSocket.on("getOnlineUsers", (res) => { setOnlineUsers(res); });
-        });
-
-
-        return () => {
-            newSocket.disconnect();
-            socketRef.current = null;
-        };
-    }, [userId]);
 
     useEffect(() => {
         const getChats = async () => {
@@ -103,7 +84,7 @@ function ChatRoom() {
 
     return (
         <div className={styles.container}>
-            <Up />
+            <Up/>
 
             <div className={styles.chatName}><p>To id</p></div>
             <div className={styles.otherChats}>
