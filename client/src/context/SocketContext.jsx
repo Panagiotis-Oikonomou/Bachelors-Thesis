@@ -13,27 +13,29 @@ export const SocketProvider = () => {
     const userid = auth?.accessToken ? jwtDecode(auth.accessToken).id : null;
 
     useEffect(() => {
-        if (!userid) return;
         const newSocket = io("http://localhost:5000");
-
         setSocket(newSocket);
-
-        newSocket.on("connect", () => {
-            console.log("connected:", newSocket.id);
-            newSocket.emit("addNewUser", userid);
-        });
-        
-        newSocket.on("getOnlineUsers", (res) => { setOnlineUsers(res); });
 
         return () => {
             newSocket.disconnect();
-            setSocket(null);
         };
     }, [userid]);
 
+    useEffect(() => {
+        if (!socket || !userid) return;
+        socket.on("connect", () => {
+            socket.emit("addNewUser", userid);
+            console.log("connected:", socket?.id);
+        });
+        socket.on("getOnlineUsers", (res) => { setOnlineUsers(res); });
+        return () => {
+            socket.off("getOnlineUsers");
+        };
+    }, [socket]);
+
     return (
-        <SocketContext.Provider value={{ onlineUsers, socket}}>
-            <Outlet/>
+        <SocketContext.Provider value={{ onlineUsers, socket }}>
+            <Outlet />
         </SocketContext.Provider>
     );
 }

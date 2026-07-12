@@ -26,11 +26,17 @@
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #1b2632;
     outline-style: groove;
     outline-color: rgb(194, 186, 186);
-    background-color: rgb(209, 205, 205);
+    background-color: rgb(119, 64, 64);
+}
+
+.chat::-webkit-scrollbar {
+    width: 3px;
+}
+
+.chat::-webkit-scrollbar-thumb {
+    background: #888;
 }
 
 .type {
@@ -114,6 +120,10 @@
 
 .sendButton:active {
     transform: scale(0.95);
+}
+
+.online{
+    color: green;
 }
 
 

@@ -22,6 +22,15 @@ function initSocket(server) {
             io.emit("getOnlineUsers", onlineUsers);
         });
 
+        socket.on("sendMessage", (text) => {
+            const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
+
+            if(users){
+                for(const u of users){
+                    io.to(u.socketId).emit("getMessage", text.message);
+                }
+            }
+        });
 
         socket.on("disconnect", () => {
             console.log("disconnected:", socket.id);

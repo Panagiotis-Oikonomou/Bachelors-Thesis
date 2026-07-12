@@ -7,16 +7,13 @@ import useAuth from "../../hooks/useAuth";
 import { useSocket } from "../../context/SocketContext";
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
-import InputEmoji from 'react-input-emoji';
-import 'bootstrap';
 import { BsEmojiSmile, BsSendFill } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
-// import { io } from 'socket.io-client';
 
 function ChatRoom() {
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
-    const {onlineUsers, socket} = useSocket();
+    const { onlineUsers, socket } = useSocket();
     const { chatid } = useParams();
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
@@ -25,8 +22,10 @@ function ChatRoom() {
 
     const [showPicker, setShowPicker] = useState(false);
     const textareaRef = useRef(null);
-
-    console.log("Online users", onlineUsers);
+    const chatRef = useRef(null);
+    const bottomRef = useRef(null);
+    const isNearBottomRef = useRef(true);
+    const firstLoad = useRef(true);
 
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
@@ -34,6 +33,40 @@ function ChatRoom() {
         acc[item.chatid].push(item);
         return acc;
     }, {});
+
+    useEffect(() => {
+        const el = chatRef.current;
+        if (!el) return;
+
+        const handleScroll = () => {
+            isNearBottomRef.current =
+                el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+        };
+
+        el.addEventListener("scroll", handleScroll);
+
+        handleScroll();
+
+        return () => {
+            el.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (firstLoad.current) {
+            bottomRef.current?.scrollIntoView({ behavior: "auto", });
+
+            firstLoad.current = false;
+            return;
+        }
+
+        if (isNearBottomRef.current) bottomRef.current?.scrollIntoView({ behavior: "smooth", });
+    }, [chat.length]);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView();
+        firstLoad.current = true;
+    }, [chatid]);
 
     useEffect(() => {
         const getChats = async () => {
@@ -59,11 +92,29 @@ function ChatRoom() {
         setUserId(decoded.id);
     }, [chatid]);
 
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("getMessage", res => {
+            if (chatid != res.chatid) return;
+            setChat((prev) => [...prev, res]);
+        });
+
+        return () => {
+            socket.off("getMessage");
+        };
+    }, [socket, chatid]);
+
     async function sendText() {
         if (!text.trim()) return;
         try {
             const res = await axiosPrivate.post('/chats', { chatid, userid: userId, message: text });
             setChat((prev) => [...prev, res.data]);
+            if (res.data) {
+                if (!socket) return;
+                const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
+                const res2 = await axiosPrivate.post("/chats/online_users", { getRecipients, chatid });
+                if (res2.data) socket.emit("sendMessage", { message: res.data, recipients: res2.data });
+            }
             setText("");
         } catch (error) {
             console.log(error);
@@ -84,7 +135,7 @@ function ChatRoom() {
 
     return (
         <div className={styles.container}>
-            <Up/>
+            <Up />
 
             <div className={styles.chatName}><p>To id</p></div>
             <div className={styles.otherChats}>
@@ -93,7 +144,7 @@ function ChatRoom() {
                         <div className={styles.insideOtherChats} >
                             {members.map(member => (
                                 <div key={member.username}>
-                                    {member.username}
+                                    <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
                                 </div>
                             ))}
                         </div>
@@ -101,7 +152,7 @@ function ChatRoom() {
                 ))}
             </div>
 
-            <div className={styles.chat}>
+            <div className={styles.chat} ref={chatRef}>
                 {chat.map((item) => (
                     <div className={userId === item.userid ? styles.myMessage : styles.otherMessage} key={item.messageid}>
                         {userId !== item.userid && <div className={styles.userName}>{item.username}<br /></div>}
@@ -109,10 +160,10 @@ function ChatRoom() {
                         <div className={styles.date}>{moment(item.createdat).calendar()}</div>
                     </div>
                 ))}
+                <div ref={bottomRef}></div>
             </div>
 
             <div className={styles.type}>
-                {/* <InputEmoji value={text} onChange={setText} shouldReturn onEnter={sendText} fontFamily="nunito" background="rgba(68, 156, 14, 0.2)" /> */}
                 <textarea ref={textareaRef} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={keyPressed} />
 
                 <button onClick={() => setShowPicker((p) => !p)}>
