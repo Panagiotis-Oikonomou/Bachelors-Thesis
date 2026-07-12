@@ -64,13 +64,91 @@
     flex: 1;
 }
 
-.myMessage, .otherMessage {
+.myMessage, .otherMessage, .deletedMessageBubble {
     max-width: 50%;
     padding: 10px;
-    margin: 8px;
+    margin: 8px 8px 18px 8px;
     border-radius: 15px;
     word-break: break-word;
     white-space: pre-wrap;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.deletedMessageBubble {
+    background: #e0e0e0;
+    color: #777;
+    font-style: italic;
+}
+
+.myDeletedMessage {
+    align-self: flex-end;
+}
+
+.otherDeletedMessage {
+    align-self: flex-start;
+}
+
+.myMessage {
+    position: relative;
+}
+
+.messageOptions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.optionsButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    color: rgba(255,255,255,0.7);
+    font-size: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.optionsButton:hover {
+    color: white;
+}
+
+.deletedMessage {
+    text-decoration: line-through;
+}
+
+.chatMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+
+    background: white;
+    color: black;
+
+    border-radius: 80px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+    z-index: 100;
+}
+
+.chatMenu button {
+    background: none;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.chatMenu button:hover {
+    background: #f2f2f2;
 }
 
 .myMessage {
@@ -125,7 +203,6 @@
 .online{
     color: green;
 }
-
 
 @media screen and (min-width: 350px){
 

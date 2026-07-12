@@ -41,8 +41,19 @@ exports.getOnlineChatUsers = async (req, res) => {
         const sql = "SELECT userid FROM chat_users WHERE chatid = ? AND userid IN (?)";
         const { getRecipients, chatid } = req.body;
         const userIds = getRecipients.map(r => r.userId);
+        if(userIds.length === 0) return res.status(200).json([]);
         const [rows] = await db.query(sql, [chatid, userIds]);
         return res.status(201).json(rows);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.deleteMessage = async (req, res) => {
+    try {
+        const sql = "UPDATE messages SET message = '', unsent = 1 WHERE messageid = ?";
+        await db.query(sql, [req.params.messageid]);
+        return res.sendStatus(200);
     } catch (error) {
         console.log(error);
     }

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useSocket } from "../../context/SocketContext";
 import { Up } from "../../components/up/Up";
 import styles from './MyChats.module.css';
 
 function MyChats() {
+    const { onlineUsers } = useSocket();
     const axiosPrivate = useAxiosPrivate();
     const [chats, setChats] = useState([]);
     const grouped = chats.reduce((acc, item) => {
@@ -36,7 +38,7 @@ function MyChats() {
                         <div className={styles.chat} >
                             {members.map(member => (
                                 <div className={styles.chatData} key={member.username}>
-                                    {member.username}
+                                    <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
                                 </div>
                             ))}
                         </div>

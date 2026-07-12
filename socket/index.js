@@ -32,6 +32,16 @@ function initSocket(server) {
             }
         });
 
+        socket.on("unsendMessage", (text) => {
+            const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
+
+            if(users){
+                for(const u of users){
+                    io.to(u.socketId).emit("removeUnsendMessage", text.message);
+                }
+            }
+        });
+
         socket.on("disconnect", () => {
             console.log("disconnected:", socket.id);
 

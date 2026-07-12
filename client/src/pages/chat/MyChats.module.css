@@ -2,7 +2,6 @@
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     background-color: salmon;
-    /* grid-auto-rows: min-content; */
     grid-auto-rows: auto;
     align-content: start;
     width: 100%;
@@ -12,23 +11,6 @@
 .up {
     display: none;
 }
-
-/* .main-hidden .chats {
-    display: none;
-} */
-
-/* .main-hidden .up {
-    grid-column: 1 / 7;
-    grid-row: auto;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y:auto;
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #1b2632;
-} */
 
 .chats {
     grid-column: 1 / 7;
@@ -43,7 +25,6 @@
 }
 
 .chat {
-    /* grid-column: 1 / 5; */
     outline-style: groove;
     outline-color: rgb(139, 134, 134);
     background-color: rgb(209, 205, 205);
@@ -67,6 +48,10 @@
 .alink:link, .alink:visited, .alink:hover {
     color: black;
     text-decoration: none;
+}
+
+.online {
+    color: green;
 }
 
 
