@@ -227,19 +227,48 @@
         padding: 10px 5px 0px 10px;
         margin-left: 10px;
     }
-    
-    .chat {
-        grid-column: 4 / 9;
-        grid-row: 3;
-        height: 74vh;
-    }
 
     .insideOtherChats {
+        position: relative;
         outline-style: groove;
         outline-color: rgb(139, 134, 134);
         background-color: rgb(209, 205, 205);
         padding: 5px 0px 5px 5px;
         margin-bottom: 10px;
+    }
+
+    .memb {
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+    }
+
+    .notificationIcon {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+    }
+
+    .notificationBadge {
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: #ef4444;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .chat {
+        grid-column: 4 / 9;
+        grid-row: 3;
+        height: 74vh;
     }
 
     .type {

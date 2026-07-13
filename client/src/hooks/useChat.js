@@ -10,7 +10,7 @@ export default function useChat(chatid) {
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
-    const { onlineUsers, socket } = useSocket();
+    const { onlineUsers, socket, notifications, setNotifications } = useSocket();
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
@@ -25,6 +25,7 @@ export default function useChat(chatid) {
     const menuRef = useRef(null);
     const [openMenu, setOpenMenu] = useState(null);
 
+    console.log("Notifications", notifications);
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
 
@@ -52,6 +53,7 @@ export default function useChat(chatid) {
             return;
         }
 
+        setNotifications(prev => prev.map(n => n.chatid == chatid ? {...n, isRead: true} : n));
     }, [chatid]);
 
     useEffect(() => {
@@ -114,13 +116,22 @@ export default function useChat(chatid) {
 
     useEffect(() => {
         if (!socket) return;
-        socket.on("getMessage", res => {
+        socket.on("getMessage", (res) => {
             if (chatid != res.chatid) return;
             setChat((prev) => [...prev, res]);
         });
 
+        socket.on("getNotification", (res) => {
+            const isChatOpen = chatid == res.chatid;
+
+            if(isChatOpen) setNotifications(prev => [{...res, isRead: true}, ...prev]);
+
+            else setNotifications(prev => [res, ...prev]);
+        });
+
         return () => {
             socket.off("getMessage");
+            socket.off("getNotification");
         };
     }, [socket, chatid]);
 
@@ -193,6 +204,6 @@ export default function useChat(chatid) {
     return {
         chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
-        setShowPicker, onEmojiClick, sendText
+        setShowPicker, onEmojiClick, sendText, notifications
     };
 }

@@ -26,12 +26,37 @@
 
 .chat {
     outline-style: groove;
+    display: flex;
+    align-items: center;
     outline-color: rgb(139, 134, 134);
     background-color: rgb(209, 205, 205);
     padding-top: 10px;
     padding-bottom: 10px;
     max-height: 80px;
     margin-bottom: 20px;
+}
+
+.notificationIcon {
+    position: relative;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.notificationBadge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chatData {

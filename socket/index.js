@@ -28,6 +28,7 @@ function initSocket(server) {
             if(users){
                 for(const u of users){
                     io.to(u.socketId).emit("getMessage", text.message);
+                    io.to(u.socketId).emit("getNotification", {chatid: text.message.chatid, isRead: false, message: text.message.message});
                 }
             }
         });

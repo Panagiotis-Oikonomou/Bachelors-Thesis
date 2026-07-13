@@ -4,11 +4,13 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSocket } from "../../context/SocketContext";
 import { Up } from "../../components/up/Up";
 import styles from './MyChats.module.css';
+import { BsBell } from 'react-icons/bs';
 
 function MyChats() {
-    const { onlineUsers } = useSocket();
+    const { onlineUsers, notifications } = useSocket();
     const axiosPrivate = useAxiosPrivate();
     const [chats, setChats] = useState([]);
+    console.log("not", notifications);
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
 
@@ -41,6 +43,12 @@ function MyChats() {
                                     <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
                                 </div>
                             ))}
+                            {notifications.some(n => n.chatid == chatid && n.isRead == false) && (
+                                <div className={styles.notificationIcon}>
+                                    <BsBell size={3} />
+                                    <span className={styles.notificationBadge}>{notifications.filter(n => n.chatid == chatid && n.isRead == false).length}</span>
+                                </div>
+                             )}
                         </div>
                     </Link>
                 ))}

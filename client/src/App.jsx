@@ -54,13 +54,11 @@ function App() {
         </Route>
 
         <Route element={<RequiredAuth admin={true} />}>
-          <Route element={<SocketProvider />}>
             <Route path="/users" element={<Users />} />
             <Route path="/profile/admin" element={<ProfileAdmin />} />
             <Route path="/providers" element={<Providers />} />
 
             <Route path="/notifications/admin" element={<NotificationsAdmin />} />
-          </Route>
         </Route>
 
         <Route path="/*" element={<Navigate to="/" />} />

@@ -2,15 +2,15 @@ import { Link, useParams } from "react-router-dom";
 import styles from './ChatRoom.module.css'
 import { Up } from "../../components/up/Up";
 import moment from 'moment';
-import { BsEmojiSmile, BsSendFill, BsThreeDots } from 'react-icons/bs';
+import { BsEmojiSmile, BsSendFill, BsThreeDots, BsBell } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
 import useChat from "../../hooks/useChat";
 
 function ChatRoom() {
     const { chatid } = useParams();
     const { chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
-        onlineUsers, grouped, setOpenMenu, openMenu, unsendText, setText, keyPressed, 
-        setShowPicker, onEmojiClick, sendText
+        onlineUsers, grouped, setOpenMenu, openMenu, unsendText, setText, keyPressed,
+        setShowPicker, onEmojiClick, sendText, notifications
     } = useChat(chatid);
 
     return (
@@ -22,11 +22,19 @@ function ChatRoom() {
                 {Object.entries(grouped).map(([chatid, members]) => (
                     <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid}>
                         <div className={styles.insideOtherChats} >
-                            {members.map(member => (
-                                <div key={member.username}>
-                                    <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
+                            {notifications.some(n => n.chatid == chatid && n.isRead == false) && (
+                                <div className={styles.notificationIcon}>
+                                    <BsBell size={3} />
+                                    <span className={styles.notificationBadge}>{notifications.filter(n => n.chatid == chatid && n.isRead == false).length}</span>
                                 </div>
-                            ))}
+                            )}
+                            <div className={styles.memb}>
+                                {members.map(member => (
+                                    <div key={member.username}>
+                                        <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </Link>
                 ))}
