@@ -10,7 +10,7 @@ export default function useChat(chatid) {
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
-    const { onlineUsers, socket, notifications, setNotifications } = useSocket();
+    const { onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages } = useSocket();
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
@@ -25,7 +25,6 @@ export default function useChat(chatid) {
     const menuRef = useRef(null);
     const [openMenu, setOpenMenu] = useState(null);
 
-    console.log("Notifications", notifications);
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
 
@@ -127,6 +126,8 @@ export default function useChat(chatid) {
             if(isChatOpen) setNotifications(prev => [{...res, isRead: true}, ...prev]);
 
             else setNotifications(prev => [res, ...prev]);
+
+            setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ?{...p, message: res.message} : p));
         });
 
         return () => {
@@ -204,6 +205,6 @@ export default function useChat(chatid) {
     return {
         chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
-        setShowPicker, onEmojiClick, sendText, notifications
+        setShowPicker, onEmojiClick, sendText, notifications, peakMessages
     };
 }

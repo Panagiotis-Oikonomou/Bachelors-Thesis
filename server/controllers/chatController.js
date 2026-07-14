@@ -58,3 +58,13 @@ exports.deleteMessage = async (req, res) => {
         console.log(error);
     }
 }
+
+exports.getLatestMessages = async (req, res) => {
+    try {
+        const getChatsSql = "SELECT cu.chatid, m.message FROM chat_users cu LEFT JOIN messages m ON m.messageid = (SELECT messageid FROM messages WHERE chatid = cu.chatid AND unsent = 0 ORDER BY messageid DESC LIMIT 1) WHERE cu.userid = ?";
+        const [rows] = await db.query(getChatsSql, [req.params.userid]);
+        return res.status(200).json(rows);
+    } catch (error) {
+        console.log(error);
+    }
+}

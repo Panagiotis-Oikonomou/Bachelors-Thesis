@@ -7,11 +7,11 @@ import EmojiPicker from 'emoji-picker-react';
 import useChat from "../../hooks/useChat";
 
 function ChatRoom() {
-    const { chatid } = useParams();
+    const { chatId } = useParams();
     const { chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, grouped, setOpenMenu, openMenu, unsendText, setText, keyPressed,
-        setShowPicker, onEmojiClick, sendText, notifications
-    } = useChat(chatid);
+        setShowPicker, onEmojiClick, sendText, notifications, peakMessages
+    } = useChat(chatId);
 
     return (
         <div className={styles.container}>
@@ -35,6 +35,12 @@ function ChatRoom() {
                                     </div>
                                 ))}
                             </div>
+
+                            {chatid != chatId && (
+                                <div className={styles.lastMessage}>
+                                    Latest message: {peakMessages.find(p => p.chatid == chatid)?.message}
+                                </div>
+                            )}
                         </div>
                     </Link>
                 ))}

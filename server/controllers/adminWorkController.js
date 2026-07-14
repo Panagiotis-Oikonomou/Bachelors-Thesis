@@ -19,6 +19,7 @@ exports.deleteUser = async (req, res) => {
         const sqlCriteria = "DELETE FROM criterias WHERE userid = ?";
         const sqlNotification = "DELETE FROM notifications WHERE userid = ?";
         const sqlMatchings = "DELETE FROM matchings WHERE userid = ?";
+        const sqlChat = "DELETE FROM chat_users WHERE userid = ?";
         const userid = req.params.userid;
 
         await db.query(sql, [userid]);
@@ -26,6 +27,7 @@ exports.deleteUser = async (req, res) => {
         await db.query(sqlCriteria, [userid]);
         await db.query(sqlNotification, [userid]);
         await db.query(sqlMatchings, [userid]);
+        await db.query(sqlChat, [userid]);
         return res.sendStatus(200);
     }
     catch(err){

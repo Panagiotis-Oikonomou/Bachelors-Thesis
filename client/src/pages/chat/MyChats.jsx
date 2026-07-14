@@ -7,10 +7,9 @@ import styles from './MyChats.module.css';
 import { BsBell } from 'react-icons/bs';
 
 function MyChats() {
-    const { onlineUsers, notifications } = useSocket();
+    const { onlineUsers, notifications, peakMessages } = useSocket();
     const axiosPrivate = useAxiosPrivate();
     const [chats, setChats] = useState([]);
-    console.log("not", notifications);
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
 
@@ -32,23 +31,38 @@ function MyChats() {
     }, []);
     return (
         <div className={styles.container}>
-            <Up></Up>
-
+            <Up/>
+            
             <div className={styles.chats}>
                 {Object.entries(grouped).map(([chatid, members]) => (
-                    <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid}>
-                        <div className={styles.chat} >
-                            {members.map(member => (
-                                <div className={styles.chatData} key={member.username}>
-                                    <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
+                    <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid} >
+                        <div className={styles.chat}>
+
+                            <div className={styles.chatInfo}>
+                                <div className={styles.chatNames}>
+                                    {members.map(member => (
+                                        <div className={styles.chatData} key={member.username}>
+                                            <span className={ onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>
+                                                {member.username}
+                                            </span>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                            {notifications.some(n => n.chatid == chatid && n.isRead == false) && (
+
+                                <div className={styles.lastMessage}>
+                                    Latest message: {peakMessages.find(p => p.chatid == chatid)?.message}
+                                </div>
+                            </div>
+
+                            {notifications.some(n => n.chatid == chatid && !n.isRead) && (
                                 <div className={styles.notificationIcon}>
-                                    <BsBell size={3} />
-                                    <span className={styles.notificationBadge}>{notifications.filter(n => n.chatid == chatid && n.isRead == false).length}</span>
+                                    <BsBell size={30} />
+                                    <span className={styles.notificationBadge}>
+                                        {notifications.filter(n => n.chatid == chatid && !n.isRead).length}
+                                    </span>
                                 </div>
-                             )}
+                            )}
+
                         </div>
                     </Link>
                 ))}

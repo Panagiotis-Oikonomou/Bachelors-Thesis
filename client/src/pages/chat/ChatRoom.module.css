@@ -264,6 +264,17 @@
         align-items: center;
         justify-content: center;
     }
+
+    .lastMessage {
+        margin-top: 6px;
+        font-size: 0.9rem;
+        color: #555;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 190px;
+        pointer-events: none;
+    }
     
     .chat {
         grid-column: 4 / 9;

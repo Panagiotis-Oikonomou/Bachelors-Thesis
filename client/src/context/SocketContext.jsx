@@ -2,16 +2,19 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { io } from 'socket.io-client';
 import { jwtDecode } from "jwt-decode";
 import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Outlet, useLocation } from "react-router-dom";
 
 const SocketContext = createContext({});
 
 export const SocketProvider = () => {
     const { auth } = useAuth();
+    const axiosPrivate = useAxiosPrivate();
     const location = useLocation();
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
+    const [peakMessages, setPeakMessages] = useState([]);
     const userid = auth?.accessToken ? jwtDecode(auth.accessToken).id : null;
 
     useEffect(() => {
@@ -43,15 +46,32 @@ export const SocketProvider = () => {
     useEffect(() => {
         if(!socket) return;
         if(location.pathname.startsWith("/chatroom/")) return;
-        socket.on("getNotification", (res) => { setNotifications(prev => [res, ...prev]); });
+        socket.on("getNotification", (res) => { 
+            setNotifications(prev => [res, ...prev]); 
+            setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ?{...p, message: res.message} : p));
+        });
 
         return () => {
             socket.off("getNotification");
         };
     }, [socket, location]);
 
+    useEffect(() => {
+        const getLatestMessages = async () => {
+            try {
+                if(!userid) return;
+                const res = await axiosPrivate.get(`/chats/messages/${userid}`);
+                if(res.data.length > 0) setPeakMessages(res.data);
+            } 
+            catch (error) {
+                console.log(error);
+            }
+        }
+        getLatestMessages();
+    }, [socket, location]);
+
     return (
-        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications }}>
+        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages }}>
             <Outlet />
         </SocketContext.Provider>
     );
