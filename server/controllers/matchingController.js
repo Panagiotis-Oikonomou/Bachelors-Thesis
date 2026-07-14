@@ -73,11 +73,13 @@ exports.updateAgrees = async (req, res) => {
             }
         }
         if (allAgree) {
-            const chatCreationSql = "INSERT INTO chats () VALUES ()";
-            const [chat] = await db.query(chatCreationSql);
+            const chatCreationSql = "INSERT INTO chats (groupid) VALUES (?)";
+            const [chat] = await db.query(chatCreationSql, [gi[0].groupid]);
             const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
+            const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
             for (const r of result) {
                 await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
+                await db.query(createDestroySql, [chat.insertId, r.userid]);
             }
         }
         return res.sendStatus(201);

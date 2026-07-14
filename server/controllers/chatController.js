@@ -68,3 +68,54 @@ exports.getLatestMessages = async (req, res) => {
         console.log(error);
     }
 }
+
+exports.getWatingDelete = async (req, res) => {
+    try {
+        const sql = "SELECT wdc.*, u.username FROM waiting_deleted_chats wdc JOIN users u ON wdc.userid = u.userid WHERE chatid = ?";
+        const [rows] = await db.query(sql, [req.params.chatid]);
+        return res.status(200).json(rows);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.changeWaitingDelete = async (req, res) => {
+    try {
+        const sql = "UPDATE waiting_deleted_chats SET destroy = ? WHERE userid = ? AND chatid = ?";
+        await db.query(sql, [req.params.d, req.user.id, req.params.chatid]);
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.deleteChat = async (req, res) => {
+    try {
+        const getGroupSql = "SELECT groupid FROM chats WHERE chatid = ?";
+        const getUsersSql = "SELECT userid FROM waiting_deleted_chats WHERE chatid = ?";
+        const deleteWaitingSql = "DELETE FROM waiting_deleted_chats WHERE chatid = ?";
+        const deleteChatUsersSql = "DELETE FROM chat_users WHERE chatid = ?";
+        const deleteChatSql = "DELETE FROM chats WHERE chatid = ?";
+        const deleteGroupSql = "DELETE FROM groups WHERE groupid = ?";
+        const deleteMatchingsSql = "DELETE FROM matchings WHERE groupid = ?";
+        const deleteMessagesSql = "DELETE FROM messages WHERE groupid = ?";
+        const sendNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?)";
+        const message = "Έχετε βγει από την ομάδα μετά από συμφωνία όλων των μελών της";
+
+        const [groupid] = await db.query(getGroupSql, [req.params.chatid]);
+        const [users] = await db.query(getUsersSql, [req.params.chatid]);
+        await db.query(deleteWaitingSql, [req.params.chatid]);
+        await db.query(deleteChatUsersSql, [req.params.chatid]);
+        await db.query(deleteChatSql, [req.params.chatid]);
+        await db.query(deleteMessagesSql, [req.params.chatid]);
+        await db.query(deleteGroupSql, [groupid[0].groupid]);
+        await db.query(deleteMatchingsSql, [groupid[0].groupid]);
+        
+        for(const u of users){
+            await db.query(sendNotificationSql, [u.userid, groupid[0].groupid, message, "info"]);
+        }
+        return res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+    }
+}

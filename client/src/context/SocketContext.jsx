@@ -70,6 +70,31 @@ export const SocketProvider = () => {
         getLatestMessages();
     }, [socket, location]);
 
+    // useEffect(() => {
+    //     if(!socket) return;
+    //     if(location.pathname.startsWith("/chatroom/")) return;
+    //     socket.on("getNotification", (res) => { 
+    //         setNotifications(prev => [res, ...prev]); 
+    //         setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ?{...p, message: res.message} : p));
+    //     });
+
+    //     socket.on("removeUnsendMessage", res => {
+    //         if (chatid != res.chatid) return;
+    //         setChat(prev => {
+    //             const updated = prev.map(m => m.messageid === res.messageid ? { ...m, unsent: 1, message: "" } : m);
+                
+    //             const lastNonEmpty = [...updated].reverse().find(m => m.message.trim() !== "");
+
+    //             setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? {
+    //                 ...p, message: lastNonEmpty ? lastNonEmpty.message : "" } : p));
+    //         });
+    //     });
+
+    //     return () => {
+    //         socket.off("removeUnsendMessage");
+    //     };
+    // }, [socket, location]);
+
     return (
         <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages }}>
             <Outlet />

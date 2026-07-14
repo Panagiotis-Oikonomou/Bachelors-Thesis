@@ -14,7 +14,6 @@
     grid-row: 2;
     font-weight: 700;
     font-size: 1.4em;
-    text-align: center;
 }
 
 .chat {
@@ -204,11 +203,41 @@
     color: green;
 }
 
+.yesPointer {
+    color: green;
+    cursor: pointer;
+    padding-right: 5px;
+}
+
+.yes {
+    color: green;
+    padding-right: 5px;
+}
+
+.noPointer {
+    color: red;
+    cursor: pointer;
+}
+
+.no {
+    color: red;
+}
+
 @media screen and (min-width: 350px){
 
     .container {
         grid-template-columns: repeat(8, 1fr);
         background-color: rgb(207, 25, 5);
+    }
+
+    .delete {
+        grid-column: 2 / 7;
+        display: flex;
+        padding: 10px;
+    }
+
+    .deleteData {
+        padding: 5px;
     }
 
     .otherChats {
@@ -305,7 +334,7 @@
     }   
 
     .chatName {
-        grid-column: 4 / 11;
+        grid-column: 7 / 11;
     }
 
     .otherChats {

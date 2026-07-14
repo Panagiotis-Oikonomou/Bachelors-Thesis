@@ -15,6 +15,7 @@ export default function useChat(chatid) {
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
     const [text, setText] = useState("");
+    const [waitingDelete, setWaitingDelete] = useState([]);
 
     const [showPicker, setShowPicker] = useState(false);
     const textareaRef = useRef(null);
@@ -140,13 +141,32 @@ export default function useChat(chatid) {
         if (!socket) return;
         socket.on("removeUnsendMessage", res => {
             if (chatid != res.chatid) return;
-            setChat(prev => prev.map(m => m.messageid === res.messageid ? { ...m, unsent: 1, message: "" } : m));
+            setChat(prev => {
+                const updated = prev.map(m => m.messageid === res.messageid ? { ...m, unsent: 1, message: "" } : m);
+                
+                const lastNonEmpty = [...updated].reverse().find(m => m.message.trim() !== "");
+
+                setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? {
+                    ...p, message: lastNonEmpty ? lastNonEmpty.message : "" } : p));
+            });
         });
 
         return () => {
             socket.off("removeUnsendMessage");
         };
     }, [socket, chatid]);
+
+    useEffect(() => {
+        const getDeleteChat = async () => {
+            try {
+                const res = await axiosPrivate.get(`/chats/waiting_delete/${chatid}`);
+                if(res.data) setWaitingDelete(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getDeleteChat();
+    }, [chatid]);
 
     async function sendText() {
         if (!text.trim()) return;
@@ -202,9 +222,32 @@ export default function useChat(chatid) {
         textareaRef.current?.focus();
     };
 
+    async function changeWaitingDelete(del) {
+        if(del == 1){
+            const allAgree = waitingDelete.every(w => w.destroy == 1 || w.userid == userId);
+
+            if(allAgree){
+                try {
+                    await axiosPrivate.delete(`/chats/${chatid}`);
+                    return navigate("/my_chats");
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+
+        try {
+            await axiosPrivate.put(`/chats/waiting_delete/${del}/${chatid}`);
+            setWaitingDelete(prev => prev.map(w => w.userid == userId ? {...w, destroy: del} : w));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return {
         chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
-        setShowPicker, onEmojiClick, sendText, notifications, peakMessages
+        setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
+        changeWaitingDelete
     };
 }
