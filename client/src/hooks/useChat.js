@@ -107,6 +107,29 @@ export default function useChat(chatid) {
     }, []);
 
     useEffect(() => {
+        if (!socket) return;
+        socket.on("getWaitingDelete", async (res) => {
+            let shouldDelete = false;
+            setWaitingDelete(prev => {
+                const updated = prev.map(w => w.userid === res.userid ? { ...w, destroy: res.del } : w);
+
+                shouldDelete = updated.every(w => w.destroy === 1);
+
+                return updated;
+            });
+
+            if (shouldDelete) return navigate("/my_chats");
+        });
+
+        socket.on("chatDeleted", () => { navigate("/my_chats") });
+
+        return () => {
+            socket.off("getWaitingDelete");
+            socket.off("chatDeleted");
+        };
+    }, [socket, chatid]);
+
+    useEffect(() => {
         const getChat = async () => {
             const res = await axiosPrivate.get(`chats/${chatid}`);
 
@@ -152,9 +175,7 @@ export default function useChat(chatid) {
 
                 const lastNonEmpty = [...updated].reverse().find(m => m.message.trim() !== "");
 
-                setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? {
-                    ...p, message: lastNonEmpty ? lastNonEmpty.message : ""
-                } : p));
+                setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? { ...p, message: lastNonEmpty ? lastNonEmpty.message : "" } : p));
             });
         });
 
@@ -230,22 +251,23 @@ export default function useChat(chatid) {
     };
 
     async function changeWaitingDelete(del) {
-        if (del == 1) {
-            const allAgree = waitingDelete.every(w => w.destroy == 1 || w.userid == userId);
-
-            if (allAgree) {
-                try {
-                    await axiosPrivate.delete(`/chats/${chatid}`);
-                    return navigate("/my_chats");
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-        }
-
         try {
             await axiosPrivate.put(`/chats/waiting_delete/${del}/${chatid}`);
-            setWaitingDelete(prev => prev.map(w => w.userid == userId ? { ...w, destroy: del } : w));
+
+            const updated = waitingDelete.map(w => w.userid === userId ? { ...w, destroy: del } : w);
+            setWaitingDelete(updated);
+
+            const getRecipients = onlineUsers?.filter(u => u.userId !== userId);
+            const res = await axiosPrivate.post("/chats/online_users", { getRecipients, chatid });
+            socket.emit("setChatDeleteStatus", { userId, del, recipients: res.data });
+
+            const allAgree = updated.every(w => w.destroy == 1);
+
+            if (allAgree) {
+                await axiosPrivate.delete(`/chats/${chatid}`);
+                socket.emit("chatDeleted", { recipients: res.data });
+                return navigate("/my_chats");
+            }
         } catch (error) {
             console.log(error);
         }

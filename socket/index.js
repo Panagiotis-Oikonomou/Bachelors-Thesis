@@ -43,6 +43,26 @@ function initSocket(server) {
             }
         });
 
+        socket.on("setChatDeleteStatus", (t) => {
+            const users = onlineUsers.filter((u) => t.recipients.some(r => r.userid == u.userId));
+
+            if(users){
+                for(const u of users){
+                    io.to(u.socketId).emit("getWaitingDelete", {userid: t.userId, del: t.del});
+                }
+            }
+        });
+
+        socket.on("chatDeleted", (t) => {
+            const users = onlineUsers.filter((u) => t.recipients.some(r => r.userid == u.userId));
+
+            if(users){
+                for(const u of users){
+                    io.to(u.socketId).emit("chatDeleted");
+                }
+            }
+        });
+
         socket.on("disconnect", () => {
             console.log("disconnected:", socket.id);
 
