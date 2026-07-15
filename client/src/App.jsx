@@ -50,18 +50,21 @@ function App() {
             <Route path="/chatroom/:chatId" element={<ChatRoom />} />
             <Route path="/matchings" element={<Matchings />} />
             <Route path="/match" element={<Match />} />
+
+            <Route path="/*" element={<Navigate to="/profile" />} />
           </Route>
         </Route>
 
         <Route element={<RequiredAuth admin={true} />}>
-            <Route path="/users" element={<Users />} />
-            <Route path="/profile/admin" element={<ProfileAdmin />} />
-            <Route path="/providers" element={<Providers />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/profile/admin" element={<ProfileAdmin />} />
+          <Route path="/providers" element={<Providers />} />
 
-            <Route path="/notifications/admin" element={<NotificationsAdmin />} />
+          <Route path="/*" element={<Navigate to="/profile/admin" />} />
+          <Route path="/notifications/admin" element={<NotificationsAdmin />} />
         </Route>
 
-        <Route path="/*" element={<Navigate to="/" />} />
+        <Route path="/*" element={<Navigate to="/login" />} />
       </Route>
     </Routes>
   );

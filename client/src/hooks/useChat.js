@@ -16,6 +16,7 @@ export default function useChat(chatid) {
     const [userId, setUserId] = useState(null);
     const [text, setText] = useState("");
     const [waitingDelete, setWaitingDelete] = useState([]);
+    const [chatName, setChatName] = useState("");
 
     const [showPicker, setShowPicker] = useState(false);
     const textareaRef = useRef(null);
@@ -34,18 +35,18 @@ export default function useChat(chatid) {
     }, {});
 
     useEffect(() => {
-    const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-            setOpenMenu(null);
-        }
-    };
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setOpenMenu(null);
+            }
+        };
 
-    document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
 
-    return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-    };
-}, []);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         if (!chatid) {
@@ -53,7 +54,7 @@ export default function useChat(chatid) {
             return;
         }
 
-        setNotifications(prev => prev.map(n => n.chatid == chatid ? {...n, isRead: true} : n));
+        setNotifications(prev => prev.map(n => n.chatid == chatid ? { ...n, isRead: true } : n));
     }, [chatid]);
 
     useEffect(() => {
@@ -94,6 +95,8 @@ export default function useChat(chatid) {
         const getChats = async () => {
             try {
                 const res = await axiosPrivate.get('/chats');
+                if (!res.data.some(r => r.chatid == chatid)) navigate("/my_chats");
+
                 if (res.data) setChats(res.data);
             }
             catch (err) {
@@ -107,7 +110,10 @@ export default function useChat(chatid) {
         const getChat = async () => {
             const res = await axiosPrivate.get(`chats/${chatid}`);
 
-            if (res.data) setChat(res.data);
+            if (res.data) {
+                setChat(res.data.rows);
+                setChatName(res.data.chat_name);
+            }
         }
         getChat();
         const decoded = jwtDecode(auth?.accessToken);
@@ -124,11 +130,11 @@ export default function useChat(chatid) {
         socket.on("getNotification", (res) => {
             const isChatOpen = chatid == res.chatid;
 
-            if(isChatOpen) setNotifications(prev => [{...res, isRead: true}, ...prev]);
+            if (isChatOpen) setNotifications(prev => [{ ...res, isRead: true }, ...prev]);
 
             else setNotifications(prev => [res, ...prev]);
 
-            setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ?{...p, message: res.message} : p));
+            setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? { ...p, message: res.message } : p));
         });
 
         return () => {
@@ -143,11 +149,12 @@ export default function useChat(chatid) {
             if (chatid != res.chatid) return;
             setChat(prev => {
                 const updated = prev.map(m => m.messageid === res.messageid ? { ...m, unsent: 1, message: "" } : m);
-                
+
                 const lastNonEmpty = [...updated].reverse().find(m => m.message.trim() !== "");
 
                 setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? {
-                    ...p, message: lastNonEmpty ? lastNonEmpty.message : "" } : p));
+                    ...p, message: lastNonEmpty ? lastNonEmpty.message : ""
+                } : p));
             });
         });
 
@@ -160,7 +167,7 @@ export default function useChat(chatid) {
         const getDeleteChat = async () => {
             try {
                 const res = await axiosPrivate.get(`/chats/waiting_delete/${chatid}`);
-                if(res.data) setWaitingDelete(res.data);
+                if (res.data) setWaitingDelete(res.data);
             } catch (error) {
                 console.log(error);
             }
@@ -223,10 +230,10 @@ export default function useChat(chatid) {
     };
 
     async function changeWaitingDelete(del) {
-        if(del == 1){
+        if (del == 1) {
             const allAgree = waitingDelete.every(w => w.destroy == 1 || w.userid == userId);
 
-            if(allAgree){
+            if (allAgree) {
                 try {
                     await axiosPrivate.delete(`/chats/${chatid}`);
                     return navigate("/my_chats");
@@ -238,7 +245,7 @@ export default function useChat(chatid) {
 
         try {
             await axiosPrivate.put(`/chats/waiting_delete/${del}/${chatid}`);
-            setWaitingDelete(prev => prev.map(w => w.userid == userId ? {...w, destroy: del} : w));
+            setWaitingDelete(prev => prev.map(w => w.userid == userId ? { ...w, destroy: del } : w));
         } catch (error) {
             console.log(error);
         }
@@ -248,6 +255,6 @@ export default function useChat(chatid) {
         chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
         setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
-        changeWaitingDelete
+        changeWaitingDelete, chatName
     };
 }

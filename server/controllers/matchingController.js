@@ -18,7 +18,8 @@ exports.createMatchings = async (req, res) => {
     try {
         const sql = "INSERT INTO matchings (groupid, userid) VALUES (?, ?)";
         const { users, groupid } = req.body;
-        for (const user of users) {
+        const usersNoUser = users.filter(u => u.userid != req.user.id);
+        for (const user of usersNoUser) {
             await db.query(sql, [groupid, user.userid]);
         }
         return res.sendStatus(201);
@@ -32,6 +33,7 @@ exports.createMatchings = async (req, res) => {
 const noAgrement = async (res, result, groupid, username, userid) => {
     const deleteMembersGroupSql = "DELETE FROM matchings WHERE userid = ? AND groupid = ?";
     const makeDisableSql = "UPDATE notifications SET disabled = 1 WHERE groupid = ?";
+    // const deleteNotificationSql = "DELETE FROM notifications WHERE groupid = ?";
     db.query(makeDisableSql, [groupid]);
     const createInfoNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
     const message = `The user ${username} didn't want to make a group with you.`;
@@ -58,7 +60,6 @@ exports.updateAgrees = async (req, res) => {
         const sql = "UPDATE matchings SET agrees = ? WHERE userid = ? AND groupid = ?";
         await db.query(sql, [agrees, gi[0].userid, gi[0].groupid]);
 
-
         const getAllMembersSql = "SELECT agrees, userid FROM matchings WHERE groupid = ?";
         const [result] = await db.query(getAllMembersSql, [gi[0].groupid]);
         if (!agrees) {
@@ -73,8 +74,8 @@ exports.updateAgrees = async (req, res) => {
             }
         }
         if (allAgree) {
-            const chatCreationSql = "INSERT INTO chats (groupid) VALUES (?)";
-            const [chat] = await db.query(chatCreationSql, [gi[0].groupid]);
+            const chatCreationSql = "INSERT INTO chats (groupid, chat_name) VALUES (?, ?)";
+            const [chat] = await db.query(chatCreationSql, [gi[0].groupid, "new chat"]);
             const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
             const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
             for (const r of result) {

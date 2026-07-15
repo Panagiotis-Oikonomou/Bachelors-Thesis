@@ -11,7 +11,7 @@ function ChatRoom() {
     const { chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, grouped, setOpenMenu, openMenu, unsendText, setText, keyPressed,
         setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
-        changeWaitingDelete
+        changeWaitingDelete, chatName
     } = useChat(chatId);
 
     return (
@@ -32,7 +32,7 @@ function ChatRoom() {
                 </div>
             ))}</div>
 
-            <div className={styles.chatName}><p>To id</p></div>
+            <div className={styles.chatName}><p>{chatName}</p></div>
             <div className={styles.otherChats}>
                 {Object.entries(grouped).map(([chatid, members]) => (
                     <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid}>

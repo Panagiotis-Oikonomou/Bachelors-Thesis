@@ -44,6 +44,7 @@ exports.deleteMessage = async (req, res) => {
 
 exports.createInvitationNotification = async (req, res) => {
     const users = req.body;
+    const usersNoUser = users.filter(u => u.userid != req.user.id);
     const areaid = users.find(u => u.areaid !== null && u.areaid !== '')?.areaid;
 
     try {
@@ -61,7 +62,7 @@ exports.createInvitationNotification = async (req, res) => {
 
         const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
         let sum = 0;
-        for(const user of users){
+        for(const user of usersNoUser){
             const [essentialsRows] = await db.query(essentialsSql, [user.userid]);
             if (essentialsRows[0]?.money !== null) sum += Number(essentialsRows[0].money);
         }
@@ -79,10 +80,12 @@ exports.createInvitationNotification = async (req, res) => {
             notification += '\n';
         }
         const newGroupSql = "INSERT INTO groups VALUES ()";
+        const alreadyAcceptSql = "INSERT INTO matchings (groupid, userid, agrees) VALUES (?, ?, ?)";
 
         const [create] = await db.query(newGroupSql);
+        await db.query(alreadyAcceptSql, [create.insertId, req.user.id, 1]);
         const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, is_read, type) VALUES (?, ?, ?, ?, ?)";
-        for(const user of users){
+        for(const user of usersNoUser){
             await db.query(addNotificationSql, [user.userid, create.insertId, notification, false, "conf"]);
         }
         res.status(201).json({groupid: create.insertId});
