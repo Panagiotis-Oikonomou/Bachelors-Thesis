@@ -73,6 +73,7 @@
 
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .deletedMessageBubble {
@@ -87,10 +88,6 @@
 
 .otherDeletedMessage {
     align-self: flex-start;
-}
-
-.myMessage {
-    position: relative;
 }
 
 .messageOptions {
@@ -119,6 +116,7 @@
 
 .deletedMessage {
     text-decoration: line-through;
+    margin-top: 10px;
 }
 
 .chatMenu {
@@ -162,6 +160,20 @@
     color: black;
 }
 
+.onlineIndicator {
+    position: absolute;
+    top: 6px;
+    left: 4px;
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+    background: #22c55e;
+
+    border: 2px solid white;
+}
+
 .alink:link, .alink:visited, .alink:hover {
     color: black;
     text-decoration: none;
@@ -199,10 +211,6 @@
     transform: scale(0.95);
 }
 
-.online{
-    color: green;
-}
-
 .yesPointer {
     color: green;
     cursor: pointer;
@@ -221,6 +229,26 @@
 
 .no {
     color: red;
+}
+
+.userName {
+    font-size: medium;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.activeUsers {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #16833e;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
 @media screen and (min-width: 350px){
@@ -262,14 +290,25 @@
         outline-style: groove;
         outline-color: rgb(139, 134, 134);
         background-color: rgb(209, 205, 205);
-        padding: 5px 0px 5px 5px;
+        padding: 10px;
         margin-bottom: 10px;
     }
 
-    .memb {
+    .chatInfo {
         display: flex;
         flex-direction: column;
-        padding-top: 10px;
+        margin-left: 28px; /* leaves room for the bell */
+    }
+
+    .chatN {
+        font-size: 1rem;
+    }
+
+    .chatHeader {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
     }
 
     .notificationIcon {
@@ -295,7 +334,7 @@
     }
 
     .lastMessage {
-        margin-top: 6px;
+        margin-top: 4px;
         font-size: 0.9rem;
         color: #555;
         white-space: nowrap;
@@ -361,9 +400,5 @@
 
     .myMessage, .otherMessage {
         max-width: 70%;
-    }
-    
-    .userName {
-        font-size: medium;
     }
 }

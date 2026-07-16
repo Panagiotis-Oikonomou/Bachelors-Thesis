@@ -22,8 +22,8 @@ function ChatRoom() {
                 <div key={item.delid} className={styles.deleteData}>{item.username}
                     {item.userid == userId && (
                         <span>
-                            <BsCheckCircle className={item.destroy ? styles.yes : styles.yesPointer} onClick={() => changeWaitingDelete(1)}/>
-                            <BsXCircle className={item.destroy ? styles.noPointer :styles.no} onClick={() => changeWaitingDelete(0)}/>
+                            <BsCheckCircle className={item.destroy ? styles.yes : styles.yesPointer} onClick={() => changeWaitingDelete(1)} />
+                            <BsXCircle className={item.destroy ? styles.noPointer : styles.no} onClick={() => changeWaitingDelete(0)} />
                         </span>
                     )}
                     {item.userid != userId && (
@@ -34,31 +34,41 @@ function ChatRoom() {
 
             <div className={styles.chatName}><p>{chatName}</p></div>
             <div className={styles.otherChats}>
-                {Object.entries(grouped).map(([chatid, members]) => (
-                    <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid}>
-                        <div className={styles.insideOtherChats} >
-                            {notifications.some(n => n.chatid == chatid && n.isRead == false) && (
-                                <div className={styles.notificationIcon}>
-                                    <BsBell size={3} />
-                                    <span className={styles.notificationBadge}>{notifications.filter(n => n.chatid == chatid && n.isRead == false).length}</span>
-                                </div>
-                            )}
-                            <div className={styles.memb}>
-                                {members.map(member => (
-                                    <div key={member.username}>
-                                        <span className={onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>{member.username}</span>
-                                    </div>
-                                ))}
-                            </div>
+                {Object.entries(grouped).map(([chatId, members]) => {
+                    const onlineCount = onlineUsers.filter(
+                        online =>
+                            online.userId !== userId &&
+                            members.some(m => m.userid === online.userId)
+                    ).length;
 
-                            {chatid != chatId && (
-                                <div className={styles.lastMessage}>
-                                    Latest message: {peakMessages.find(p => p.chatid == chatid)?.message}
+                    return (
+                        <Link key={chatId} to={`/chatroom/${chatId}`} className={styles.alink}>
+                            <div className={styles.insideOtherChats}>
+                                {notifications.some(n => n.chatid == members[0].chatid && n.isRead == false) && (
+                                    <div className={styles.notificationIcon}>
+                                        <BsBell size={2} />
+                                        <span className={styles.notificationBadge}>{notifications.filter(n => n.chatid == members[0].chatid && n.isRead == false).length}</span>
+                                    </div>
+                                )}
+                                <div className={styles.chatInfo}>
+                                    <div className={styles.chatHeader}>
+                                        <span className={styles.chatName}>{members[0].chat_name}</span>
+
+                                        {onlineCount > 0 && (
+                                            <div className={styles.activeUsers}>
+                                                {onlineCount}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.lastMessage}>
+                                        Latest message: {peakMessages.find(p => p.chatid == members[0].chatid)?.message}
+                                    </div>
                                 </div>
-                            )}
-                        </div>
-                    </Link>
-                ))}
+                            </div>
+                        </Link>
+                    );
+                })}
             </div>
 
             <div className={styles.chat} ref={chatRef}>
@@ -69,12 +79,13 @@ function ChatRoom() {
                         : userId === item.userid
                             ? styles.myMessage
                             : styles.otherMessage
-                    } key={item.messageid}
-                    >
+                    } key={item.messageid}>
+                        {(userId !== item.userid && onlineUsers.some(o => o.userId == item.userid)) && (
+                            <div className={styles.onlineIndicator}></div>
+                        )}
                         {userId !== item.userid && item.unsent != 1 && (
                             <div className={styles.userName}>
                                 {item.username}
-                                <br />
                             </div>
                         )}
 

@@ -5,11 +5,15 @@ import { useSocket } from "../../context/SocketContext";
 import { Up } from "../../components/up/Up";
 import styles from './MyChats.module.css';
 import { BsBell } from 'react-icons/bs';
+import useAuth from "../../hooks/useAuth";
+import { jwtDecode } from "jwt-decode";
 
 function MyChats() {
+    const { auth } = useAuth();
     const { onlineUsers, notifications, peakMessages } = useSocket();
     const axiosPrivate = useAxiosPrivate();
     const [chats, setChats] = useState([]);
+    const [userId, setUserId] = useState("");
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
 
@@ -28,44 +32,50 @@ function MyChats() {
             }
         }
         getChats();
+        setUserId(jwtDecode(auth?.accessToken).id);
     }, []);
     return (
         <div className={styles.container}>
-            <Up/>
-            
+            <Up />
+
             <div className={styles.chats}>
-                {Object.entries(grouped).map(([chatid, members]) => (
-                    <Link to={`/chatroom/${chatid}`} className={styles.alink} key={chatid} >
-                        <div className={styles.chat}>
+                {Object.entries(grouped).map(([chatId, members]) => {
+                    const onlineCount = onlineUsers.filter(
+                        online =>
+                            online.userId !== userId &&
+                            members.some(m => m.userid === online.userId)
+                    ).length;
 
-                            <div className={styles.chatInfo}>
-                                <div className={styles.chatNames}>
-                                    {members.map(member => (
-                                        <div className={styles.chatData} key={member.username}>
-                                            <span className={ onlineUsers.some((u) => u?.userId === member.userid) ? styles.online : ""}>
-                                                {member.username}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
+                    return (
+                        <Link key={chatId} to={`/chatroom/${chatId}`} className={styles.alink}>
+                            <div className={styles.chat}>
+                                <div className={styles.chatInfo}>
+                                    <div className={styles.chatNames}>
+                                        {members[0].chat_name}
 
-                                <div className={styles.lastMessage}>
-                                    Latest message: {peakMessages.find(p => p.chatid == chatid)?.message}
+                                        {onlineCount > 0 && (
+                                            <div className={styles.activeUsers}>
+                                                {onlineCount}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.lastMessage}>
+                                        Latest message: {peakMessages.find(p => p.chatid == members[0].chatid)?.message}
+                                    </div>
                                 </div>
+                                {notifications.some(n => n.chatid == members[0].chatid && !n.isRead) && (
+                                    <div className={styles.notificationIcon}>
+                                        <BsBell size={3} />
+                                        <span className={styles.notificationBadge}>
+                                            {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
-
-                            {notifications.some(n => n.chatid == chatid && !n.isRead) && (
-                                <div className={styles.notificationIcon}>
-                                    <BsBell size={30} />
-                                    <span className={styles.notificationBadge}>
-                                        {notifications.filter(n => n.chatid == chatid && !n.isRead).length}
-                                    </span>
-                                </div>
-                            )}
-
-                        </div>
-                    </Link>
-                ))}
+                        </Link>
+                    );
+                })}
             </div>
         </div>
     )
