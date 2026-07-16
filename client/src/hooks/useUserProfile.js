@@ -51,7 +51,7 @@ export default function useUserProfile() {
             try {
                 const res = await axiosPrivate.get('/users/profile');
                 if (res.data) {
-                    setData(res.data);
+                    setData(prev => ({ ...prev, ...res.data, password: "" }));
                 }
             } catch (err) {
                 console.log(err);
@@ -97,7 +97,7 @@ export default function useUserProfile() {
             case "password": {
                 const { cpswerror, cpswmatch } = passwordChecking(name, trimmed, conPass, setCpswRequired);
                 setCpswError(cpswerror);
-                
+
                 setCpswMatch(cpswmatch);
                 break;
             }
@@ -155,7 +155,7 @@ export default function useUserProfile() {
             setSaved("Οι αλλαγές ήταν επιτυχής");
             setConPass("");
             setCpswMatch("");
-            setData(prev => ({...prev, password: ""}));
+            setData(prev => ({ ...prev, password: "" }));
         }
         catch (err) {
             console.log(err);

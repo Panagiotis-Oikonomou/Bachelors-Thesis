@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 exports.getProfile = async (req, res) => {
     try {
-        const sql = "SELECT * FROM admins WHERE adminid=?";
+        const sql = "SELECT fname, lname, email, username FROM admins WHERE adminid=?";
 
         const id = req.user.id;
 

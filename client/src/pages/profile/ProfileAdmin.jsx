@@ -5,10 +5,9 @@ import { UpAdmin } from "../../components/up/UpAdmin";
 
 function ProfileAdmin() {
     const {
-        data, conPass, errors, providers, cpswError,
-        cpswMatch, cpswRequired, allError, saved,
-        showPassword, setShowPassword, showConfPassword,
-        setShowConfPassword, handleChange, handleSubmit, signOut,
+        data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired, allError,
+        saved, showPassword, setShowPassword, showConfPassword, setShowConfPassword,
+        handleChange, handleSubmit, signOut,
     } = useAdminProfile();
 
     return (
