@@ -41,6 +41,7 @@ export default function useMatch() {
     const [searchedUsers, setSearchedUsers] = useState([]);
     const [currentIndex, setCurrectIndex] = useState(0);
     const [username, setUsername] = useState("");
+    const [hoveredUser, setHoveredUser] = useState(null);
     let visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
@@ -185,7 +186,7 @@ export default function useMatch() {
             setReadyToGo(prev => ({ ...prev, area: true }));
         }
         fixReadyToGoForAdd(user);
-        setUsers([...users, { username: user.username, userid: user.userid, areaid: user.areaid, money: user.money, papers: user.papers, other: user.other }]);
+        setUsers([...users, { username: user.username, userid: user.userid, areaid: user.areaid, money: user.money, papers: user.papers, other: user.other, ac: user?.ac, areasize: user?.areasize, energy: user?.energy, income: user?.income, size: user?.size }]);
         nextUser();
     }
 
@@ -300,9 +301,9 @@ export default function useMatch() {
 
     return {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked,
-        isEnergyChecked, isIncomeChecked,
-        isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, handleSearchSubmit,
-        areas, isAreaChecked, havingArea, selectedArea, handleCreationSubmit, users,
-        removeSelectedUser, addUser, searchedUsers, visibleUser, nextUser
+        isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, 
+        checkboxOptions, handleSearchSubmit, areas, isAreaChecked, havingArea, selectedArea, 
+        handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser, 
+        nextUser, hoveredUser, setHoveredUser
     };
 }

@@ -8,14 +8,45 @@ import checkMark from '../../assets/images/checkMark.png';
 import xMark from '../../assets/images/xMark.png';
 
 function Match() {
-    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero, isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser, nextUser } = useMatch();
+    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked,
+        isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero,
+        isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser,
+        addUser, searchedUsers, visibleUser, nextUser, hoveredUser, setHoveredUser } = useMatch();
     return (
         <div className={styles.container}>
-            <Up></Up>
+            <Up/>
 
             <div className={styles.users}>
                 {users.map((user, index) => (
-                    <div className={styles.user} key={index}>{user.username} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
+                    <div className={styles.user} key={index}
+                        onMouseEnter={() => setHoveredUser(user.userid)} onMouseLeave={() => setHoveredUser(null)}>
+                        {user.username} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
+
+                        {hoveredUser === user.userid && (
+                            <div className={styles.userData}>
+                                {<>Περιοχή:{user.areaid === null ? " Όχι" : " Ναι"}<br /></>}
+
+                                {user.areaid !== null && (
+                                    <>
+                                        Έκταση περιοχής: {user.size}m²<br />
+                                        Ποσότητα PV ενέργειας: {user.ac}kwh<br />
+                                    </>)}<br />
+
+                                Ζήτηση και Προσφορά<br />
+
+                                {user.areasize !== null && (<>Έκταση: {user.areasize}m²<br /></>)}
+
+                                {user.energy !== null && (<>Ποσότητα PV ενέργειας: {user.energy}kwh<br /></>)}
+
+                                {user.income !== null && (<>Ποσοστό εσόδων: {user.income}<br /></>)}
+
+                                {user.money !== null && (<>Χρήματα: {user.money}<br /></>)}
+
+                                Χαρτιά: {user.papers !== null && user.papers ? "Ναι" : "Όχι"}<br />
+
+                                Άλλα: {user.other !== null && user.other ? "Ναι" : "Όχι"}<br />
+                            </div>
+                        )}
                     </div>
                 ))}
 
@@ -120,21 +151,20 @@ function Match() {
                 {visibleUser && (
                     <>
                         <div className={styles.area}>
-                            {visibleUser.username !== null && (<>Username: {visibleUser.username}<br /><br/></>)}
+                            {visibleUser.username !== null && (<>Username: {visibleUser.username}<br /><br /></>)}
 
                             {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br /></>}
 
                             {visibleUser.areaid !== null && (
                                 <>
-                                    Έκταση περιοχής(km<sup>2</sup>): {visibleUser.size}<br /> 
-                                    Ποσότητα PV ενέργειας(kwh): {visibleUser.ac}<br />
-                                </>)}<br/>
+                                    Έκταση περιοχής: {visibleUser.size}m²<br />
+                                    Ποσότητα PV ενέργειας: {visibleUser.ac}kwh<br />
+                                </>)}<br />
 
-                            Ζήτηση και Προσφορά<br/>
+                            Ζήτηση και Προσφορά<br />
+                            {visibleUser.areasize !== null && (<>Έκταση: {visibleUser.areasize}m²<br /></>)}
 
-                            {visibleUser.areasize !== null && (<>Έκταση(km<sup>2</sup>): {visibleUser.size}<br /></>)}
-
-                            {visibleUser.energy !== null && (<>Ποσότητα PV ενέργειας(kwh): {visibleUser.energy}<br /></>)}
+                            {visibleUser.energy !== null && (<>Ποσότητα PV ενέργειας: {visibleUser.energy}kwh<br /></>)}
 
                             {visibleUser.income !== null && (<>Ποσοστό εσόδων: {visibleUser.income}<br /></>)}
 
@@ -151,7 +181,7 @@ function Match() {
                     </>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 
