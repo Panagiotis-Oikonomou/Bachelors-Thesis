@@ -4,13 +4,9 @@ import useUserProfile from '../../hooks/useUserProfile';
 import { Up } from "../../components/up/Up";
 
 function Profile() {
-    const {
-        data, conPass, errors, providers, cpswError, cpswMatch,
-        cpswRequired, allError, saved,
-        showPassword, setShowPassword,
-        showConfPassword, setShowConfPassword,
-        handleChange, handleSubmit, signOut
-    } = useUserProfile();
+    const { data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired, allError, saved,
+            showPassword, setShowPassword, showConfPassword, setShowConfPassword, handleChange,
+            handleSubmit, signOut } = useUserProfile();
 
     return (
         <div className={styles.container}>
@@ -128,7 +124,7 @@ function Profile() {
 
                     <div className={styles.errorMsg}>{allError}</div>
                     <div className={styles.pswmatch}>{saved}</div>
-                    <input type="submit" value="Αποθήκευση αλλαγών"  />
+                    <input type="submit" value="Αποθήκευση αλλαγών" />
                 </form>
             </div>
         </div>

@@ -1,26 +1,25 @@
-const passwordChecking = (name, password, conPassword, originalPassword, setCpswRequired) => {
+const passwordChecking = (name, password, conPassword, setCpswRequired) => {
     let cpswmatch = "";
     let cpswerror = "";
-    let len = password.length;
+    let len = !password ? 0 : password.length;
     let cpswlen = conPassword.length;
+    const emptyPassword = !password || password.trim() === "";
 
     switch (name) {
         case "password": {
-            if (!originalPassword) return;
+            setCpswRequired(!emptyPassword);
 
-            setCpswRequired(originalPassword !== password);
-
-            if (originalPassword === password) {
+            if (emptyPassword) {
                 cpswerror = "";
-                cpswmatch = "";
-            }
-            else if (originalPassword !== password) {
-                cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
                 cpswmatch = "";
             }
             else if (password === conPassword && len !== 0) {
                 cpswerror = "";
                 cpswmatch = "Οι δύο κωδικοί ταιρίαζουν";
+            }
+            else if (!emptyPassword) {
+                cpswerror = "Οι δύο κωδικοί δεν ταιρίαζουν";
+                cpswmatch = "";
             }
             else if (password !== conPassword && cpswlen === 0) {
                 cpswerror = "";
@@ -33,9 +32,9 @@ const passwordChecking = (name, password, conPassword, originalPassword, setCpsw
             break;
         }
         case "cpsw": {
-            if (!originalPassword) return;
+            if (emptyPassword) break;
 
-            if (cpswlen === 0 || password == originalPassword) {
+            if (cpswlen === 0 || emptyPassword) {
                 cpswerror = "";
                 cpswmatch = "";
             }
@@ -49,12 +48,9 @@ const passwordChecking = (name, password, conPassword, originalPassword, setCpsw
             }
             break;
         }
-
-        default:
-            break;
     }
 
-    return {cpswerror, cpswmatch};
+    return { cpswerror, cpswmatch };
 }
 
 export default passwordChecking;

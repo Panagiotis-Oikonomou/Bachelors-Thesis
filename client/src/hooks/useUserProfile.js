@@ -27,7 +27,6 @@ export default function useUserProfile() {
         password: ""
     });
     const [conPass, setConPass] = useState("");
-    const [originalPassword, setOriginalPassword] = useState("");
 
     const [errors, setErrors] = useState({
         fname: "",
@@ -53,7 +52,6 @@ export default function useUserProfile() {
                 const res = await axiosPrivate.get('/users/profile');
                 if (res.data) {
                     setData(res.data);
-                    setOriginalPassword(res.data.password);
                 }
             } catch (err) {
                 console.log(err);
@@ -97,14 +95,14 @@ export default function useUserProfile() {
                 break;
             }
             case "password": {
-                const { cpswerror, cpswmatch } = passwordChecking(name, trimmed, conPass, originalPassword, setCpswRequired);
+                const { cpswerror, cpswmatch } = passwordChecking(name, trimmed, conPass, setCpswRequired);
                 setCpswError(cpswerror);
-
+                
                 setCpswMatch(cpswmatch);
                 break;
             }
             case "cpsw": {
-                const { cpswerror, cpswmatch } = passwordChecking(name, data.password, trimmed, originalPassword, setCpswRequired);
+                const { cpswerror, cpswmatch } = passwordChecking(name, data.password, trimmed, setCpswRequired);
                 setCpswError(cpswerror);
 
                 setCpswMatch(cpswmatch);
@@ -151,13 +149,13 @@ export default function useUserProfile() {
 
             if (res.data) {
                 setData(res.data);
-                setOriginalPassword(res.data.password);
             }
 
             setAllError("");
             setSaved("Οι αλλαγές ήταν επιτυχής");
             setConPass("");
             setCpswMatch("");
+            setData(prev => ({...prev, password: ""}));
         }
         catch (err) {
             console.log(err);

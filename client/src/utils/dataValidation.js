@@ -49,7 +49,7 @@ const dataValidation = (name, value, setErrors) => {
             break;
         }
         case "password": {
-            if (len === 0) error = "Ο κωδικός σας είναι κενός";
+            if (len === 0) error = "";
 
             else if (len < 5 || len > 15) error = "Ο κωδικός σας πρέπει να αποτελείται απο 5 μέχρι 15 χαρακτήρες";
 
