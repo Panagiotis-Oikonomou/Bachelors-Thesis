@@ -12,7 +12,7 @@ const generateRefreshToken = (id, username, isAdmin) => {
 
 const storeRefreshTokens = async (token, id) => {
     try{
-        const sql = "INSERT INTO refresh_tokens (userid, refresh_token, expires_at) VALUES (?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTE))";
+        const sql = "INSERT INTO refresh_tokens (userid, refresh_token, expires_at) VALUES (?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 HOUR))";
 
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 

@@ -80,6 +80,13 @@ table, td, th{
     background-color: red;
 }
 
+.multDelete {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
 .menu {
     grid-column: 6;
 }

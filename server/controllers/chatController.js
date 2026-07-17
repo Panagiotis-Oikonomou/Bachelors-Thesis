@@ -2,7 +2,6 @@ const db = require('../config/db');
 
 exports.getChats = async (req, res) => {
     try {
-        // const sql = "SELECT cu.chatid, cu.userid, c.chat_name FROM chats c JOIN chat_users cu ON c.chatid = cu.chatid JOIN  (SELECT DISTINCT chatid FROM chat_users WHERE userid = ?) g ON g.chatid = cu.chatid";
         const sql = "SELECT cu.chatid, cu.userid, c.chat_name FROM chats c JOIN chat_users cu ON c.chatid = cu.chatid WHERE c.chatid IN  (SELECT chatid FROM chat_users WHERE userid = ?) ORDER BY c.chatid, cu.userid";
 
         const id = req.user.id;
