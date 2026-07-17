@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const bcrypt = require("bcrypt");
 
 exports.getProfile = async (req, res) => {
     try {
@@ -17,12 +18,13 @@ exports.getProfile = async (req, res) => {
 exports.updateAdmin = async (req, res) => {
     try {
         const sql = "UPDATE admins SET fname=?, lname=?, email=?, username=?, password=? WHERE adminid=?";
+        const hash = await bcrypt.hash(req.body.password, 12);
         const values = [
             req.body.fname,
             req.body.lname,
             req.body.email,
             req.body.username,
-            req.body.password,
+            hash,
             req.user.id
         ];
         await db.query(sql, values);

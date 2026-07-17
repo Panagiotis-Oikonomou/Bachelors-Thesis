@@ -2,10 +2,12 @@ const db = require('../config/db');
 const jwt = require('jsonwebtoken');
 const { generateAccessToken, generateRefreshToken, storeRefreshTokens, removeRefreshToken, hasRefreshToken, clearRefreshCookie, setRefreshCookie, removeAllUserTokens } = require('../services/tokenService');
 const { addCriteria } = require('../controllers/criteriaController');
+const bcrypt = require("bcrypt");
 
 exports.register = async (req, res) => {
     try {
         const sql = "INSERT INTO users (fname, lname, clock, provider, email, username,  password) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        const hash = await bcrypt.hash(req.body.password, 12);
         const values = [
             req.body.fname,
             req.body.lname,
@@ -13,7 +15,7 @@ exports.register = async (req, res) => {
             req.body.provider,
             req.body.email,
             req.body.username,
-            req.body.password
+            hash
         ];
 
         const [rows] = await db.query(sql, values);
@@ -27,12 +29,12 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const sql = "SELECT userid, username FROM users WHERE username=? AND password=? LIMIT 1";
-        const sql2 = "SELECT adminid, username FROM admins WHERE username=? AND password=? LIMIT 1";
+        const sql = "SELECT userid, username, password FROM users WHERE username=? LIMIT 1";
+        const sql2 = "SELECT adminid, username, password FROM admins WHERE username=? LIMIT 1";
         const { usr, psw, persist } = req.body;
 
-        const [rows] = await db.query(sql, [usr, psw]);
-        const [rows2] = await db.query(sql2, [usr, psw]);
+        const [rows] = await db.query(sql, [usr]);
+        const [rows2] = await db.query(sql2, [usr]);
 
         const cookies = req.cookies;
         if (cookies?.jwt) {
@@ -54,6 +56,9 @@ exports.login = async (req, res) => {
         }
 
         if (rows.length > 0) {
+            const isUser = await bcrypt.compare(psw, rows[0].password);
+            if(!isUser) return res.json({ exists: false });
+
             const accessToken = generateAccessToken(rows[0].userid, rows[0].username, false);
             if (persist) {
                 const refreshToken = generateRefreshToken(rows[0].userid, rows[0].username, false);
@@ -64,6 +69,9 @@ exports.login = async (req, res) => {
             res.json({ exists: true, isAdmin: false, accessToken });
         }
         else if (rows2.length > 0) {
+            const isAdmin = await bcrypt.compare(psw, rows2[0].password);
+            if(!isAdmin) return res.json({ exists: false });
+
             const accessToken = generateAccessToken(rows2[0].adminid, rows2[0].username, true);
             if (persist) {
                 const refreshToken = generateRefreshToken(rows2[0].adminid, rows2[0].username, true);
