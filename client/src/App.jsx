@@ -27,6 +27,7 @@ import Providers from "./pages/adminWork/Providers";
 import RequiredAuth from "./pages/RequiredAuth";
 import PersistLogin from "./pages/PersistLogin";
 import { SocketProvider } from "./context/SocketContext";
+import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -39,19 +40,21 @@ function App() {
       <Route element={<PersistLogin />}>
         <Route element={<RequiredAuth admin={false} />}>
           <Route element={<SocketProvider />}>
-            <Route path="/add_area" element={<AddArea />} />
-            <Route path="/my_areas" element={<MyAreas />} />
-            <Route path="/manage_area/:id" element={<ManageArea />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/criteria" element={<Criteria />} />
+            <Route element ={<Layout/>}>
+              <Route path="/add_area" element={<AddArea />} />
+              <Route path="/my_areas" element={<MyAreas />} />
+              <Route path="/manage_area/:id" element={<ManageArea />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/criteria" element={<Criteria />} />
 
-            <Route path="/my_chats" element={<MyChats />} />
-            <Route path="/chatroom/:chatId" element={<ChatRoom />} />
-            <Route path="/matchings" element={<Matchings />} />
-            <Route path="/match" element={<Match />} />
+              <Route path="/my_chats" element={<MyChats />} />
+              <Route path="/chatroom/:chatId" element={<ChatRoom />} />
+              <Route path="/matchings" element={<Matchings />} />
+              <Route path="/match" element={<Match />} />
 
-            <Route path="/*" element={<Navigate to="/profile" />} />
+              <Route path="*" element={<Navigate to="/profile" />} />
+            </Route>
           </Route>
         </Route>
 

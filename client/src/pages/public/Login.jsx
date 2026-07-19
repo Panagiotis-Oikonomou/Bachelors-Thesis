@@ -1,106 +1,115 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import styles from './LoginRegister.module.css';
+import styles from "../../assets/css/links.module.css";
 import axios from "../../api/axios";
 import resetTimer from "../../utils/resetTimer";
+import { Alert, Box, Button, Checkbox, Container, FormControlLabel, FormGroup, Paper, Stack, TextField, Typography } from "@mui/material";
 
 function Login() {
-    const { setAuth, persist, setPersist } = useAuth();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
-    const [showPassword, setShowPassword] = useState(false);
-    const [notFound, setNotFound] = useState("");
-    const [loginData, setLoginData] = useState({
-        usr: "",
-        psw: ""
-    });
+  const { setAuth, persist, setPersist } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  const [showPassword, setShowPassword] = useState(false);
+  const [notFound, setNotFound] = useState("");
+  const [loginData, setLoginData] = useState({
+    usr: "",
+    psw: ""
+  });
 
-    useEffect(() => {
-        resetTimer(notFound, setNotFound);
-    }, [notFound]);
+  useEffect(() => {
+    resetTimer(notFound, setNotFound);
+  }, [notFound]);
 
-    const togglePersist = () => {
-        setPersist(prev => !prev);
-    }
+  const togglePersist = () => {
+    setPersist(prev => !prev);
+  }
 
-    useEffect(() => {
-        localStorage.setItem("persist", persist);
-    }, [persist])
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist])
 
-    function handleSubmit(e) {
-        e.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
 
-        axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw, persist })
-            .then((res) => {
-                if (res.data.exists) {
-                    const accessToken = res.data?.accessToken;
-                    const isAdmin = res.data?.isAdmin;
-                    setAuth({ accessToken });
-                    if (isAdmin) {
-                        if (from !== "/") {
-                            navigate(from, { replace: true });
-                        }
-                        else navigate('/profile/admin', { replace: true });
-                    }
-                    else {
-                        if (from !== "/") {
-                            navigate(from, { replace: true });
-                        }
-                        else navigate('/profile', { replace: true });
-                    }
-                }
-                else {
-                    setNotFound("Το username ή ο κωδικός είναι λάθος");
-                }
-            })
-            .catch((err) => console.log(err));
-    }
+    axios.post('/public/login', { usr: loginData.usr, psw: loginData.psw, persist })
+      .then((res) => {
+        if (res.data.exists) {
+          const accessToken = res.data?.accessToken;
+          const isAdmin = res.data?.isAdmin;
+          setAuth({ accessToken });
+          if (isAdmin) {
+            if (from !== "/") {
+              navigate(from, { replace: true });
+            }
+            else navigate('/profile/admin', { replace: true });
+          }
+          else {
+            if (from !== "/") {
+              navigate(from, { replace: true });
+            }
+            else navigate('/profile', { replace: true });
+          }
+        }
+        else {
+          setNotFound("Το username ή ο κωδικός είναι λάθος.");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.header}>Login Form</div>
+  return (
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
+      >
+        <Paper sx={{
+          p: { xs: 2, sm: 4 }, width: "100%",
+          maxWidth: 450, bgcolor: "transparent",
+          color: "white", 
+          border: "1px solid rgba(255,255,255,0.3)",
+          backgroundColor: "rgba(255,255,255,0.05)"
+        }}
+          variant="outlined" square={false}
+        >
+          <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign in</Typography>
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={2}>
+              <TextField
+                label="Username"
+                fullWidth required
+                autoFocus
+                onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
+              />
 
-            <div className={styles.loginForm}>
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.formData}>
-                        <label htmlFor="usr">Username</label><br />
-                        <input
-                            type="text"
-                            id="usr"
-                            name="usr"
-                            required
-                            autoFocus
-                            autoComplete="on"
-                            onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
-                        />
-                    </div>
+              <TextField
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                fullWidth required
+                onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
+              />
 
-                    <div className={styles.formData}>
-                        <label htmlFor="psw">Password</label><br />
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            id="psw"
-                            name="psw"
-                            required
-                            autoComplete="on"
-                            onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
-                        /><br />
-                        <input type="checkbox" id="showpsw" onChange={() => setShowPassword(!showPassword)} /><label htmlFor="showpsw"> Εμφάνιση κωδικού</label>
-                    </div>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
+                <FormControlLabel control={<Checkbox onChange={togglePersist} checked={persist} />} label="Trust this device" />
+              </FormGroup>
 
-                    <div className={styles.formData}>
-                        <input type="checkbox" id="persist" onChange={togglePersist} checked={persist} />
-                        <label htmlFor="persist">Trust this device</label>
-                    </div>
-                    <div className={styles.errorMsg}>{notFound}</div>
-                    <input type="submit" value="Login" />
-                </form>
-                <p>Δεν έχεις λογαριασμό; κάνε <Link to='/register'>Εγγραφή</Link></p>
-            </div>
-        </div>
-    );
+              {notFound && (<Alert severity="error" icon={false}>{notFound}</Alert>)}
+
+              <Button type="submit" variant="contained" >Σύνδεση</Button>
+              <Typography variant="body2">Δεν έχεις λογαριασμό; κάνε <Link to='/register' className={styles.link}>Εγγραφή</Link></Typography>
+            </Stack>
+          </form>
+        </Paper>
+      </Box>
+    </Container>
+  );
 }
 
 export default Login;

@@ -7,7 +7,7 @@ const dataValidation = (name, value, setErrors) => {
 
     switch (name) {
         case "fname": {
-            if (len === 0) error = "Το όνομα είναι κενό";
+            if (len === 0) error = "";
 
             else if (len < 4 || len > 15) error = "Το όνομά σας πρέπει να αποτελείται από 4 μέχρι 15 γράμματα";
 

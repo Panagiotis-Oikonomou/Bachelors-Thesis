@@ -1,0 +1,111 @@
+import { createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+    palette: {
+        mode: "dark",
+        primary: {
+            main: "#1b2632",
+        },
+        background: {
+            default: "#1b2632",
+        }
+    },
+    components: {
+        MuiTextField: {
+            defaultProps: {
+                variant: "outlined",
+            },
+            styleOverrides: {
+                root: {
+                    fontSize: "1.2rem"
+                }
+            }
+        },
+
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "white",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#90caf9 !important",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#90caf9",
+                    },
+                },
+            },
+        },
+
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    color: "white",
+
+                    fontSize: "0.6rem",
+
+                    "&.Mui-focused": {
+                        color: "#90caf9",
+                    },
+
+                    ".MuiFormControl-root:hover &": {
+                        color: "#90caf9"
+                    },
+                },
+            },
+        },
+
+        MuiCheckbox: {
+            styleOverrides: {
+                root: {
+                    color: "white",
+
+                    "&.Mui-checked": {
+                        color: "#90caf9",
+                    },
+                },
+            },
+        },
+
+        MuiFormControlLabel: {
+            styleOverrides: {
+                label: {
+                    color: "white",
+                },
+            },
+        },
+
+        MuiFormHelperText: {
+            styleOverrides: {
+                root: {
+                    fontSize: "0.9rem",
+                },
+            },
+        },
+
+        MuiSelect: {
+            styleOverrides: {
+                select: {
+                    color: "white",
+                },
+                icon: {
+                    color: "white",
+                },
+            },
+        },
+
+        MuiInputBase: {
+            styleOverrides: {
+                root: {
+                    fontSize: "1.1rem",
+                },
+                input: {
+                    // fontSize: "1.1rem",
+                },
+            },
+        },
+    }
+});
+
+export default theme;

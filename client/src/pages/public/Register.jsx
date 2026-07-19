@@ -1,138 +1,146 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styles from './LoginRegister.module.css';
+import styles from "../../assets/css/links.module.css";
+import {scrollbarStyles} from "../styles/scrollbar";
 import useRegister from "../../hooks/useRegister";
+import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
 
 function Register() {
-    const {
-        formData, conPass, errors, providers, cpswError, cpswMatch,
-        allError, showConfPassword, showPassword,
-        setShowConfPassword, setShowPassword,
-        handleChange, handleSubmit
-    } = useRegister();
-    return (
-        <div className={styles.container}>
-            <div className={styles.header}>Register Form</div>
-            <div className={styles.registerForm}>
-                <form onSubmit={handleSubmit}>
-                    <p className={styles.titlee}>Πρέπει να συμπληρώσεται όλα τα πεδία της φόρμας</p><br />
-                    <div className={styles.formData}><label htmlFor="fname">Όνομα<span className={styles.must}>*</span></label><br />
-                        <input
-                            type="text"
-                            id="fname"
-                            name="fname"
-                            value={formData.fname}
-                            required
-                            onChange={handleChange}
-                            className={errors.fname ? styles.inputError : ""}
-                            autoFocus
-                            autoComplete="off"
-                        />
-                        <div className={styles.errorMsg}>{errors.fname}</div>
-                    </div>
+  const {
+    formData, conPass, errors, providers, cpswError, cpswMatch,
+    allError, showConfPassword, showPassword, setShowConfPassword,
+    setShowPassword, handleChange, handleSubmit } = useRegister();
+  return (
+    <Container maxWidth="md" sx={{p:{xs:0}}}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "90vh",
+        }}
+      >
+        <Paper sx={{
+          p: { xs: 2, sm: 4 }, width: "100%",
+          mt:{md:2}, maxWidth: 750,
+          bgcolor: "transparent", color: "white",
+          maxHeight: "95vh", overflowY: "auto",
+          border: "1px solid rgba(255,255,255,0.3)",
+          backgroundColor: "rgba(255,255,255,0.05)",
+          ...scrollbarStyles,
+        }}
+          variant="outlined" square={false}
+        >
+          <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign up</Typography>
+          <form onSubmit={handleSubmit} autoComplete="off">
+            <Stack spacing={3}>
+              <TextField
+                label="Όνομα" name="fname"
+                value={formData.fname}
+                onChange={handleChange}
+                error={errors.fname !== ""}
+                helperText={errors.fname}
+                fullWidth required
+                autoFocus
+              />
 
-                    <div className={styles.formData}><label htmlFor="lname">Επώνυμο<span className={styles.must}>*</span></label><br />
-                        <input
-                            type="text"
-                            id="lname"
-                            name="lname"
-                            value={formData.lname}
-                            required
-                            onChange={handleChange}
-                            className={errors.lname ? styles.inputError : ""}
-                            autoComplete="off"
-                        />
-                        <div className={styles.errorMsg}>{errors.lname}</div>
-                    </div>
+              <TextField
+                label="Επώνυμο" name="lname"
+                value={formData.lname}
+                onChange={handleChange}
+                error={errors.lname !== ""}
+                helperText={errors.lname}
+                fullWidth required
+              />
 
-                    <div className={styles.formData}><label htmlFor="clock">Αριθμός ρολογιού<span className={styles.must}>*</span></label><br />
-                        <input
-                            type="text"
-                            id="clock"
-                            name="clock"
-                            value={formData.clock}
-                            required
-                            onChange={handleChange}
-                            className={errors.clock ? styles.inputError : ""}
-                            autoComplete="off"
-                        />
-                        <div className={styles.errorMsg}>{errors.clock}</div>
-                    </div>
+              <TextField
+                label="Αριθμός ρολογιού" name="clock"
+                value={formData.clock}
+                onChange={handleChange}
+                error={errors.clock !== ""}
+                helperText={errors.clock}
+                fullWidth required
+              />
 
-                    <div className={styles.formData}><label htmlFor="provider">Πάροχος ενέργειας<span className={styles.must}>*</span></label><br />
-                        <select id="provider" name="provider"  required onChange={handleChange} value={formData.provider}>
-                            <option defaultValue={""}></option>
-                            {providers.map((provider) => {
-                                return (
-                                    <option key={provider.providerid} value={provider.providername}>
-                                        {provider.providername}
-                                    </option>);
-                            })}
-                        </select>
-                    </div>
+              <FormControl>
+                <InputLabel id="providerLabel">Πάροχος ενέργειας</InputLabel>
+                <Select
+                  labelId="providerLabel"
+                  required sx={{ width: 200 }}
+                  name="provider"
+                  label="Πάροχος ενέργειας"
+                  value={formData.provider}
+                  onChange={handleChange}
+                >
+                  {providers.map((provider) => {
+                    return (<MenuItem key={provider.providerid} value={provider.providername}>{provider.providername}</MenuItem>);
+                  })}
+                </Select>
+              </FormControl>
 
-                    <div className={styles.formData}><label htmlFor="email">Email<span className={styles.must}>*</span></label><br />
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            required
-                            onChange={handleChange}
-                            className={errors.email ? styles.inputError : ""}
-                            autoComplete="off"
-                        />
-                        <div className={styles.errorMsg}>{errors.email}</div>
-                    </div>
+              <TextField
+                label="Email" name="email"
+                value={formData.email} type="email"
+                onChange={handleChange}
+                error={errors.email !== ""}
+                helperText={errors.email}
+                fullWidth required
+              />
 
-                    <div className={styles.formData}><label htmlFor="username">Username<span className={styles.must}>*</span></label><br />
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            required
-                            onChange={handleChange}
-                            className={errors.username ? styles.inputError : ""}
-                            autoComplete="off"
-                        />
-                        <div className={styles.errorMsg}>{errors.username}</div>
-                    </div>
+              <TextField
+                label="Username" name="username"
+                value={formData.username}
+                onChange={handleChange}
+                error={errors.username !== ""}
+                helperText={errors.username}
+                fullWidth required
+              />
 
-                    <div className={styles.formData}><label htmlFor="password">Password<span className={styles.must}>*</span></label><br />
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            required
-                            onChange={handleChange}
-                            className={errors.password ? styles.inputError : ""}
-                        /><br />
-                        <input type="checkbox" id="showpsw" onChange={() => setShowPassword(!showPassword)} /> <label htmlFor="showpsw">Εμφάνιση κωδικού</label>
-                        <div className={styles.errorMsg}>{errors.password}</div>
-                    </div>
+              <TextField
+                label="Password" name="password"
+                value={formData.password}
+                onChange={handleChange}
+                type={showPassword ? "text" : "password"}
+                error={errors.password !== ""}
+                helperText={errors.password}
+                fullWidth required
+              />
+              <FormGroup>
+                <FormControlLabel control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
+              </FormGroup>
 
-                    <div className={styles.formData}><label htmlFor="cpsw">Confirm Password<span className={styles.must}>*</span></label><br />
-                        <input
-                            type={showConfPassword ? "text" : "password"}
-                            id="cpsw"
-                            name="cpsw"
-                            value={conPass}
-                            required
-                            onChange={handleChange}
-                            className={cpswError ? styles.inputError : ""}
-                        /><br />
-                        <input type="checkbox" id="showcpsw" onChange={() => setShowConfPassword(!showConfPassword)} /> <label htmlFor="showcpsw"> Εμφάνιση κωδικού </label>
-                        <div className={styles.errorMsg}>{cpswError}</div><br />
-                        <div className={styles.pswmatch}>{cpswMatch}</div>
-                    </div>
-                    <div className={styles.errorMsg}>{allError}</div>
-                    <input type="submit" value="Εγγραφή" />
-                </form>
-                <p>Έχεις λογαριασμό; κάνε <Link to='/login'>Σύνδεση</Link></p>
-            </div>
-        </div>
-    )
+              <TextField
+                label="Confirm Password" name="cpsw"
+                value={conPass} onChange={handleChange}
+                type={showConfPassword ? "text" : "password"}
+                error={cpswError !== ""}
+                helperText={cpswError || cpswMatch}
+                slotProps={{
+                  formHelperText: {
+                    sx: {
+                      color: cpswError
+                        ? "error.main"
+                        : cpswMatch
+                          ? "success.main"
+                          : "text.secondary",
+                    },
+                  }
+                }}
+                fullWidth required
+              />
+
+              <FormGroup>
+                <FormControlLabel control={<Checkbox onChange={() => setShowConfPassword(!showConfPassword)} />} label="Εμφάνιση κωδικού" />
+              </FormGroup>
+
+              {allError && (<Alert severity="error" icon={false}>{allError}</Alert>)}
+
+              <Button type="submit" variant="contained" >Εγγραφή</Button>
+              <Typography variant="body2">Έχεις λογαριασμό; κάνε <Link to='/login' className={styles.link}>Σύνδεση</Link></Typography>
+            </Stack>
+          </form>
+        </Paper>
+      </Box>
+    </Container>
+  )
 }
 export default Register;
