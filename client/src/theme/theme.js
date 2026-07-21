@@ -3,11 +3,13 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
         mode: "dark",
+        divider: "3px solid rgba(255,255,255,0.4)",
         primary: {
             main: "#1b2632",
         },
         background: {
             default: "#1b2632",
+            paper: "#1b2632",
         }
     },
     components: {
@@ -103,6 +105,22 @@ const theme = createTheme({
                 input: {
                     // fontSize: "1.1rem",
                 },
+            },
+        },
+
+        MuiAppBar: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    backgroundColor: theme.palette.background.default,
+                }),
+            },
+        },
+
+        MuiDrawer: {
+            styleOverrides: {
+                paper: ({ theme }) => ({
+                    backgroundColor: theme.palette.background.paper,
+                }),
             },
         },
     }

@@ -104,6 +104,7 @@ function Login() {
 
               <Button type="submit" variant="contained" >Σύνδεση</Button>
               <Typography variant="body2">Δεν έχεις λογαριασμό; κάνε <Link to='/register' className={styles.link}>Εγγραφή</Link></Typography>
+              <Typography variant="body2"><Link to='/' className={styles.link}>Αρχική</Link></Typography>
             </Stack>
           </form>
         </Paper>

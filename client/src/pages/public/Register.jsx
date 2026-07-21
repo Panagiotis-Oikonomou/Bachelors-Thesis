@@ -136,6 +136,7 @@ function Register() {
 
               <Button type="submit" variant="contained" >Εγγραφή</Button>
               <Typography variant="body2">Έχεις λογαριασμό; κάνε <Link to='/login' className={styles.link}>Σύνδεση</Link></Typography>
+              <Typography variant="body2"><Link to='/' className={styles.link}>Αρχική</Link></Typography>
             </Stack>
           </form>
         </Paper>
