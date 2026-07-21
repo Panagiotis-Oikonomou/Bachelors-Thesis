@@ -28,6 +28,7 @@ import RequiredAuth from "./pages/RequiredAuth";
 import PersistLogin from "./pages/PersistLogin";
 import { SocketProvider } from "./context/SocketContext";
 import Layout from "./components/Layout";
+import LayoutAdmin from "./components/LayoutAdmin";
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
       <Route element={<PersistLogin />}>
         <Route element={<RequiredAuth admin={false} />}>
           <Route element={<SocketProvider />}>
-            <Route element ={<Layout/>}>
+            <Route element={<Layout />}>
               <Route path="/add_area" element={<AddArea />} />
               <Route path="/my_areas" element={<MyAreas />} />
               <Route path="/manage_area/:id" element={<ManageArea />} />
@@ -59,12 +60,13 @@ function App() {
         </Route>
 
         <Route element={<RequiredAuth admin={true} />}>
-          <Route path="/users" element={<Users />} />
-          <Route path="/profile/admin" element={<ProfileAdmin />} />
-          <Route path="/providers" element={<Providers />} />
+          <Route element={<LayoutAdmin />}>
+            <Route path="/users" element={<Users />} />
+            <Route path="/profile/admin" element={<ProfileAdmin />} />
+            <Route path="/providers" element={<Providers />} />
 
-          <Route path="/*" element={<Navigate to="/profile/admin" />} />
-          <Route path="/notifications/admin" element={<NotificationsAdmin />} />
+            <Route path="*" element={<Navigate to="/profile/admin" />} />
+          </Route>
         </Route>
 
         <Route path="/*" element={<Navigate to="/login" />} />

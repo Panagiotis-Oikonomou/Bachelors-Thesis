@@ -8,7 +8,7 @@ function Profile() {
     handleSubmit, signOut } = useUserProfile();
 
   return (
-    <Container maxWidth="md" sx={{ p: { xs: 0 }, pt: { xs: 1 }, }}>
+    <Container maxWidth="md" sx={{ p: { xs: 0 }, pt: { xs: 0 }, }}>
       <Box
         sx={{
           display: "flex",
@@ -17,8 +17,8 @@ function Profile() {
         }}
       >
         <Paper sx={{
-          p: { xs: 1, sm: 2 }, width: "100%", mt: { md: 2 },
-          maxHeight: { xs: "100%", sm: "90vh", md: "88vh" }, overflowY: "auto",
+          p: { xs: 1, sm: 2 }, width: "100%", 
+          maxHeight: { xs: "100%", sm: "92vh", }, overflowY: "auto",
           border: "1px solid rgba(255,255,255,0.3)",
           backgroundColor: "rgba(255,255,255,0.05)", flexGrow: 1,
           ...scrollbarStyles,
@@ -35,7 +35,6 @@ function Profile() {
                 error={errors.fname !== ""}
                 helperText={errors.fname}
                 fullWidth required
-                autoFocus
               />
 
               <TextField
@@ -97,7 +96,7 @@ function Profile() {
                 type={showPassword ? "text" : "password"}
                 error={errors.password !== ""}
                 helperText={errors.password}
-                fullWidth required
+                fullWidth 
               />
               <FormGroup >
                 <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
@@ -120,7 +119,7 @@ function Profile() {
                     },
                   }
                 }}
-                fullWidth required
+                fullWidth required={cpswRequired}
               />
 
               <FormGroup>
