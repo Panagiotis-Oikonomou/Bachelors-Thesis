@@ -1,133 +1,141 @@
-import { Link } from "react-router-dom";
-import styles from './Profile.module.css';
+import { scrollbarStyles } from "../styles/scrollbar";
 import useUserProfile from '../../hooks/useUserProfile';
-import { Up } from "../../components/up/Up";
+import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
 
 function Profile() {
-    const { data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired, allError, saved,
-            showPassword, setShowPassword, showConfPassword, setShowConfPassword, handleChange,
-            handleSubmit, signOut } = useUserProfile();
+  const { data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired, allError, saved,
+    showPassword, setShowPassword, showConfPassword, setShowConfPassword, handleChange,
+    handleSubmit, signOut } = useUserProfile();
 
-    return (
-        <div className={styles.container}>
-            <Up></Up>
+  return (
+    <Container maxWidth="md" sx={{ p: { xs: 0 }, pt: { xs: 1 }, }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper sx={{
+          p: { xs: 1, sm: 2 }, width: "100%", mt: { md: 2 },
+          maxHeight: { xs: "100%", sm: "90vh", md: "88vh" }, overflowY: "auto",
+          border: "1px solid rgba(255,255,255,0.3)",
+          backgroundColor: "rgba(255,255,255,0.05)", flexGrow: 1,
+          ...scrollbarStyles,
+        }}
+          variant="outlined" square={false}
+        >
+          <form onSubmit={handleSubmit} autoComplete="off">
+            <Stack spacing={3}>
+            <Button variant="contained" sx={{width:{xs:"30%", sm:"15%"}, alignSelf:"end", bgcolor:"#ca2d2d", ":hover":{bgcolor:"#d35252"}}} onClick={signOut}>Logout</Button>
+              <TextField
+                label="Όνομα" name="fname"
+                value={data.fname}
+                onChange={handleChange}
+                error={errors.fname !== ""}
+                helperText={errors.fname}
+                fullWidth required
+                autoFocus
+              />
 
-            <div className={styles.profile}>
-                <div className={styles.logoutContainer}>
-                    <button className={styles.logout} onClick={signOut}>Logout</button>
-                </div>
-                <form onSubmit={handleSubmit} autoComplete="off">
-                    <div className={styles.profileData}><label htmlFor="fname">Ονομα</label><br />
-                        <input
-                            type="text"
-                            id="fname"
-                            name="fname"
-                            value={data.fname}
-                            onChange={handleChange}
-                            className={errors.fname ? styles.inputError : ""}
-                        />
-                        <div className={styles.errorMsg}>{errors.fname}</div>
-                    </div>
+              <TextField
+                label="Επώνυμο" name="lname"
+                value={data.lname}
+                onChange={handleChange}
+                error={errors.lname !== ""}
+                helperText={errors.lname}
+                fullWidth required
+              />
 
-                    <div className={styles.profileData}><label htmlFor="lname">Επώνυμο</label><br />
-                        <input
-                            type="text"
-                            id="lname"
-                            name="lname"
-                            value={data.lname}
-                            onChange={handleChange}
-                            className={errors.lname ? styles.inputError : ""}
-                        />
-                        <div className={styles.errorMsg}>{errors.lname}</div>
-                    </div>
+              <TextField
+                label="Αριθμός ρολογιού" name="clock"
+                value={data.clock}
+                onChange={handleChange}
+                error={errors.clock !== ""}
+                helperText={errors.clock}
+                fullWidth required
+              />
 
-                    <div className={styles.profileData}><label htmlFor="clock">Ρολόι</label><br />
-                        <input
-                            type="text"
-                            id="clock"
-                            name="clock"
-                            value={data.clock}
-                            onChange={handleChange}
-                            className={errors.clock ? styles.inputError : ""}
-                        />
-                        <div className={styles.errorMsg}>{errors.clock}</div>
-                    </div>
+              <FormControl>
+                <InputLabel id="providerLabel">Πάροχος ενέργειας</InputLabel>
+                <Select
+                  labelId="providerLabel"
+                  required sx={{ width: 200 }}
+                  name="provider"
+                  label="Πάροχος ενέργειας"
+                  value={data.provider}
+                  onChange={handleChange}
+                >
+                  {providers.map((provider) => {
+                    return (<MenuItem key={provider.providerid} value={provider.providername}>{provider.providername}</MenuItem>);
+                  })}
+                </Select>
+              </FormControl>
 
-                    <div className={styles.profileData}><label htmlFor="provider">Πάροχος</label><br />
-                        <select id="provider" name="provider" onChange={handleChange} value={data.provider}>
-                            {/* key={userId} */}
-                            <option defaultValue={data.provider} >{data.provider}</option>
-                            {providers.map((provider) => {
-                                return (
-                                    <option key={provider.providerid} value={provider.providername}>
-                                        {provider.providername}
-                                    </option>);
-                            })}
-                        </select>
-                    </div>
+              <TextField
+                label="Email" name="email"
+                value={data.email} type="email"
+                onChange={handleChange}
+                error={errors.email !== ""}
+                helperText={errors.email}
+                fullWidth required
+              />
 
-                    <div className={styles.profileData}><label htmlFor="email">Email</label><br />
-                        <input
-                            type="text"
-                            id="email"
-                            name="email"
-                            autoComplete="off"
-                            value={data.email}
-                            onChange={handleChange}
-                            className={errors.email ? styles.inputError : ""}
-                        />
-                        <div className={styles.errorMsg}>{errors.email}</div>
-                    </div>
+              <TextField
+                label="Username" name="username"
+                value={data.username}
+                onChange={handleChange}
+                error={errors.username !== ""}
+                helperText={errors.username}
+                fullWidth required
+              />
 
-                    <div className={styles.profileData}><label htmlFor="username">Username</label><br />
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            autoComplete="off"
-                            value={data.username}
-                            onChange={handleChange}
-                            className={errors.username ? styles.inputError : ""}
-                        />
-                        <div className={styles.errorMsg}>{errors.username}</div>
-                    </div>
+              <TextField
+                label="Password" name="password"
+                value={data.password}
+                onChange={handleChange}
+                type={showPassword ? "text" : "password"}
+                error={errors.password !== ""}
+                helperText={errors.password}
+                fullWidth required
+              />
+              <FormGroup >
+                <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
+              </FormGroup>
 
-                    <div className={styles.profileData}><label htmlFor="password">Password</label><br />
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            id="password"
-                            name="password"
-                            value={data.password}
-                            onChange={handleChange}
-                            className={errors.password ? styles.inputError : ""}
-                        />
-                        <br />
-                        <input type="checkbox" id="showpsw" onChange={() => setShowPassword(!showPassword)} /> <label htmlFor="showpsw"> Εμφάνιση κωδικού</label>
-                        <div className={styles.errorMsg}>{errors.password}</div>
-                    </div>
+              <TextField
+                label="Confirm Password" name="cpsw"
+                value={conPass} onChange={handleChange}
+                type={showConfPassword ? "text" : "password"}
+                error={cpswError !== ""}
+                helperText={cpswError || cpswMatch}
+                slotProps={{
+                  formHelperText: {
+                    sx: {
+                      color: cpswError
+                        ? "error.main"
+                        : cpswMatch
+                          ? "success.main"
+                          : "text.secondary",
+                    },
+                  }
+                }}
+                fullWidth required
+              />
 
-                    <div className={styles.profileData}><label htmlFor="cpsw">Confirm Password</label><br />
-                        <input
-                            type={showConfPassword ? "text" : "password"}
-                            id="cpsw"
-                            name="cpsw"
-                            value={conPass}
-                            onChange={handleChange}
-                            required={cpswRequired}
-                            className={cpswError ? styles.inputError : ""}
-                        />
-                        <br />
-                        <input type="checkbox" id="showcpsw" onChange={() => setShowConfPassword(!showConfPassword)} /> <label htmlFor="showcpsw">Εμφάνιση κωδικού</label>
-                        <div className={styles.errorMsg}>{cpswError}</div>
-                        <div className={styles.pswmatch}>{cpswMatch}</div><br />
-                    </div>
+              <FormGroup>
+                <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowConfPassword(!showConfPassword)} />} label="Εμφάνιση κωδικού" />
+              </FormGroup>
 
-                    <div className={styles.errorMsg}>{allError}</div>
-                    <div className={styles.pswmatch}>{saved}</div>
-                    <input type="submit" value="Αποθήκευση αλλαγών" />
-                </form>
-            </div>
-        </div>
-    )
+              {allError && (<Alert severity="error" icon={false}>{allError}</Alert>)}
+              {saved && (<Alert severity="success" icon={false}>{saved}</Alert>)}
+
+              <Button type="submit" variant="contained" >Αποθήκευση αλλαγών</Button>
+            </Stack>
+          </form>
+        </Paper>
+      </Box>
+    </Container>
+  )
 }
 export default Profile;

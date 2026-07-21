@@ -60,7 +60,7 @@ function Login() {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs" sx={{p:0}}>
       <Box
         sx={{
           minHeight: "100vh",
@@ -71,8 +71,6 @@ function Login() {
       >
         <Paper sx={{
           p: { xs: 2, sm: 4 }, width: "100%",
-          maxWidth: 450, bgcolor: "transparent",
-          color: "white", 
           border: "1px solid rgba(255,255,255,0.3)",
           backgroundColor: "rgba(255,255,255,0.05)"
         }}

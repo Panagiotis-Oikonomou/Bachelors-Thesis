@@ -90,7 +90,7 @@ export default function Layout({ children }) {
         {DrawerList}
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p:{xs:0.2, sm:1} }}>
+      <Box component="main" sx={{ flexGrow: 1, }}>
         <Toolbar/>
         <Outlet />
       </Box>

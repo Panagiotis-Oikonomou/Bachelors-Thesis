@@ -20,10 +20,10 @@ function Register() {
         }}
       >
         <Paper sx={{
-          p: { xs: 2, sm: 4 }, width: "100%",
-          mt:{md:2}, maxWidth: 750,
-          bgcolor: "transparent", color: "white",
-          maxHeight: "95vh", overflowY: "auto",
+          p: { xs: 1, sm: 3 },  width: "100%",
+          mt:{sm:2}, 
+          height:{xs:"100vh", sm:"97vh"},
+          overflowY: "auto",
           border: "1px solid rgba(255,255,255,0.3)",
           backgroundColor: "rgba(255,255,255,0.05)",
           ...scrollbarStyles,
@@ -105,7 +105,7 @@ function Register() {
                 fullWidth required
               />
               <FormGroup>
-                <FormControlLabel control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
+                <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
               </FormGroup>
 
               <TextField
@@ -129,7 +129,7 @@ function Register() {
               />
 
               <FormGroup>
-                <FormControlLabel control={<Checkbox onChange={() => setShowConfPassword(!showConfPassword)} />} label="Εμφάνιση κωδικού" />
+                <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowConfPassword(!showConfPassword)} />} label="Εμφάνιση κωδικού" />
               </FormGroup>
 
               {allError && (<Alert severity="error" icon={false}>{allError}</Alert>)}

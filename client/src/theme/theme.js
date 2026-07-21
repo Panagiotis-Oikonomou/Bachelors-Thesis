@@ -102,9 +102,6 @@ const theme = createTheme({
                 root: {
                     fontSize: "1.1rem",
                 },
-                input: {
-                    // fontSize: "1.1rem",
-                },
             },
         },
 
