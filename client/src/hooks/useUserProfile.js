@@ -121,7 +121,8 @@ export default function useUserProfile() {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Logout"
+            confirmButtonText: "Logout",
+            didClose: () => { document.activeElement?.blur(); }
         });
 
         if (!result.isConfirmed) return;

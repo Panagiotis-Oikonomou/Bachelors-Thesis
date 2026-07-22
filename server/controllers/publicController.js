@@ -30,11 +30,11 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const sql = "SELECT userid, username, password FROM users WHERE username=? LIMIT 1";
-        const sql2 = "SELECT adminid, username, password FROM admins WHERE username=? LIMIT 1";
+        const sql2 = "SELECT adminid, username FROM admins WHERE username=? AND password=? LIMIT 1";
         const { usr, psw, persist } = req.body;
 
         const [rows] = await db.query(sql, [usr]);
-        const [rows2] = await db.query(sql2, [usr]);
+        const [rows2] = await db.query(sql2, [usr, psw]);
 
         const cookies = req.cookies;
         if (cookies?.jwt) {
@@ -69,9 +69,6 @@ exports.login = async (req, res) => {
             res.json({ exists: true, isAdmin: false, accessToken });
         }
         else if (rows2.length > 0) {
-            const isAdmin = await bcrypt.compare(psw, rows2[0].password);
-            if(!isAdmin) return res.json({ exists: false });
-
             const accessToken = generateAccessToken(rows2[0].adminid, rows2[0].username, true);
             if (persist) {
                 const refreshToken = generateRefreshToken(rows2[0].adminid, rows2[0].username, true);

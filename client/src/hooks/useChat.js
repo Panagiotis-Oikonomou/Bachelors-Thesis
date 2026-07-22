@@ -220,7 +220,8 @@ export default function useChat(chatid) {
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Unsend"
+            confirmButtonText: "Unsend",
+            didClose: () => { document.activeElement?.blur(); }
         });
 
         if (!result.isConfirmed) return;

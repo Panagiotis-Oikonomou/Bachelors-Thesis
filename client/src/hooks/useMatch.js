@@ -227,7 +227,8 @@ export default function useMatch() {
                     icon: "warning",
                     showConfirmButton: true,
                     confirmButtonColor: "#3085d6",
-                    confirmButtonText: "Ok"
+                    confirmButtonText: "Ok",
+                    didClose: () => { document.activeElement?.blur(); }
                 });
                 return;
             }
@@ -249,7 +250,8 @@ export default function useMatch() {
                 icon: "warning",
                 showConfirmButton: true,
                 confirmButtonColor: "#3085d6",
-                confirmButtonText: "Ok"
+                confirmButtonText: "Ok",
+                didClose: () => { document.activeElement?.blur(); }
             });
             return;
         }
@@ -259,21 +261,23 @@ export default function useMatch() {
                 icon: "warning",
                 showConfirmButton: true,
                 confirmButtonColor: "#3085d6",
-                confirmButtonText: "Ok"
+                confirmButtonText: "Ok",
+                didClose: () => { document.activeElement?.blur(); }
             });
             return;
         }
 
         try {
             const res = await axiosPrivate.post('/notifications', users);
-            if(res.data) await axiosPrivate.post('/matchings', {users, groupid: res.data.groupid});
+            if (res.data) await axiosPrivate.post('/matchings', { users, groupid: res.data.groupid });
 
             Swal.fire({
                 title: "A invitation has been send to the other users",
                 icon: "success",
                 showConfirmButton: true,
                 confirmButtonColor: "#3085d6",
-                confirmButtonText: "Ok"
+                confirmButtonText: "Ok",
+                didClose: () => { document.activeElement?.blur(); }
             });
         } catch (err) {
             console.log(err);
@@ -282,7 +286,8 @@ export default function useMatch() {
                 icon: "warning",
                 showConfirmButton: true,
                 confirmButtonColor: "#3085d6",
-                confirmButtonText: "Ok"
+                confirmButtonText: "Ok",
+                didClose: () => { document.activeElement?.blur(); }
             });
         }
         setUsers(prev => prev.filter(u => u.username === username).map(u => ({ ...u, areaid: null })));
@@ -301,9 +306,9 @@ export default function useMatch() {
 
     return {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked,
-        isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked, 
-        checkboxOptions, handleSearchSubmit, areas, isAreaChecked, havingArea, selectedArea, 
-        handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser, 
+        isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked,
+        checkboxOptions, handleSearchSubmit, areas, isAreaChecked, havingArea, selectedArea,
+        handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser,
         nextUser, hoveredUser, setHoveredUser
     };
 }

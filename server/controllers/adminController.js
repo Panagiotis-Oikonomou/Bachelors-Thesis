@@ -18,13 +18,12 @@ exports.getProfile = async (req, res) => {
 exports.updateAdmin = async (req, res) => {
     try {
         const sql = "UPDATE admins SET fname=?, lname=?, email=?, username=?, password=? WHERE adminid=?";
-        const hash = await bcrypt.hash(req.body.password, 12);
         const values = [
             req.body.fname,
             req.body.lname,
             req.body.email,
             req.body.username,
-            hash,
+            req.body.password,
             req.user.id
         ];
         await db.query(sql, values);

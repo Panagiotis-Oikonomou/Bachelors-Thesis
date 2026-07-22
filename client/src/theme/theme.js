@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
     palette: {
         mode: "dark",
-        divider: "3px solid rgba(255,255,255,0.4)",
+        divider: "rgba(255,255,255,0.4)",
         primary: {
             main: "#1b2632",
         },
