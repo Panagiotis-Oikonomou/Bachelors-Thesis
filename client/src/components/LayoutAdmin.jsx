@@ -16,7 +16,7 @@ export default function LayoutAdmin({ children }) {
     {
       text: "Providers",
       icon: <ElectricBoltOutlined />,
-      path: "/provoders"
+      path: "/providers"
     },
     {
       text: "Users",
