@@ -4,13 +4,16 @@ import Swal from "sweetalert2";
 import { Box, Container, IconButton, Paper, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { DeleteForever } from "@mui/icons-material";
+import MainLayout from "../../components/mainLayout";
+import { scrollbarStyles } from "../styles/scrollbar";
 
 function Users() {
-  const [users, setUsers] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
   const [selectedRows, setSelectedRows] = useState({ type: "include", ids: new Set(), });
+  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [search, setSearch] = useState('');
-  const axiosPrivate = useAxiosPrivate();
+  const paginationModel = { page: 0, pageSize: 5 };
 
   useEffect(() => {
     const getUsers = async () => {
@@ -77,43 +80,28 @@ function Users() {
     { field: 'email', headerName: 'Email', sortable: false, width: 160, },
   ];
 
-  console.log(selectedRows.ids);
-  const paginationModel = { page: 0, pageSize: 5 };
-
   return (
-    <Container maxWidth="lg" sx={{ p: { xs: 0 }, }}>
-
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }} >
-        <Paper sx={{
-          p: { xs: 0.5, sm: 1 }, width: "100%",
-          height: { sm: "87vh", md: "91vh" }, display: "flex",
-          flexDirection: "column", flexGrow: 1,
-          border: "1px solid rgba(255,255,255,0.3)",
-          backgroundColor: "rgba(255,255,255,0.05)",
-        }} variant="outlined" square={false}
-        >
-          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-            <Box component="form" sx={{ display: "flex", alignItems: "flex-start", gap: 1, }}>
-              <TextField type="search" size="small" value={search} onChange={(e) => searchUser(e.target.value)} label="Search user" />
-            </Box>
-            <IconButton onClick={deleteUsers} disabled={selectedRows.ids.size === 0}><DeleteForever /></IconButton>
-          </Stack>
-          <Box sx={{ flex: 1, minHeight: 0, overflowX: "auto", overflowY: "hidden", }}>
-            <DataGrid
-              rows={filteredUsers} columns={columns}
-              getRowId={(row) => row.userid}
-              checkboxSelection
-              columnVisibilityModel
-              disableRowSelectionExcludeModel
-              rowSelectionModel={selectedRows}
-              onRowSelectionModelChange={(ids) => { setSelectedRows(ids); console.log(ids) }}
-              initialState={{ pagination: { paginationModel: paginationModel, }, }}
-              pageSizeOptions={[5, 10, 20]} sx={{ width: "98%", height: "100%", }}
-            />
-          </Box>
-        </Paper>
+    <MainLayout mxW="lg" paperSx={{ p: { xs: 0.5, sm: 1 }, height: { sm: "87dvh", md: "91dvh" }, display: "flex", flexDirection: "column", flexGrow: 1, }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Box component="form" sx={{ display: "flex", alignItems: "flex-start", gap: 1, }}>
+          <TextField type="search" size="small" value={search} onChange={(e) => searchUser(e.target.value)} label="Search user" />
+        </Box>
+        <IconButton onClick={deleteUsers} disabled={selectedRows.ids.size === 0}><DeleteForever /></IconButton>
+      </Stack>
+      <Box sx={{ flex: 1, minHeight: 0, overflowX: "auto", overflowY: "hidden", }}>
+        <DataGrid
+          rows={filteredUsers} columns={columns}
+          getRowId={(row) => row.userid}
+          checkboxSelection
+          // columnVisibilityModel
+          disableRowSelectionExcludeModel
+          rowSelectionModel={selectedRows}
+          onRowSelectionModelChange={(ids) => setSelectedRows(ids)}
+          initialState={{ pagination: { paginationModel: paginationModel, }, }}
+          pageSizeOptions={[5, 10, 20]} sx={{ width: "98%", height: "95%", }}
+        />
       </Box>
-    </Container>
+    </MainLayout>
   )
 }
 

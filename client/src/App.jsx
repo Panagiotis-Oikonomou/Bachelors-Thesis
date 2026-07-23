@@ -15,7 +15,6 @@ import Criteria from "./pages/criteria/Criteria";
 import Match from "./pages/match/Match";
 
 import Notifications from "./pages/notifications/Notifications";
-import NotificationsAdmin from "./pages/notifications/NotificationsAdmin";
 
 import Index from "./pages/public/Index";
 import Login from './pages/public/Login';

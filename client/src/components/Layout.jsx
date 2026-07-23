@@ -51,11 +51,11 @@ export default function Layout({ children }) {
   ];
 
   const DrawerList = (
-    <Box onClick={() => toggleDrawer(false)}>
+    <Box>
       <List>
         {menuItems.map(item => (
           <ListItem key={item.text} sx={{ cursor: "pointer", background: location.pathname === item.path ? "#3c6bb2" : "" }} disablePadding>
-            <ListItemButton onClick={() => navigate(item.path)}>
+            <ListItemButton onClick={() => {navigate(item.path); toggleDrawer(false);}}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

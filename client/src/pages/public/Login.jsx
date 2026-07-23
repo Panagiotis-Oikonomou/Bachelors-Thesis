@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from "../../assets/css/links.module.css";
+import MainLayout from "../../components/MainLayout";
 import axios from "../../api/axios";
 import resetTimer from "../../utils/resetTimer";
 import { Alert, Box, Button, Checkbox, Container, FormControlLabel, FormGroup, Paper, Stack, TextField, Typography } from "@mui/material";
@@ -60,54 +61,37 @@ function Login() {
   }
 
   return (
-    <Container maxWidth="xs" sx={{p:0}}>
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
-      >
-        <Paper sx={{
-          p: { xs: 2, sm: 4 }, width: "100%",
-          border: "1px solid rgba(255,255,255,0.3)",
-          backgroundColor: "rgba(255,255,255,0.05)"
-        }}
-          variant="outlined" square={false}
-        >
-          <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign in</Typography>
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={2}>
-              <TextField
-                label="Username"
-                fullWidth required
-                autoFocus
-                onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
-              />
+    <MainLayout mxW="xs" boxSx={{ minHeight: "100dvh", }} paperSx={{ p: { xs: 2, sm: 4 } }}>
+      <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign in</Typography>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={2}>
+          <TextField
+            label="Username"
+            fullWidth required
+            autoFocus
+            onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
+          />
 
-              <TextField
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                fullWidth required
-                onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
-              />
+          <TextField
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            fullWidth required
+            onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
+          />
 
-              <FormGroup>
-                <FormControlLabel control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
-                <FormControlLabel control={<Checkbox onChange={togglePersist} checked={persist} />} label="Trust this device" />
-              </FormGroup>
+          <FormGroup>
+            <FormControlLabel control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
+            <FormControlLabel control={<Checkbox onChange={togglePersist} checked={persist} />} label="Trust this device" />
+          </FormGroup>
 
-              {notFound && (<Alert severity="error" icon={false}>{notFound}</Alert>)}
+          {notFound && (<Alert severity="error" icon={false}>{notFound}</Alert>)}
 
-              <Button type="submit" variant="contained" >Σύνδεση</Button>
-              <Typography variant="body2">Δεν έχεις λογαριασμό; κάνε <Link to='/register' className={styles.link}>Εγγραφή</Link></Typography>
-              <Typography variant="body2"><Link to='/' className={styles.link}>Αρχική</Link></Typography>
-            </Stack>
-          </form>
-        </Paper>
-      </Box>
-    </Container>
+          <Button type="submit" variant="contained" >Σύνδεση</Button>
+          <Typography variant="body2">Δεν έχεις λογαριασμό; κάνε <Link to='/register' className={styles.link}>Εγγραφή</Link></Typography>
+          <Typography variant="body2"><Link to='/' className={styles.link}>Αρχική</Link></Typography>
+        </Stack>
+      </form>
+    </MainLayout>
   );
 }
 

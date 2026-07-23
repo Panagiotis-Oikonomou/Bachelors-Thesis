@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 export function Up() {
     return (
         <>
-            <img src={menu} className={styles.menu} alt="menu" />
+            {/* <img src={menu} className={styles.menu} alt="menu" />
             <div className={styles.up}>
                 <Link to='/matchings'><img src={matchings} /></Link>
                 <Link to='/my_areas'><img src={myareas} /></Link>
@@ -22,7 +22,7 @@ export function Up() {
                 <Link to='/my_chats'><img src={chats} /></Link>
                 <Link to='/notifications'><img src={notifications} /></Link>
                 <Link to='/profile'><img src={profile} /></Link>
-            </div>
+            </div> */}
         </>
     )
 }

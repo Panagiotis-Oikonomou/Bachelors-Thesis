@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../assets/css/links.module.css";
-import {scrollbarStyles} from "../styles/scrollbar";
+import { scrollbarStyles } from "../styles/scrollbar";
 import useRegister from "../../hooks/useRegister";
 import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
+import MainLayout from "../../components/MainLayout";
 
 function Register() {
   const {
@@ -10,138 +11,117 @@ function Register() {
     allError, showConfPassword, showPassword, setShowConfPassword,
     setShowPassword, handleChange, handleSubmit } = useRegister();
   return (
-    <Container maxWidth="md" sx={{p:{xs:0}}}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "90vh",
-        }}
-      >
-        <Paper sx={{
-          p: { xs: 1, sm: 3 },  width: "100%",
-          mt:{sm:2}, 
-          height:{xs:"100vh", sm:"97vh"},
-          overflowY: "auto",
-          border: "1px solid rgba(255,255,255,0.3)",
-          backgroundColor: "rgba(255,255,255,0.05)",
-          ...scrollbarStyles,
-        }}
-          variant="outlined" square={false}
-        >
-          <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign up</Typography>
-          <form onSubmit={handleSubmit} autoComplete="off">
-            <Stack spacing={3}>
-              <TextField
-                label="Όνομα" name="fname"
-                value={formData.fname}
-                onChange={handleChange}
-                error={errors.fname !== ""}
-                helperText={errors.fname}
-                fullWidth required
-                autoFocus
-              />
+    <MainLayout mxW="md" paperSx={{ p: { xs: 1, sm: 3 }, height: { xs: "100dvh", }, }}>
+      <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign up</Typography>
+      <form onSubmit={handleSubmit} autoComplete="off">
+        <Stack spacing={3}>
+          <TextField
+            label="Όνομα" name="fname"
+            value={formData.fname}
+            onChange={handleChange}
+            error={errors.fname !== ""}
+            helperText={errors.fname}
+            fullWidth required
+            autoFocus
+          />
 
-              <TextField
-                label="Επώνυμο" name="lname"
-                value={formData.lname}
-                onChange={handleChange}
-                error={errors.lname !== ""}
-                helperText={errors.lname}
-                fullWidth required
-              />
+          <TextField
+            label="Επώνυμο" name="lname"
+            value={formData.lname}
+            onChange={handleChange}
+            error={errors.lname !== ""}
+            helperText={errors.lname}
+            fullWidth required
+          />
 
-              <TextField
-                label="Αριθμός ρολογιού" name="clock"
-                value={formData.clock}
-                onChange={handleChange}
-                error={errors.clock !== ""}
-                helperText={errors.clock}
-                fullWidth required
-              />
+          <TextField
+            label="Αριθμός ρολογιού" name="clock"
+            value={formData.clock}
+            onChange={handleChange}
+            error={errors.clock !== ""}
+            helperText={errors.clock}
+            fullWidth required
+          />
 
-              <FormControl>
-                <InputLabel id="providerLabel">Πάροχος ενέργειας</InputLabel>
-                <Select
-                  labelId="providerLabel"
-                  required sx={{ width: 200 }}
-                  name="provider"
-                  label="Πάροχος ενέργειας"
-                  value={formData.provider}
-                  onChange={handleChange}
-                >
-                  {providers.map((provider) => {
-                    return (<MenuItem key={provider.providerid} value={provider.providername}>{provider.providername}</MenuItem>);
-                  })}
-                </Select>
-              </FormControl>
+          <FormControl>
+            <InputLabel id="providerLabel">Πάροχος ενέργειας</InputLabel>
+            <Select
+              labelId="providerLabel"
+              required sx={{ width: 200 }}
+              name="provider"
+              label="Πάροχος ενέργειας"
+              value={formData.provider}
+              onChange={handleChange}
+            >
+              {providers.map((provider) => {
+                return (<MenuItem key={provider.providerid} value={provider.providername}>{provider.providername}</MenuItem>);
+              })}
+            </Select>
+          </FormControl>
 
-              <TextField
-                label="Email" name="email"
-                value={formData.email} type="email"
-                onChange={handleChange}
-                error={errors.email !== ""}
-                helperText={errors.email}
-                fullWidth required
-              />
+          <TextField
+            label="Email" name="email"
+            value={formData.email} type="email"
+            onChange={handleChange}
+            error={errors.email !== ""}
+            helperText={errors.email}
+            fullWidth required
+          />
 
-              <TextField
-                label="Username" name="username"
-                value={formData.username}
-                onChange={handleChange}
-                error={errors.username !== ""}
-                helperText={errors.username}
-                fullWidth required
-              />
+          <TextField
+            label="Username" name="username"
+            value={formData.username}
+            onChange={handleChange}
+            error={errors.username !== ""}
+            helperText={errors.username}
+            fullWidth required
+          />
 
-              <TextField
-                label="Password" name="password"
-                value={formData.password}
-                onChange={handleChange}
-                type={showPassword ? "text" : "password"}
-                error={errors.password !== ""}
-                helperText={errors.password}
-                fullWidth required
-              />
-              <FormGroup>
-                <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
-              </FormGroup>
+          <TextField
+            label="Password" name="password"
+            value={formData.password}
+            onChange={handleChange}
+            type={showPassword ? "text" : "password"}
+            error={errors.password !== ""}
+            helperText={errors.password}
+            fullWidth required
+          />
+          <FormGroup>
+            <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
+          </FormGroup>
 
-              <TextField
-                label="Confirm Password" name="cpsw"
-                value={conPass} onChange={handleChange}
-                type={showConfPassword ? "text" : "password"}
-                error={cpswError !== ""}
-                helperText={cpswError || cpswMatch}
-                slotProps={{
-                  formHelperText: {
-                    sx: {
-                      color: cpswError
-                        ? "error.main"
-                        : cpswMatch
-                          ? "success.main"
-                          : "text.secondary",
-                    },
-                  }
-                }}
-                fullWidth required
-              />
+          <TextField
+            label="Confirm Password" name="cpsw"
+            value={conPass} onChange={handleChange}
+            type={showConfPassword ? "text" : "password"}
+            error={cpswError !== ""}
+            helperText={cpswError || cpswMatch}
+            slotProps={{
+              formHelperText: {
+                sx: {
+                  color: cpswError
+                    ? "error.main"
+                    : cpswMatch
+                      ? "success.main"
+                      : "text.secondary",
+                },
+              }
+            }}
+            fullWidth required
+          />
 
-              <FormGroup>
-                <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowConfPassword(!showConfPassword)} />} label="Εμφάνιση κωδικού" />
-              </FormGroup>
+          <FormGroup>
+            <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowConfPassword(!showConfPassword)} />} label="Εμφάνιση κωδικού" />
+          </FormGroup>
 
-              {allError && (<Alert severity="error" icon={false}>{allError}</Alert>)}
+          {allError && (<Alert severity="error" icon={false}>{allError}</Alert>)}
 
-              <Button type="submit" variant="contained" >Εγγραφή</Button>
-              <Typography variant="body2">Έχεις λογαριασμό; κάνε <Link to='/login' className={styles.link}>Σύνδεση</Link></Typography>
-              <Typography variant="body2"><Link to='/' className={styles.link}>Αρχική</Link></Typography>
-            </Stack>
-          </form>
-        </Paper>
-      </Box>
-    </Container>
+          <Button type="submit" variant="contained" >Εγγραφή</Button>
+          <Typography variant="body2">Έχεις λογαριασμό; κάνε <Link to='/login' className={styles.link}>Σύνδεση</Link></Typography>
+          <Typography variant="body2"><Link to='/' className={styles.link}>Αρχική</Link></Typography>
+        </Stack>
+      </form>
+    </MainLayout>
   )
 }
 export default Register;

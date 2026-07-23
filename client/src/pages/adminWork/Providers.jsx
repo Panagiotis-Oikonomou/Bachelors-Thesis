@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { Box, Container, Paper, Stack, TextField, Typography, Button, IconButton } from "@mui/material";
 import { scrollbarStyles } from "../styles/scrollbar";
 import { DeleteForever } from "@mui/icons-material";
+import MainLayout from "../../components/mainLayout";
 
 function Providers() {
   const axiosPrivate = useAxiosPrivate();
@@ -93,56 +94,46 @@ function Providers() {
   }
 
   return (
-    <Container maxWidth="md" sx={{ p: { xs: 0 }, pt: { xs: 0 }, }}>
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", }} >
+    <MainLayout mxW="md" paperSx={{ p: { xs: 0.5, sm: 2 }, flexGrow: 1, height: { xs: "100%", sm: "91dvh", }, }}>
+      <Stack spacing={2}>
+        <Stack direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "space-between", alignItems: "flex-start" }} spacing={2}>
+          <form>
+            <TextField type="search" size="small" value={search} onChange={(e) => searchProvider(e.target.value)} label="Search provider" />
+          </form>
+
+          <Box component="form"
+            onSubmit={handleSubmit}
+            sx={{
+              display: "flex", flexDirection: "column",
+              alignItems: { xs: "flex-start", sm: "flex-end", },
+              gap: 1,
+            }}>
+            <TextField label="Όνομα παρόχου" onChange={(e) => checkName(e.target.value)} value={provider}
+              helperText={providerError} error={providerError !== ""} sx={{ width: { xs: 181 } }} />
+            <Button type="submit" variant="contained" disabled={providerError !== ""}>Πρόσθεσε</Button>
+          </Box>
+        </Stack>
+
         <Paper sx={{
-          p: { xs: 0.5, sm: 2 }, width: "100%",
-          height: { xs: "100%", sm: "91vh", },
+          p: { sm: 2 }, width: "100%",
+          maxHeight: { sm: "67dvh" }, overflowY: "auto",
           border: "1px solid rgba(255,255,255,0.3)",
           backgroundColor: "rgba(255,255,255,0.05)", flexGrow: 1,
+          ...scrollbarStyles,
         }} variant="outlined" square={false}
         >
-          <Stack spacing={2}>
-            <Stack direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "space-between", alignItems: "flex-start" }} spacing={2}>
-              <form>
-                <TextField type="search" size="small" value={search} onChange={(e) => searchProvider(e.target.value)} label="Search provider" />
-              </form>
-
-              <Box component="form"
-                onSubmit={handleSubmit}
-                sx={{
-                  display: "flex", flexDirection: "column",
-                  alignItems: { xs: "flex-start", sm: "flex-end", },
-                  gap: 1,
-                }}>
-                <TextField label="Όνομα παρόχου" onChange={(e) => checkName(e.target.value)} value={provider}
-                  helperText={providerError} error={providerError !== ""} sx={{ width: { xs: 181 } }} />
-                <Button type="submit" variant="contained" disabled={providerError !== ""}>Πρόσθεσε</Button>
-              </Box>
-            </Stack>
-
-            <Paper sx={{
-              p: { sm: 2 }, width: "100%",
-              maxHeight: { sm: "68vh" }, overflowY: "auto",
-              border: "1px solid rgba(255,255,255,0.3)",
-              backgroundColor: "rgba(255,255,255,0.05)", flexGrow: 1,
-              ...scrollbarStyles,
-            }} variant="outlined" square={false}
-            >
-              {filteredProviders.map((item) => {
-                return <Paper key={item.providerid} sx={{
-                  p: 0.5, mb: 1, display: "flex",
-                  alignItems: "center", ":hover": { bgcolor: "#293440" }
-                }}>
-                  <IconButton onClick={() => deleteProvider(item.providerid)}><DeleteForever /></IconButton>
-                  <Typography>{item.providername}</Typography>
-                </Paper>
-              })}
+          {filteredProviders.map((item) => {
+            return <Paper key={item.providerid} sx={{
+              p: 0.5, mb: 1, display: "flex",
+              alignItems: "center", ":hover": { bgcolor: "#293440" }
+            }}>
+              <IconButton onClick={() => deleteProvider(item.providerid)}><DeleteForever /></IconButton>
+              <Typography>{item.providername}</Typography>
             </Paper>
-          </Stack>
+          })}
         </Paper>
-      </Box>
-    </Container>
+      </Stack>
+    </MainLayout>
   )
 }
 
