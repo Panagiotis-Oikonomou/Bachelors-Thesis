@@ -1,6 +1,6 @@
 import { scrollbarStyles } from "../styles/scrollbar";
 import useAdminProfile from "../../hooks/useAdminProfile";
-import { Alert, Box, Button, Checkbox, Container, FormControlLabel, FormGroup, Paper, Stack, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField } from "@mui/material";
 import MainLayout from "../../components/mainLayout";
 
 function ProfileAdmin() {
@@ -11,10 +11,7 @@ function ProfileAdmin() {
   } = useAdminProfile();
 
   return (
-    <MainLayout mxW="sm" paperSx={{
-      mt: { sm: 2 },
-      maxHeight: { xs: "100%", }, flexGrow: 1,
-    }}>
+    <MainLayout mxW="sm" paperSx={{ mt: { sm: 4 }, height:"90%"}}>
       <form onSubmit={handleSubmit} autoComplete="off">
         <Stack spacing={3}>
           <Button variant="contained" sx={{ width: { xs: "30%", sm: "15%" }, alignSelf: "end", bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} onClick={signOut}>Logout</Button>

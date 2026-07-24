@@ -1,6 +1,6 @@
 import { scrollbarStyles } from "../styles/scrollbar";
 import useUserProfile from '../../hooks/useUserProfile';
-import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import MainLayout from "../../components/mainLayout";
 
 function Profile() {
@@ -9,7 +9,7 @@ function Profile() {
     handleSubmit, signOut } = useUserProfile();
 
   return (
-    <MainLayout mxW="md" paperSx={{ maxHeight: { xs: "100%", sm: "92vh", }, flexGrow: 1, }}>
+    <MainLayout mxW="md">
       <form onSubmit={handleSubmit} autoComplete="off">
         <Stack spacing={3}>
           <Button variant="contained" sx={{ width: { xs: "30%", sm: "15%" }, alignSelf: "end", bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} onClick={signOut}>Logout</Button>

@@ -5,7 +5,7 @@ import styles from "../../assets/css/links.module.css";
 import MainLayout from "../../components/MainLayout";
 import axios from "../../api/axios";
 import resetTimer from "../../utils/resetTimer";
-import { Alert, Box, Button, Checkbox, Container, FormControlLabel, FormGroup, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
 
 function Login() {
   const { setAuth, persist, setPersist } = useAuth();
@@ -61,7 +61,7 @@ function Login() {
   }
 
   return (
-    <MainLayout mxW="xs" boxSx={{ minHeight: "100dvh", }} paperSx={{ p: { xs: 2, sm: 4 } }}>
+    <MainLayout mxW="xs" boxSx={{pt:20}} paperSx={{ p: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign in</Typography>
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>

@@ -74,7 +74,7 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <Box style={{ display: "flex", height: "100vh", overflow: "hidden", }}>
 
       <AppBar position="fixed" elevation={0} sx={{borderBottom: 1, borderColor: "divider", }}>
         <Toolbar disableGutters sx={{p:{xs:0.2, sm:1}}}>
@@ -90,10 +90,10 @@ export default function Layout({ children }) {
         {DrawerList}
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, }}>
+      <Box component="main" sx={{ flexGrow: 1, display: "flex", flexDirection:"column", overflow:"hidden", minHeight: 0,}}>
         <Toolbar/>
         <Outlet />
       </Box>
-    </div>
+    </Box>
   );
 }

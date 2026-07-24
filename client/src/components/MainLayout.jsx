@@ -3,12 +3,12 @@ import { scrollbarStyles } from "../pages/styles/scrollbar";
 
 export default function MainLayout({ children, containerSx = {}, boxSx = {}, paperSx = {}, mxW }) {
   return (
-    <Container maxWidth={mxW} sx={{ p:{xs:0}, ...containerSx, }} >
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", ...boxSx}}>
+    <Container maxWidth={mxW} sx={{ p:0, flex:1, display:"flex", minHeight:0, overflow:"hidden",...containerSx, }} >
+      <Box sx={{ flex:1, display: "flex", minHeight:0, overflow:"hidden", ...boxSx}}>
         <Paper
           variant="outlined" square={false}
           sx={{
-            width: "100%",
+            width: "100%", minHeight:0, flex:1,
             p: { xs: 1, sm: 2 }, overflowY: "auto",
             border: "1px solid rgba(255,255,255,0.3)",
             backgroundColor: "rgba(255,255,255,0.05)",

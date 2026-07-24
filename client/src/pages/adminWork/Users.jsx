@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
-import { Box, Container, IconButton, Paper, Stack, TextField } from "@mui/material";
+import { Box, IconButton, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { DeleteForever } from "@mui/icons-material";
 import MainLayout from "../../components/mainLayout";
@@ -81,7 +81,7 @@ function Users() {
   ];
 
   return (
-    <MainLayout mxW="lg" paperSx={{ p: { xs: 0.5, sm: 1 }, height: { sm: "87dvh", md: "91dvh" }, display: "flex", flexDirection: "column", flexGrow: 1, }}>
+    <MainLayout mxW="lg" paperSx={{ p: { xs: 0.5, sm: 1 }, display: "flex", flexDirection: "column",  }}>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <Box component="form" sx={{ display: "flex", alignItems: "flex-start", gap: 1, }}>
           <TextField type="search" size="small" value={search} onChange={(e) => searchUser(e.target.value)} label="Search user" />

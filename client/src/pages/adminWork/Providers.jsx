@@ -94,7 +94,7 @@ function Providers() {
   }
 
   return (
-    <MainLayout mxW="md" paperSx={{ p: { xs: 0.5, sm: 2 }, flexGrow: 1, height: { xs: "100%", sm: "91dvh", }, }}>
+    <MainLayout mxW="md" paperSx={{ p: { xs: 0.5, sm: 2 }, }}>
       <Stack spacing={2}>
         <Stack direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "space-between", alignItems: "flex-start" }} spacing={2}>
           <form>
@@ -116,7 +116,7 @@ function Providers() {
 
         <Paper sx={{
           p: { sm: 2 }, width: "100%",
-          maxHeight: { sm: "67dvh" }, overflowY: "auto",
+          maxHeight: { sm: "75dvh" }, overflowY: "auto",
           border: "1px solid rgba(255,255,255,0.3)",
           backgroundColor: "rgba(255,255,255,0.05)", flexGrow: 1,
           ...scrollbarStyles,
