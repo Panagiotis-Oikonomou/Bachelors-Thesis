@@ -13,7 +13,7 @@ function Profile() {
       <form onSubmit={handleSubmit} autoComplete="off">
         <Stack spacing={3}>
           <Button variant="contained" sx={{ width: { xs: "30%", sm: "15%" }, alignSelf: "end", bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} onClick={signOut}>Logout</Button>
-          <TextField
+          <TextField size="small"
             label="Όνομα" name="fname"
             value={data.fname}
             onChange={handleChange}
@@ -22,7 +22,7 @@ function Profile() {
             fullWidth required
           />
 
-          <TextField
+          <TextField size="small"
             label="Επώνυμο" name="lname"
             value={data.lname}
             onChange={handleChange}
@@ -31,7 +31,7 @@ function Profile() {
             fullWidth required
           />
 
-          <TextField
+          <TextField size="small"
             label="Αριθμός ρολογιού" name="clock"
             value={data.clock}
             onChange={handleChange}
@@ -56,7 +56,7 @@ function Profile() {
             </Select>
           </FormControl>
 
-          <TextField
+          <TextField size="small"
             label="Email" name="email"
             value={data.email} type="email"
             onChange={handleChange}
@@ -65,7 +65,7 @@ function Profile() {
             fullWidth required
           />
 
-          <TextField
+          <TextField size="small"
             label="Username" name="username"
             value={data.username}
             onChange={handleChange}
@@ -74,7 +74,7 @@ function Profile() {
             fullWidth required
           />
 
-          <TextField
+          <TextField size="small"
             label="Password" name="password"
             value={data.password}
             onChange={handleChange}
@@ -87,7 +87,7 @@ function Profile() {
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
           </FormGroup>
 
-          <TextField
+          <TextField size="small"
             label="Confirm Password" name="cpsw"
             value={conPass} onChange={handleChange}
             type={showConfPassword ? "text" : "password"}

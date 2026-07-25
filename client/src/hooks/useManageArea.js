@@ -77,7 +77,7 @@ export default function useManageArea(id) {
         else if(name === "size"){
             let len = value.trim().length;
             let error = "";
-            let regex = /^\d+(\.\d+)?$/;;
+            let regex = /^[1-9]\d*(\.\d+)?$/;
 
             if(len === 0) error = "";
 

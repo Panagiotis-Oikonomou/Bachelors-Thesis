@@ -16,6 +16,7 @@ export default function useAddArea() {
 
     const [formError, setFormError] = useState("");
     const [nameError, setNameError] = useState("");
+    const [numberError, setNumberError] = useState("");
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -37,6 +38,16 @@ export default function useAddArea() {
 
             else if (regex.test(value)) error = "Το όνομά περιοχής δεν επιτρέπεται να περιέχει ψηφία";
             setNameError(error);
+        }
+        else if(name === "size"){
+            let len = value.trim().length;
+            let error = "";
+            let regex = /^[1-9]\d*(\.\d+)?$/;
+
+            if(len === 0) error = "";
+
+            else if(!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+            setNumberError(error);
         }
     }
 
@@ -72,6 +83,6 @@ export default function useAddArea() {
 
     return {
         areaData, setAreaData, nameError, formError,
-        handleChange, handleSubmit
+        handleChange, handleSubmit, numberError, setFormError
     };
 }
