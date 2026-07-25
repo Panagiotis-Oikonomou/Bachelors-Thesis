@@ -1,4 +1,9 @@
 .link {
- color: #90caf9;
- text-decoration: none; 
+    color: #90caf9;
+    text-decoration: none;
+}
+
+.linkNoColor {
+    color: #ffffff;
+    text-decoration: none;
 }

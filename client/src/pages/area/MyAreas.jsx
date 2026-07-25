@@ -1,103 +1,97 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styles from './MyAreas.module.css'
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { Up } from "../../components/up/Up";
 import Swal from "sweetalert2";
-
-import plus from '../../assets/images/plus.png';
+import MainLayout from "../../components/mainLayout";
+import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
+import { AddCircleOutlined } from "@mui/icons-material";
+import styles from "../../assets/css/links.module.css";
+import { scrollbarStyles } from "../styles/scrollbar";
 
 function MyAreas() {
-    const axiosPrivate = useAxiosPrivate();
-    const [search, setSearch] = useState('');
-    const [areas, setAreas] = useState([]);
-    const [filteredAreas, setFilteredAreas] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const [search, setSearch] = useState('');
+  const [areas, setAreas] = useState([]);
+  const [filteredAreas, setFilteredAreas] = useState([]);
 
-    useEffect(() => {
-        const getAreas = async () => {
-            try {
-                const res = await axiosPrivate.get('/areas');
-                if (res.data) {
-                    setFilteredAreas(res.data);
-                    setAreas(res.data);
-                }
-            }
-            catch (err) {
-                console.log(err);
-            }
+  useEffect(() => {
+    const getAreas = async () => {
+      try {
+        const res = await axiosPrivate.get('/areas');
+        if (res.data) {
+          setFilteredAreas(res.data);
+          setAreas(res.data);
         }
-
-        getAreas();
-    }, []);
-
-    async function deleteArea(id) {
-        const result = await Swal.fire({
-            title: "Are you sure?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        });
-
-        if (!result.isConfirmed) return;
-
-        try {
-            await axiosPrivate.delete(`/areas/${id}`);
-            setAreas(prev => prev.filter(a => a.areaid !== id));
-            setFilteredAreas(prev => prev.filter(a => a.areaid !== id));
-        }
-        catch (err) {
-            Swal.fire("Error", "Something went wrong", "error");
-        }
+      }
+      catch (err) {
+        console.log(err);
+      }
     }
 
-    function searchArea(value) {
-        setSearch(value);
+    getAreas();
+  }, []);
 
-        if (value == "") setFilteredAreas(areas);
+  async function deleteArea(id) {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    });
 
-        else setFilteredAreas(areas.filter(a => a.name.toLowerCase().includes(value.toLowerCase())));
+    if (!result.isConfirmed) return;
+
+    try {
+      await axiosPrivate.delete(`/areas/${id}`);
+      setAreas(prev => prev.filter(a => a.areaid !== id));
+      setFilteredAreas(prev => prev.filter(a => a.areaid !== id));
     }
+    catch (err) {
+      Swal.fire("Error", "Something went wrong", "error");
+    }
+  }
 
-    return (
-        <div className={styles.container}>
-            <Up></Up>
+  function searchArea(value) {
+    setSearch(value);
 
-            <div className={styles.searchBar}>
-                <form>
-                    <input
-                        type="search"
-                        placeholder="Search area"
-                        value={search}
-                        onChange={(e) => searchArea(e.target.value)}
-                    />
-                </form>
-            </div>
+    if (value == "") setFilteredAreas(areas);
 
-            <div className={styles.areas}>
-                <p>Δημιουργία νέας έκτασης <Link to='/add_area'><img src={plus} className={styles.plus} /></Link></p>
+    else setFilteredAreas(areas.filter(a => a.name.toLowerCase().includes(value.toLowerCase())));
+  }
 
-                {filteredAreas.map((id) => (
-                    <div className={styles.area} key={id.areaid}>
-                        <Link to={`/manage_area/${id.areaid}`} className={styles.alink}>
-                            <div className={styles.areaData}>
-                                Όνομα περιοχής: {id.name}<br />
+  return (
+    <MainLayout mxW="md">
+      <Stack spacing={2}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection:{xs:"column", sm:"row"}, alignItems:"flex-start", gap:1}}>
+          <TextField type="search" label="Search field" size="small" value={search} onChange={(e) => searchArea(e.target.value)} />
+          <Typography sx={{display:"flex", alignSelf:{xs:"start", sm:"center"}}}>Νέα έκταση <Link to='/add_area' className={styles.link}><AddCircleOutlined /></Link></Typography>
+        </Box>
 
-                                Έκταση περιοχής: {id.size}<br />
+        <Paper sx={{
+          height: {xs:"77dvh", sm:"79dvh"}, ...scrollbarStyles, 
+          overflowY: "auto", width:"100%",
+        }} variant="outlined" square={false} >
+          {filteredAreas.map((id) => (
+            <Paper key={id.areaid} sx={{ mb: 2, p: 2, width: "100%", }}>
+              <Link to={`/manage_area/${id.areaid}`} className={styles.linkNoColor}>
+                  <Typography>Όνομα περιοχής: {id.name}</Typography>
 
-                                Γεωγραφικό πλάτος: {id.lat}<br />
+                  <Typography>Έκταση περιοχής: {id.size} m²</Typography>
 
-                                Γεωγραφικό μήκος: {id.lng}<br />
+                  <Typography>Γεωγραφικό πλάτος: {id.lat}</Typography>
 
-                                Ηλεκτρική ενέργεια: {id.ac}<br />
-                            </div>
-                        </Link>
-                        <button className={styles.delete} onClick={() => deleteArea(id.areaid)}>Διαγραφή</button>
-                    </div>
-                ))}
-            </div>
-        </div>
-    )
+                  <Typography>Γεωγραφικό μήκος: {id.lng}</Typography>
+
+                  <Typography>Ηλεκτρική ενέργεια: {id.ac} kwy</Typography>
+              </Link>
+              <Button sx={{ mt: 1, bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} variant="contained" onClick={() => deleteArea(id.areaid)}>Διαγραφή</Button>
+            </Paper>
+          ))}
+        </Paper>
+      </Stack>
+    </MainLayout>
+  )
 }
 export default MyAreas;
