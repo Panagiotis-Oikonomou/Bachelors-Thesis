@@ -16,6 +16,7 @@ export default function useManageArea(id) {
         ac: ""
     });
     const [nameError, setNameError] = useState("");
+    const [numberError, setNumberError] = useState("");
     const [formError, setFormError] = useState("");
     const [areaUpdated, setAreaUpdated] = useState("");
 
@@ -63,15 +64,25 @@ export default function useManageArea(id) {
 
     function validateField(name, value) {
         if (name === "name") {
-            let len = value.length;
+            let len = value.trim().length;
             let error = "";
             let regex = /\d/;
-            if (len === 0) error = "Το όνομα είναι κενό";
+            if (len === 0) error = "";
 
             else if (len < 4 || len > 20) error = "Το όνομά περιοχής πρέπει να αποτελείται από 4 μέχρι 20 γράμματα";
 
             else if (regex.test(value)) error = "Το όνομά περιοχής δεν επιτρέπεται να περιέχει ψηφία";
             setNameError(error);
+        }
+        else if(name === "size"){
+            let len = value.trim().length;
+            let error = "";
+            let regex = /^\d+(\.\d+)?$/;;
+
+            if(len === 0) error = "";
+
+            else if(!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+            setNumberError(error);
         }
     }
 
@@ -97,6 +108,6 @@ export default function useManageArea(id) {
 
     return {
         areaData, nameError, formError, areaUpdated,
-        handleSubmit, handleChange
+        handleSubmit, handleChange, numberError
     };
 }

@@ -1,73 +1,31 @@
-import { lazy, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import styles from './ManageArea.module.css';
-import { Up } from '../../components/up/Up';
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useParams } from "react-router-dom";
 import useManageArea from "../../hooks/useManageArea";
+import MainLayout from "../../components/mainLayout";
+import { Alert, Button, Stack, TextField } from "@mui/material";
 
 function ManageArea() {
-    const { id } = useParams();
-    const { areaData, nameError, formError, areaUpdated, handleChange, handleSubmit } = useManageArea(id);
+  const { id } = useParams();
+  const { areaData, nameError, formError, areaUpdated, handleChange, handleSubmit, numberError } = useManageArea(id);
 
-    return (
-        <div className={styles.container}>
-            <Up></Up>
+  return (
+    <MainLayout mxW="xs" paperSx={{ p:{xs:2, sm:3}, alignContent:{xs:"start", sm:"center"} }} boxSx={{pb:{xs:0, sm:24}, pt:{xs:0, sm:10}}}>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+          <TextField label="Όνομα περιοχής" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
 
-            <div className={styles.addArea}>
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.data}>
-                        <label htmlFor="areaname">Όνομα περιοχής:</label><br />
-                        <input
-                            type="text"
-                            id="areaname"
-                            name="name"
-                            value={areaData.name}
-                            onChange={handleChange}
-                            className={nameError ? styles.inputError : ""}
-                            required
-                        />
-                        <div className={styles.msg}>{nameError}</div>
-                    </div>
+          <TextField label="Έκταση περιοχής(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
 
-                    <div className={styles.data}>
-                        <label htmlFor="size">Έκταση περιοχής (σε km<sup>2</sup>):</label><br />
-                        <input
-                            type="number"
-                            id="size"
-                            name="size"
-                            min="1"
-                            step="0.1"
-                            value={areaData.size}
-                            onChange={handleChange}
-                        />
-                    </div>
+          <TextField label="Coordinates(lat, lng)" value={`${Number(areaData.lat).toFixed(4)}, ${Number(areaData.lng).toFixed(4)}`} slotProps={{input:{readOnly:true}}} required />
 
-                    <div className={styles.data}>
-                        Coordinates(lat, lng):<br />
-                        <input
-                            type="text"
-                            value={`${Number(areaData.lat).toFixed(4)}, ${Number(areaData.lng).toFixed(4)}`}
-                            readOnly
-                        />
-                    </div>
+          <TextField label="Ετήσια παραγωγή PV ενέργειας(kWh)" name="ac" value={areaData.ac} slotProps={{input:{readOnly:true}}} required />
 
-                    <div className={styles.data}>
-                        Ετήσια παραγωγή PV ενέργειας(kWh):<br />
-                        <input
-                            type="text"
-                            name="ac"
-                            value={areaData.ac}
-                            readOnly
-                            required
-                        />
-                    </div>
-                    <div className={styles.msg}>{formError}</div>
-                    <div className={styles.correct}>{areaUpdated}</div>
-                    <input type="submit" value="Αποθήκευση αλλαγών" />
-                </form>
-            </div>
-        </div>
-    )
+          {formError && (<Alert severity="error">{formError}</Alert>)}
+          {areaUpdated && (<Alert severity="success">{areaUpdated}</Alert>)}
+          <Button type="submit" size="small" variant="contained">Αποθήκευση αλλαγών</Button>
+        </Stack>
+      </form>
+    </MainLayout>
+  )
 }
 
 export default ManageArea;
