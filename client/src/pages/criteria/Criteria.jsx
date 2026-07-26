@@ -1,102 +1,73 @@
-import { Link } from "react-router-dom";
-import styles from './Criteria.module.css';
+import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import MainLayout from "../../components/mainLayout";
 import useCriteria from "../../hooks/useCriteria";
-import { Up } from "../../components/up/Up";
 
 function Criteria() {
-    const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
-        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
-        isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
-        havingArea, formSuccess, checkboxOptions, handleSubmit, selectedArea
-    } = useCriteria();
+  const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
+    isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
+    isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
+    havingArea, formSuccess, checkboxOptions, handleSubmit, wrongNumber, areaValue
+  } = useCriteria();
 
-    return (
-        <div className={styles.container}>
-            <Up></Up>
+  const style = { "& .MuiOutlinedInput-input": { py: 0.30, }, };
 
-            <div className={styles.criterias}>
-                <p className={styles.titlee}>Βάλε από ένα εύρος τιμών για το τι θέλεις</p><br /><br />
-                <form onSubmit={handleSubmit}>
-                    <div className={styles.criteria}>
-                        <label htmlFor="size">Έκταση(km<sup>2</sup>):<br /></label>
-                        <input
-                            type="number"
-                            name="size"
-                            disabled={isSizeChecked}
-                            required={!isSizeChecked}
-                            value={criteria.size}
-                            onChange={handleChange}
-                            id="size" step="0.1" min="0"
-                        /><br/>
-                        <label htmlFor="chsize">Δεν θέλω</label> <input type="checkbox" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chsize" id="chsize" />
-                    </div>
+  return (
+    <MainLayout mxW="md" paperSx={{ textAlign: "center" }}>
+      <Typography variant="h6" sx={{ fontSize: { xs: "0.875rem", sm: "1.2rem" }, mb: 2 }}>Βάλε από ένα εύρος τιμών για το τι θέλεις</Typography>
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={2} sx={{ alignItems: "center" }}>
+          <TextField sx={{ ...style }} size="small" label="Έκταση περιοχής(m²)" name="size" value={criteria.size} onChange={handleChange} error={wrongNumber.size !== ""} helperText={wrongNumber.size} disabled={isSizeChecked} required={!isSizeChecked} />
+          <FormGroup>
+            <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chsize" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
+          </FormGroup>
 
-                    <div className={styles.criteria}>
-                        <label htmlFor="energy">Ποσότητα PV ενέργειας(kwh):<br /></label>
-                        <input
-                            type="number"
-                            name="energy"
-                            disabled={isEnergyChecked}
-                            required={!isEnergyChecked}
-                            value={criteria.energy}
-                            onChange={handleChange}
-                            id="energy" step="0.1"
-                            // max={Number(criteria.maxenergy) - 1} 
-                            min="0"
-                        /><br/>
-                        <label htmlFor="chenergy">Δεν θέλω</label> <input type="checkbox" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} name="chenergy" id="chenergy" />
-                    </div>
+          <TextField sx={{ ...style }} size="small" label="Ποσότητα PV ενέργειας(kwy)" name="energy" value={criteria.energy} onChange={handleChange} error={wrongNumber.energy !== ""} helperText={wrongNumber.energy} disabled={isEnergyChecked} required={!isEnergyChecked} />
+          <FormGroup>
+            <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chenergy" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
+          </FormGroup>
 
-                    <div className={styles.criteria}>
-                        <label htmlFor="income">Ποσοστό εσόδων:<br /></label>
-                        <input
-                            type="number"
-                            name="income"
-                            disabled={isIncomeChecked}
-                            required={!isIncomeChecked}
-                            value={criteria.income}
-                            onChange={handleChange}
-                            id="income" step="0.1"
-                            max="100" min="0"
-                        /><br/>
-                        <label htmlFor="chincome">Δεν θέλω</label>
-                        <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
-                    </div>
+          <TextField sx={{ ...style }} size="small" label="Ποσοστό εσόδων" name="income" value={criteria.income} onChange={handleChange} error={wrongNumber.income !== ""} helperText={wrongNumber.income} disabled={isIncomeChecked} required={!isIncomeChecked} />
+          <FormGroup>
+            <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chincome" checked={isIncomeChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
+          </FormGroup>
 
-                    <div className={styles.criteria}>Τι προσφέρω:<br />
-                        <div className={styles.checkboxButtons}>
-                            <label className={styles.checkboxLabel} htmlFor="moneyM">
-                                <input type="checkbox" name="moneyM" id="moneyM" checked={isMoneyChecked} onChange={checkboxOptions} />Χρήματα
-                                <input type="number" name="money" value={criteria.money} min="1" required disabled={!isMoneyChecked} onChange={handleChange} />
-                            </label>
+          <Typography variant="h6" sx={{ fontSize: { xs: "1rem", sm: "1.2rem" } }}>Τι προσφέρω:</Typography>
+          <FormControl>
+            <FormControlLabel control={<Checkbox size="small" name="moneyM" checked={isMoneyChecked} onChange={checkboxOptions} />} label="Χρήματα" />
+            <TextField sx={{ ...style }} size="small" label="Χρήματα" name="money" value={criteria.money} onChange={handleChange} error={wrongNumber.money !== ""} helperText={wrongNumber.money} disabled={!isMoneyChecked} required={isMoneyChecked} />
 
-                            <label className={styles.checkboxLabel} htmlFor="area">
-                                <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
-                                <select name="areaid" onChange={handleChange} disabled={!isAreaChecked} value={selectedArea} required>
-                                    <option value="">Select area</option>
-                                    {areas.map((item) => (
-                                        <option key={item.areaid} value={item.areaid}>
-                                            {item.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
+            <FormControlLabel control={<Checkbox size="small" name="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />} label="Έκταση" />
+            <FormControl>
+              <InputLabel id="areaid">Έκταση</InputLabel>
+              <Select
+                labelId="areaid"
+                size="small"
+                required sx={{ ...style }}
+                name="areaid"
+                label="Έκταση"
+                value={areaValue}
+                onChange={handleChange}
+                disabled={!isAreaChecked}
+              >
+                {areas.map((area) => {
+                  return (<MenuItem key={area.areaid} value={String(area.areaid)}>{area.name}</MenuItem>);
+                })}
+              </Select>
+            </FormControl>
 
-                            <label className={styles.checkboxLabel} htmlFor="papers">
-                                <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions} />Διαδικαστικά</label>
+            <FormControlLabel control={<Checkbox size="small" name="papers" checked={isPapersChecked} onChange={checkboxOptions} />} label="Διαδικαστικά" />
 
-                            <label className={styles.checkboxLabel} htmlFor="other">
-                                <input type="checkbox" name="other" id="other" checked={isOtherChecked} onChange={checkboxOptions} />Άλλο</label>
-                        </div>
-                    </div>
+            <FormControlLabel control={<Checkbox size="small" name="other" checked={isOtherChecked} onChange={checkboxOptions} />} label="Άλλο" />
+          </FormControl>
 
-                    <div className={styles.msg}>{formError}</div>
-                    <div className={styles.success}>{formSuccess}</div>
-                    <input type="submit" value="Αποθήκευση αλλαγών" />
-                </form>
-            </div>
-        </div>
-    )
+          {formSuccess && <Alert severity="success">{formSuccess}</Alert>}
+          {formError && <Alert severity="error">{formError}</Alert>}
+          <Button type="submit" variant="contained">Αποθήκευση αλλαγών</Button>
+        </Stack>
+      </form>
+    </MainLayout>
+
+  )
 }
 
 export default Criteria;

@@ -4,15 +4,7 @@ import useAxiosPrivate from './useAxiosPrivate.js';
 
 export default function useCriteria() {
     const axiosPrivate = useAxiosPrivate();
-    const [criteria, setCriteria] = useState({
-        size: "",
-        energy: "",
-        income: "",
-        money: "",
-        areaid: "",
-        papers: false,
-        other: false
-    });
+    const [criteria, setCriteria] = useState({ size: "", energy: "", income: "", money: "", areaid: "", papers: false, other: false });
     const [isSizeChecked, setIsSizeChecked] = useState(false);
     const [isEnergyChecked, setIsEnergyChecked] = useState(false);
     const [isIncomeChecked, setIsIncomeChecked] = useState(false);
@@ -24,7 +16,8 @@ export default function useCriteria() {
     const [areas, setAreas] = useState([]);
     const [formError, setFormError] = useState("");
     const [formSuccess, setFormSuccess] = useState("");
-    const [selectedArea, setSelectedArea] = useState("");
+    const [wrongNumber, setWrongNumber] = useState({ size: "", energy: "", income: "", money: "", });
+    const areaValue = areas.some(a => String(a.areaid) === String(criteria.areaid)) ? String(criteria.areaid) : "";
 
     useEffect(() => {
         resetTimer(formError, setFormError);
@@ -35,6 +28,19 @@ export default function useCriteria() {
         const { name, value } = e.target;
 
         setCriteria(prev => ({ ...prev, [name]: value }));
+        if (name !== "areaid") validateField(name, value);
+    }
+
+    function validateField(name, value) {
+        let error = "";
+        let val = value.trim();
+        let len = val.length;
+        let regex = /^[1-9]\d*(\.\d+)?$/;
+
+        if (len === 0) error = "";
+
+        else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+        setWrongNumber(prev => ({ ...prev, [name]: error }));
     }
 
     function setMinMaxToZero(e) {
@@ -42,22 +48,25 @@ export default function useCriteria() {
         if (name === "chsize") {
             setCriteria(prev => ({ ...prev, size: "" }));
             setIsSizeChecked(checked);
+            setWrongNumber(prev => ({ ...prev, size: "" }));
         }
         else if (name === "chenergy") {
             setCriteria(prev => ({ ...prev, energy: "" }));
             setIsEnergyChecked(checked);
+            setWrongNumber(prev => ({ ...prev, energy: "" }));
         }
         else if (name === "chincome") {
             setCriteria(prev => ({ ...prev, income: "" }));
             setIsIncomeChecked(checked);
+            setWrongNumber(prev => ({ ...prev, income: "" }));
         }
-
     }
 
     function checkboxOptions(e) {
         const { name, checked } = e.target;
         if (name === "moneyM") {
             setCriteria(prev => ({ ...prev, money: "" }));
+            setWrongNumber(prev => ({ ...prev, money: "" }));
             setIsMoneyChecked(checked);
         }
         else if (name === "area") {
@@ -82,7 +91,8 @@ export default function useCriteria() {
                 const res = await axiosPrivate.get('/criteria');
                 if (res.data) {
                     setCriteria(prev => ({
-                        ...prev, ...Object.fromEntries(Object.entries(res.data ?? {}).map(([key, value]) => [key, value ?? ""])
+                        ...prev, ...Object.fromEntries(Object.entries(res.data ?? {}).map(([key, value]) => [key, key === "areaid" ?
+                            (value === null ? "" : String(value)) : (value ?? "")])
                         )
                     }));
                     setIsSizeChecked(res.data.areasize === null);
@@ -90,8 +100,8 @@ export default function useCriteria() {
                     setIsIncomeChecked(res.data.income === null);
                     setIsMoneyChecked(res.data.money !== null);
                     setIsAreaChecked(res.data.areaid !== null);
-                    setIsPapersChecked(res.data.papers);
-                    setIsOtherChecked(res.data.other);
+                    setIsPapersChecked(res.data.papers === 1);
+                    setIsOtherChecked(res.data.other === 1);
                 }
             }
             catch (err) {
@@ -101,10 +111,6 @@ export default function useCriteria() {
 
         getCriteria();
     }, []);
-
-    useEffect(() => {
-        if (criteria.areaid !== undefined) setSelectedArea(criteria.areaid ?? "");
-    }, [criteria.areaid]);
 
     useEffect(() => {
         const getAreas = async () => {
@@ -123,6 +129,12 @@ export default function useCriteria() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        const hasErrors = Object.values(wrongNumber).some(err => err !== "");
+        if (hasErrors) {
+            setFormError("Κάποια πεδία αριθμών είναι λάθος συμπληρωμένα.");
+            return;
+        }
+
         if (isEnergyChecked && isIncomeChecked && isSizeChecked) {
             setFormError("Πρέπει να έχεις επιλέξει κάποιο από τα τρία πρώτα κριτήρια.");
             return;
@@ -149,7 +161,6 @@ export default function useCriteria() {
 
         try {
             await axiosPrivate.put('/criteria', send);
-            setSelectedArea(areas.find(a => a.areaid === criteria.areaid));
             setFormSuccess("Οι αλλαγές αποθυκεύτικαν με επιτυχία");
         }
         catch (err) {
@@ -161,6 +172,6 @@ export default function useCriteria() {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
         isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
         isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
-        havingArea, formSuccess, checkboxOptions, handleSubmit, selectedArea
+        havingArea, formSuccess, checkboxOptions, handleSubmit, wrongNumber, areaValue
     };
 }

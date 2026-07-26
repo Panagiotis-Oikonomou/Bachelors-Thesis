@@ -28,9 +28,9 @@ export default function useAddArea() {
     }
 
     function validateField(name, value) {
+        let len = value.length;
+        let error = "";
         if (name === "name") {
-            let len = value.length;
-            let error = "";
             let regex = /\d/;
             if (len === 0) error = "";
 
@@ -39,14 +39,12 @@ export default function useAddArea() {
             else if (regex.test(value)) error = "Το όνομά περιοχής δεν επιτρέπεται να περιέχει ψηφία";
             setNameError(error);
         }
-        else if(name === "size"){
-            let len = value.trim().length;
-            let error = "";
+        else if (name === "size") {
             let regex = /^[1-9]\d*(\.\d+)?$/;
 
-            if(len === 0) error = "";
+            if (len === 0) error = "";
 
-            else if(!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+            else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
             setNumberError(error);
         }
     }
