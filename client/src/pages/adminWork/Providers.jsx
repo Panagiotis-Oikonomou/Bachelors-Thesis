@@ -116,7 +116,7 @@ function Providers() {
 
         <Paper sx={{
           p: { sm: 2 }, width: "100%",
-          maxHeight: { sm: "75dvh" }, overflowY: "auto",
+          maxHeight: { sm: "72dvh" }, overflowY: "auto",
           border: "1px solid rgba(255,255,255,0.3)",
           backgroundColor: "rgba(255,255,255,0.05)", flexGrow: 1,
           ...scrollbarStyles,

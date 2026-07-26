@@ -14,7 +14,7 @@ function Register() {
     <MainLayout mxW="md" paperSx={{ p: { xs: 1, sm: 3 }, height:"100vh"}}>
       <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign up</Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           <TextField
             label="Όνομα" name="fname"
             value={formData.fname}
@@ -22,7 +22,7 @@ function Register() {
             error={errors.fname !== ""}
             helperText={errors.fname}
             fullWidth required
-            autoFocus
+            autoFocus size="small"
           />
 
           <TextField
@@ -31,7 +31,7 @@ function Register() {
             onChange={handleChange}
             error={errors.lname !== ""}
             helperText={errors.lname}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -40,7 +40,7 @@ function Register() {
             onChange={handleChange}
             error={errors.clock !== ""}
             helperText={errors.clock}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <FormControl>
@@ -51,7 +51,7 @@ function Register() {
               name="provider"
               label="Πάροχος ενέργειας"
               value={formData.provider}
-              onChange={handleChange}
+              onChange={handleChange} size="small"
             >
               {providers.map((provider) => {
                 return (<MenuItem key={provider.providerid} value={provider.providername}>{provider.providername}</MenuItem>);
@@ -65,7 +65,7 @@ function Register() {
             onChange={handleChange}
             error={errors.email !== ""}
             helperText={errors.email}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -74,7 +74,7 @@ function Register() {
             onChange={handleChange}
             error={errors.username !== ""}
             helperText={errors.username}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -84,7 +84,7 @@ function Register() {
             type={showPassword ? "text" : "password"}
             error={errors.password !== ""}
             helperText={errors.password}
-            fullWidth required
+            fullWidth required size="small"
           />
           <FormGroup>
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
@@ -107,7 +107,7 @@ function Register() {
                 },
               }
             }}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <FormGroup>

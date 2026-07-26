@@ -11,7 +11,7 @@ function ProfileAdmin() {
   } = useAdminProfile();
 
   return (
-    <MainLayout mxW="sm" paperSx={{ mt: { sm: 4 }, height:"90%"}}>
+    <MainLayout mxW="md">
       <form onSubmit={handleSubmit} autoComplete="off">
         <Stack spacing={3}>
           <Button variant="contained" sx={{ width: { xs: "30%", sm: "15%" }, alignSelf: "end", bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} onClick={signOut}>Logout</Button>
@@ -21,7 +21,7 @@ function ProfileAdmin() {
             onChange={handleChange}
             error={errors.fname !== ""}
             helperText={errors.fname}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -30,7 +30,7 @@ function ProfileAdmin() {
             onChange={handleChange}
             error={errors.lname !== ""}
             helperText={errors.lname}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -39,7 +39,7 @@ function ProfileAdmin() {
             onChange={handleChange}
             error={errors.email !== ""}
             helperText={errors.email}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -48,7 +48,7 @@ function ProfileAdmin() {
             onChange={handleChange}
             error={errors.username !== ""}
             helperText={errors.username}
-            fullWidth required
+            fullWidth required size="small"
           />
 
           <TextField
@@ -58,7 +58,7 @@ function ProfileAdmin() {
             type={showPassword ? "text" : "password"}
             error={errors.password !== ""}
             helperText={errors.password}
-            fullWidth
+            fullWidth size="small"
           />
           <FormGroup >
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox onChange={() => setShowPassword(!showPassword)} />} label="Εμφάνιση κωδικού" />
@@ -81,7 +81,7 @@ function ProfileAdmin() {
                 },
               }
             }}
-            fullWidth required={cpswRequired}
+            fullWidth required={cpswRequired} size="small"
           />
 
           <FormGroup>

@@ -68,14 +68,14 @@ function Login() {
           <TextField
             label="Username"
             fullWidth required
-            autoFocus
+            autoFocus size="small"
             onChange={(e) => { setLoginData({ ...loginData, usr: e.target.value }) }}
           />
 
           <TextField
             label="Password"
             type={showPassword ? "text" : "password"}
-            fullWidth required
+            fullWidth required size="small"
             onChange={(e) => { setLoginData({ ...loginData, psw: e.target.value }) }}
           />
 
