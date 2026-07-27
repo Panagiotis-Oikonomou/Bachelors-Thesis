@@ -2,11 +2,16 @@ import { scrollbarStyles } from "../styles/scrollbar";
 import useUserProfile from '../../hooks/useUserProfile';
 import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import MainLayout from "../../components/mainLayout";
+import { useEffect } from "react";
 
 function Profile() {
   const { data, conPass, errors, providers, cpswError, cpswMatch, cpswRequired, allError, saved,
     showPassword, setShowPassword, showConfPassword, setShowConfPassword, handleChange,
     handleSubmit, signOut } = useUserProfile();
+
+  useEffect(() => {
+    document.title = "Profile";
+  }, []);
 
   return (
     <MainLayout mxW="md">

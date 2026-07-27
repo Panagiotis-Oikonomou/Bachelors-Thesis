@@ -1,6 +1,7 @@
 import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import MainLayout from "../../components/mainLayout";
 import useCriteria from "../../hooks/useCriteria";
+import { useEffect } from "react";
 
 function Criteria() {
   const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
@@ -8,6 +9,10 @@ function Criteria() {
     isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
     havingArea, formSuccess, checkboxOptions, handleSubmit, wrongNumber, areaValue
   } = useCriteria();
+
+  useEffect(() => {
+    document.title = "Criteria";
+  }, []);
 
   const style = { "& .MuiOutlinedInput-input": { py: 0.30, }, };
 

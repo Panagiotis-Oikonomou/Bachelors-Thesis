@@ -4,14 +4,19 @@ import { scrollbarStyles } from "../styles/scrollbar";
 import useRegister from "../../hooks/useRegister";
 import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import MainLayout from "../../components/MainLayout";
+import { useEffect } from "react";
 
 function Register() {
   const {
     formData, conPass, errors, providers, cpswError, cpswMatch,
     allError, showConfPassword, showPassword, setShowConfPassword,
     setShowPassword, handleChange, handleSubmit } = useRegister();
+
+  useEffect(() => {
+    document.title = "Sign-up";
+  }, []);
   return (
-    <MainLayout mxW="md" paperSx={{ p: { xs: 1, sm: 3 }, height:"100vh"}}>
+    <MainLayout mxW="md" paperSx={{ p: { xs: 1, sm: 3 }, height: "100vh" }}>
       <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign up</Typography>
       <form onSubmit={handleSubmit} autoComplete="off">
         <Stack spacing={2}>

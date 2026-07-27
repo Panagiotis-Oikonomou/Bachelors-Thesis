@@ -8,7 +8,7 @@ import { CloseOutlined } from "@mui/icons-material";
 function Notifications() {
   const axiosPrivate = useAxiosPrivate();
   const [notifications, setNotifications] = useState([]);
-  const style = notifications.length === 0 ? {display:"flex", justifyContent:"center", alignItems:"center"} : null;
+  const style = notifications.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : null;
 
   const commonSx = {
     width: "100%",
@@ -117,8 +117,12 @@ function Notifications() {
     }
   }
 
+  useEffect(() => {
+    document.title = "Notifications";
+  }, []);
+
   return (
-    <MainLayout mxW="sm" paperSx={{ ...style}}>
+    <MainLayout mxW="sm" paperSx={{ ...style }}>
       {notifications.length === 0 && <Typography>Δεν έχεις κάποια ειδοποίηση.</Typography>}
       {notifications.map((item) => {
         if (item.type === "info") {
@@ -139,8 +143,8 @@ function Notifications() {
                 <IconButton onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}><CloseOutlined /></IconButton>
               </Box>
               <Box sx={{ p: 2, }}>
-                <Button sx={{ bgcolor: "#4be675", mr: 1, width: {xs:"30%", sm:"20%"} }} variant="contained" disabled={item.disabled == 1} onClick={() => accept(item.notid)}>Accept</Button>
-                <Button sx={{ bgcolor: "#c42828", width: {xs:"30%", sm:"20%"} }} variant="contained" disabled={item.disabled == 1} onClick={() => decline(item.notid)}>Decline</Button>
+                <Button sx={{ bgcolor: "#4be675", mr: 1, width: { xs: "30%", sm: "20%" } }} variant="contained" disabled={item.disabled == 1} onClick={() => accept(item.notid)}>Accept</Button>
+                <Button sx={{ bgcolor: "#c42828", width: { xs: "30%", sm: "20%" } }} variant="contained" disabled={item.disabled == 1} onClick={() => decline(item.notid)}>Decline</Button>
               </Box>
             </Paper>)
         }

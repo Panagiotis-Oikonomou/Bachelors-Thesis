@@ -2,10 +2,15 @@ import { useParams } from "react-router-dom";
 import useManageArea from "../../hooks/useManageArea";
 import MainLayout from "../../components/mainLayout";
 import { Alert, Button, Stack, TextField } from "@mui/material";
+import { useEffect } from "react";
 
 function ManageArea() {
   const { id } = useParams();
   const { areaData, nameError, formError, areaUpdated, handleChange, handleSubmit, numberError } = useManageArea(id);
+
+  useEffect(() => {
+    document.title = "ManageArea";
+  }, []);
 
   return (
     <MainLayout mxW="xs" paperSx={{ p: { xs: 2, sm: 3 }, alignContent: { xs: "start", sm: "center" } }} boxSx={{ pb: { xs: 0, sm: 24 }, pt: { xs: 0, sm: 10 } }}>

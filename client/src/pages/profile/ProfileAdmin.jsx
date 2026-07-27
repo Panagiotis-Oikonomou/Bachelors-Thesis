@@ -2,6 +2,7 @@ import { scrollbarStyles } from "../styles/scrollbar";
 import useAdminProfile from "../../hooks/useAdminProfile";
 import { Alert, Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField } from "@mui/material";
 import MainLayout from "../../components/mainLayout";
+import { useEffect } from "react";
 
 function ProfileAdmin() {
   const {
@@ -9,6 +10,10 @@ function ProfileAdmin() {
     saved, showPassword, setShowPassword, showConfPassword, setShowConfPassword,
     handleChange, handleSubmit, signOut,
   } = useAdminProfile();
+
+  useEffect(() => {
+    document.title = "Profile";
+  }, []);
 
   return (
     <MainLayout mxW="md">

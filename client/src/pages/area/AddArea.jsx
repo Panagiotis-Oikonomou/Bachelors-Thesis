@@ -26,6 +26,10 @@ function AddArea() {
     }
   }, [location]);
 
+  useEffect(() => {
+    document.title = "AddArea";
+  }, []);
+
   useGetEnergy(setAreaData, areaData.size, areaData.lat, areaData.lng, setFormError);
 
   return (

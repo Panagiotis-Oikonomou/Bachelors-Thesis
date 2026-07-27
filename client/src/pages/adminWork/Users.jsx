@@ -80,8 +80,12 @@ function Users() {
     { field: 'email', headerName: 'Email', sortable: false, width: 160, },
   ];
 
+  useEffect(() => {
+    document.title = "Users";
+  }, []);
+
   return (
-    <MainLayout mxW="lg" paperSx={{ p: { xs: 0.5, sm: 1 }, display: "flex", flexDirection: "column",  }}>
+    <MainLayout mxW="lg" paperSx={{ p: { xs: 0.5, sm: 1 }, display: "flex", flexDirection: "column", }}>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <Box component="form" sx={{ display: "flex", alignItems: "flex-start", gap: 1, }}>
           <TextField type="search" size="small" value={search} onChange={(e) => searchUser(e.target.value)} label="Search user" />

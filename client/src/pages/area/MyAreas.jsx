@@ -61,30 +61,34 @@ function MyAreas() {
     else setFilteredAreas(areas.filter(a => a.name.toLowerCase().includes(value.toLowerCase())));
   }
 
+  useEffect(() => {
+    document.title = "MyAreas";
+  }, []);
+
   return (
     <MainLayout mxW="md">
       <Stack spacing={2}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection:{xs:"column", sm:"row"}, alignItems:"flex-start", gap:1}}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", flexDirection: { xs: "column", sm: "row" }, alignItems: "flex-start", gap: 1 }}>
           <TextField type="search" label="Search field" size="small" value={search} onChange={(e) => searchArea(e.target.value)} />
-          <Typography sx={{display:"flex", alignSelf:{xs:"start", sm:"center"}}}>Νέα έκταση <Link to='/add_area' className={styles.link}><AddCircleOutlined /></Link></Typography>
+          <Typography sx={{ display: "flex", alignSelf: { xs: "start", sm: "center" } }}>Νέα έκταση <Link to='/add_area' className={styles.link}><AddCircleOutlined /></Link></Typography>
         </Box>
 
         <Paper sx={{
-          height: {xs:"77dvh", sm:"79dvh"}, ...scrollbarStyles, 
-          overflowY: "auto", width:"100%",
+          height: { xs: "77dvh", sm: "79dvh" }, ...scrollbarStyles,
+          overflowY: "auto", width: "100%",
         }} variant="outlined" square={false} >
           {filteredAreas.map((id) => (
             <Paper key={id.areaid} sx={{ mb: 2, p: 2, width: "100%", }}>
               <Link to={`/manage_area/${id.areaid}`} className={styles.linkNoColor}>
-                  <Typography>Όνομα περιοχής: {id.name}</Typography>
+                <Typography>Όνομα περιοχής: {id.name}</Typography>
 
-                  <Typography>Έκταση περιοχής: {id.size} m²</Typography>
+                <Typography>Έκταση περιοχής: {id.size} m²</Typography>
 
-                  <Typography>Γεωγραφικό πλάτος: {id.lat}</Typography>
+                <Typography>Γεωγραφικό πλάτος: {id.lat}</Typography>
 
-                  <Typography>Γεωγραφικό μήκος: {id.lng}</Typography>
+                <Typography>Γεωγραφικό μήκος: {id.lng}</Typography>
 
-                  <Typography>Ηλεκτρική ενέργεια: {id.ac} kwy</Typography>
+                <Typography>Ηλεκτρική ενέργεια: {id.ac} kwy</Typography>
               </Link>
               <Button sx={{ mt: 1, bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} variant="contained" onClick={() => deleteArea(id.areaid)}>Διαγραφή</Button>
             </Paper>

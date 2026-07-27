@@ -7,7 +7,7 @@ import { CheckCircleOutlined } from "@mui/icons-material";
 function Matchings() {
   const axiosPrivate = useAxiosPrivate();
   const [myMatchings, setMyMatchings] = useState([]);
-  const style = myMatchings.length === 0 ? {display:"flex", justifyContent:"center", alignItems:"center"} : null;
+  const style = myMatchings.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : null;
   const grouped = myMatchings.reduce((acc, item) => {
     if (!acc[item.groupid]) acc[item.groupid] = [];
 
@@ -26,6 +26,10 @@ function Matchings() {
       }
     }
     getMatchings();
+  }, []);
+
+  useEffect(() => {
+    document.title = "MyMatchings";
   }, []);
 
   return (

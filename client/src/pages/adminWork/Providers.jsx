@@ -93,6 +93,10 @@ function Providers() {
     }
   }
 
+  useEffect(() => {
+    document.title = "Providers";
+  }, []);
+
   return (
     <MainLayout mxW="md" paperSx={{ p: { xs: 0.5, sm: 2 }, }}>
       <Stack spacing={2}>

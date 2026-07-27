@@ -60,8 +60,12 @@ function Login() {
       .catch((err) => console.log(err));
   }
 
+  useEffect(() => {
+    document.title = "Sign-in";
+  }, []);
+
   return (
-    <MainLayout mxW="xs" boxSx={{pt:20}} paperSx={{ p: { xs: 2, sm: 4 } }}>
+    <MainLayout mxW="xs" boxSx={{ pt: 20 }} paperSx={{ p: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" component="h1" sx={{ mb: 2 }}>Sign in</Typography>
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
