@@ -2,83 +2,82 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSocket } from "../../context/SocketContext";
-import { Up } from "../../components/up/Up";
-import styles from './MyChats.module.css';
+import styles from '../../assets/css/links.module.css';
 import { BsBell } from 'react-icons/bs';
 import useAuth from "../../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
+import MainLayout from "../../components/mainLayout";
+import { Box, Paper, Typography } from "@mui/material";
+import { NotificationsActiveOutlined } from "@mui/icons-material";
 
 function MyChats() {
-    const { auth } = useAuth();
-    const { onlineUsers, notifications, peakMessages } = useSocket();
-    const axiosPrivate = useAxiosPrivate();
-    const [chats, setChats] = useState([]);
-    const [userId, setUserId] = useState("");
-    const grouped = chats.reduce((acc, item) => {
-        if (!acc[item.chatid]) acc[item.chatid] = [];
+  const { auth } = useAuth();
+  const { onlineUsers, notifications, peakMessages } = useSocket();
+  const axiosPrivate = useAxiosPrivate();
+  const [chats, setChats] = useState([]);
+  const [userId, setUserId] = useState("");
+  const grouped = chats.reduce((acc, item) => {
+    if (!acc[item.chatid]) acc[item.chatid] = [];
 
-        acc[item.chatid].push(item);
-        return acc;
-    }, {});
+    acc[item.chatid].push(item);
+    return acc;
+  }, {});
 
-    useEffect(() => {
-        const getChats = async () => {
-            try {
-                const res = await axiosPrivate.get('/chats');
-                if (res.data) setChats(res.data);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        }
-        getChats();
-        setUserId(jwtDecode(auth?.accessToken).id);
-    }, []);
-    return (
-        <div className={styles.container}>
-            <Up />
+  useEffect(() => {
+    const getChats = async () => {
+      try {
+        const res = await axiosPrivate.get('/chats');
+        if (res.data) setChats(res.data);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    getChats();
+    setUserId(jwtDecode(auth?.accessToken).id);
+  }, []);
 
-            <div className={styles.chats}>
-                {Object.entries(grouped).map(([chatId, members]) => {
-                    const onlineCount = onlineUsers.filter(
-                        online =>
-                            online.userId !== userId &&
-                            members.some(m => m.userid === online.userId)
-                    ).length;
+  useEffect(() => {
+    document.title = "MyChats";
+  }, []);
 
-                    return (
-                        <Link key={chatId} to={`/chatroom/${chatId}`} className={styles.alink}>
-                            <div className={styles.chat}>
-                                <div className={styles.chatInfo}>
-                                    <div className={styles.chatNames}>
-                                        {members[0].chat_name}
-
-                                        {onlineCount > 0 && (
-                                            <div className={styles.activeUsers}>
-                                                {onlineCount}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className={styles.lastMessage}>
-                                        Latest message: {peakMessages.find(p => p.chatid == members[0].chatid)?.message}
-                                    </div>
-                                </div>
-                                {notifications.some(n => n.chatid == members[0].chatid && !n.isRead) && (
-                                    <div className={styles.notificationIcon}>
-                                        <BsBell size={3} />
-                                        <span className={styles.notificationBadge}>
-                                            {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </Link>
-                    );
-                })}
-            </div>
-        </div>
-    )
+  return (
+    <MainLayout mxW="sm" paperSx={{ p: { xs: 0, sm: 2 } }}>
+      {chats.length === 0 && <Typography sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>Δεν έχεις κάποιο chat.</Typography>}
+      {Object.entries(grouped).map(([chatId, members]) => {
+        const onlineCount = onlineUsers.filter(online =>
+          online.userId !== userId &&
+          members.some(m => m.userid === online.userId)).length;
+        return (
+          <Link key={chatId} to={`/chatroom/${chatId}`} className={styles.linkNoColor}>
+            <Paper sx={{ mb: { xs: 1, sm: 2 }, p: { xs: 1, sm: 3 }, display: "flex", alignItems: "center", ":hover": { bgcolor: "#293440" } }} variant="outlined">
+              <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Typography>{members[0].chat_name}</Typography>
+                  {onlineCount > 0 && (<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: 17, height: 17, borderRadius: "50%", backgroundColor: "#16833e", flexShrink: 0 }}> {onlineCount}</Box>
+                  )}
+                </Box>
+                <Box sx={{ color: "#a28e8e", }}>
+                  <Typography sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: { xs: 170, sm: 400 }, fontSize: { xs: "0.4rem", sm: "0.9rem" }, }}>Latest message: {peakMessages.find(p => p.chatid == members[0].chatid)?.message}</Typography>
+                </Box>
+              </Box>
+              {notifications.some(n => n.chatid == members[0].chatid && !n.isRead) && (
+                <Box sx={{ position: "relative", marginLeft: "auto", display: "flex", alignItems: "center" }}>
+                  <NotificationsActiveOutlined sx={{ width: 23, height: 23 }} />
+                  <Typography component="span" sx={{
+                    position: "absolute", top: { xs: -4, sm: -7 }, right: { xs: -4, sm: -7 }, width: { xs: 0.7, sm: 20 }, height: { xs: 0.7, sm: 20 },
+                    color: "white", display: "flex", borderRadius: "50%", backgroundColor: "#ef4444", alignItems: "center", justifyContent: "center"
+                  }}>
+                    {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length}
+                  </Typography>
+                </Box>
+              )}
+            </Paper>
+          </Link>
+        )
+      })}
+    </MainLayout>
+  )
 }
 
 export default MyChats;
