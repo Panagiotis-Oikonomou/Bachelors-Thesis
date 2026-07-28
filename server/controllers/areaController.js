@@ -71,3 +71,17 @@ exports.updateArea = async (req, res) => {
         return res.sendStatus(500);
     }
 }
+
+exports.getAreaCoordinates = async (req, res) => {
+    try {
+        const sql = "SELECT a.lat, a.lng FROM areas a JOIN chats c ON a.areaid = c.areaid WHERE chatid = ?";
+        const chatid = req.params.chatid;
+
+        const [rows] = await db.query(sql, [chatid]);
+        if (rows.length === 0) return res.status(404).json({ message: "Coordinates not found" });
+        return res.json(rows[0]);
+    }
+    catch (err) {
+        return res.sendStatus(500);
+    }
+}

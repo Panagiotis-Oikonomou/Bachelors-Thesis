@@ -81,9 +81,11 @@ exports.createInvitationNotification = async (req, res) => {
         }
         const newGroupSql = "INSERT INTO groups VALUES ()";
         const alreadyAcceptSql = "INSERT INTO matchings (groupid, userid, agrees) VALUES (?, ?, ?)";
+        const potentialAreaIdSql = "INSERT INTO potential_areaid (groupid, areaid) VALUES (?, ?)";
 
         const [create] = await db.query(newGroupSql);
         await db.query(alreadyAcceptSql, [create.insertId, req.user.id, 1]);
+        await db.query(potentialAreaIdSql, [create.insertId, areaid]);
         const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, is_read, type) VALUES (?, ?, ?, ?, ?)";
         for(const user of usersNoUser){
             await db.query(addNotificationSql, [user.userid, create.insertId, notification, false, "conf"]);

@@ -19,6 +19,8 @@ export default function useChat(chatid) {
     const [chatName, setChatName] = useState("");
 
     const [showPicker, setShowPicker] = useState(false);
+    const [showWaiting, setShowWaiting] = useState(false);
+    const [openMap, setOpenMap] = useState(false);
     const textareaRef = useRef(null);
     const chatRef = useRef(null);
     const bottomRef = useRef(null);
@@ -26,6 +28,7 @@ export default function useChat(chatid) {
     const firstLoad = useRef(true);
     const menuRef = useRef(null);
     const [openMenu, setOpenMenu] = useState(null);
+    const [coordinates, setCoordinates] = useState([]);
 
     const grouped = chats.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
@@ -33,6 +36,23 @@ export default function useChat(chatid) {
         acc[item.chatid].push(item);
         return acc;
     }, {});
+
+    useEffect(() => {
+        if(!chatid) return;
+        const getCoordinates = async () => {
+            try {
+                const res = await axiosPrivate.get(`/areas/coordinates/${chatid}`);
+                if(res.data) setCoordinates(res.data);                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getCoordinates();
+    }, []);
+
+    useEffect(() => {
+        document.title = "Chatroom";
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -62,8 +82,7 @@ export default function useChat(chatid) {
         if (!el) return;
 
         const handleScroll = () => {
-            isNearBottomRef.current =
-                el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+            isNearBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
         };
 
         el.addEventListener("scroll", handleScroll);
@@ -76,18 +95,25 @@ export default function useChat(chatid) {
     }, []);
 
     useEffect(() => {
+        const el = chatRef.current;
+        if (!el) return;
+
         if (firstLoad.current) {
             bottomRef.current?.scrollIntoView({ behavior: "auto", });
-
             firstLoad.current = false;
             return;
         }
 
-        if (isNearBottomRef.current) bottomRef.current?.scrollIntoView({ behavior: "smooth", });
+        const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+
+        const lastMessage = chat[chat.length - 1];
+
+        const isMyMessage = lastMessage?.userid === userId;
+
+        if (isMyMessage || distanceFromBottom < 100) bottomRef.current?.scrollIntoView({ behavior: "smooth", });
     }, [chat.length]);
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView();
         firstLoad.current = true;
     }, [chatid]);
 
@@ -278,6 +304,7 @@ export default function useChat(chatid) {
         chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
         setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
-        changeWaitingDelete, chatName
+        changeWaitingDelete, chatName, showWaiting, setShowWaiting, openMap, setOpenMap,
+        coordinates
     };
 }

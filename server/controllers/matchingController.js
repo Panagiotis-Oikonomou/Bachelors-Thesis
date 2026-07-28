@@ -74,14 +74,18 @@ exports.updateAgrees = async (req, res) => {
             }
         }
         if (allAgree) {
-            const chatCreationSql = "INSERT INTO chats (groupid, chat_name) VALUES (?, ?)";
-            const [chat] = await db.query(chatCreationSql, [gi[0].groupid, "new chat"]);
+            const chatCreationSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
+            const getAreaIdSql = "SELECT areaid FROM potential_areaid WHERE groupid = ?";
+            const [areaid] = await db.query(getAreaIdSql, [gi[0].groupid]);
+            const [chat] = await db.query(chatCreationSql, [gi[0].groupid, areaid[0].areaid, "new chat"]);
             const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
             const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
+            const deletePotentialAreaIdSql = "DELETE FROM potential_areaid WHERE groupid = ?";
             for (const r of result) {
                 await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
                 await db.query(createDestroySql, [chat.insertId, r.userid]);
             }
+            await db.query(deletePotentialAreaIdSql, [gi[0].groupid]);
         }
         return res.sendStatus(201);
     }

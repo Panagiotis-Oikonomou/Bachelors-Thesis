@@ -18,8 +18,7 @@ exports.getProfile = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const sql = "UPDATE users SET fname=?, lname=?, clock=?, provider=?, email=?, username=?, password=? WHERE userid=?";
-        const hash = await bcrypt.hash(req.body.password, 12);
-
+        const sqlNoPassword = "UPDATE users SET fname=?, lname=?, clock=?, provider=?, email=?, username=? WHERE userid=?";
         const values = [
             req.body.fname,
             req.body.lname,
@@ -27,10 +26,19 @@ exports.updateUser = async (req, res) => {
             req.body.provider,
             req.body.email,
             req.body.username,
-            hash,
-            req.user.id
         ];
-        await db.query(sql, values);
+        if (req.body.password === "") {
+            values.push(req.user.id);
+            await db.query(sqlNoPassword, values);
+        }
+        
+        else {
+            const hash = await bcrypt.hash(req.body.password, 12);
+            values.push(hash);
+            values.push(req.user.id);
+            await db.query(sql, values);
+        }
+
         res.json(req.body);
     }
     catch (err) {
