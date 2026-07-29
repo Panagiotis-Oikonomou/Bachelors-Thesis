@@ -37,10 +37,20 @@ export default function useCriteria() {
         let len = val.length;
         let regex = /^[1-9]\d*(\.\d+)?$/;
 
-        if (len === 0) error = "";
+        if (name === "income") {
+            if (len === 0) error = "";
 
-        else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
-        setWrongNumber(prev => ({ ...prev, [name]: error }));
+            else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+
+            else if (Number(value) > 100) error = "Ο αριθμός δεν πρέπει να περνάει το 100%";
+            setWrongNumber(prev => ({ ...prev, [name]: error }));
+        }
+        else {
+            if (len === 0) error = "";
+
+            else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+            setWrongNumber(prev => ({ ...prev, [name]: error }));
+        }
     }
 
     function setMinMaxToZero(e) {

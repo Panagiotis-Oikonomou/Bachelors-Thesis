@@ -1,188 +1,112 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import useMatch from "../../hooks/useMatch";
-import styles from './Match.module.css';
-import { Up } from "../../components/up/Up";
-
-import checkMark from '../../assets/images/checkMark.png';
-import xMark from '../../assets/images/xMark.png';
+import MainLayout from "../../components/mainLayout";
+import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography, Popper, useTheme, useMediaQuery, ClickAwayListener } from "@mui/material";
+import { CancelOutlined, CheckCircleOutlined, GroupAddOutlined, SearchOutlined } from "@mui/icons-material";
+import { scrollbarStyles } from "../styles/scrollbar";
+import SearchCriteria from "../../components/SearchCriteria";
+import SearchedUsers from "../../components/SearchedUsers";
 
 function Match() {
-    const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked,
-        isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero,
-        isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser,
-        addUser, searchedUsers, visibleUser, nextUser, hoveredUser, setHoveredUser } = useMatch();
-    return (
-        <div className={styles.container}>
-            <Up/>
+  const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked,
+    isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero,
+    isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser,
+    addUser, searchedUsers, visibleUser, nextUser, hoveredUser, setHoveredUser, wrongNumber, openSearch,
+    setOpenSearch, openSearchedUsers, setOpenSearchedUsers, } = useMatch();
 
-            <div className={styles.users}>
+  const style = { "& .MuiOutlinedInput-input": { py: 0.30, }, };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  return (
+    <MainLayout mxW="xl" containerSx={{ p: { xs: 0 } }} paperSx={{ p: { xs: 0.5, sm: 1 } }}>
+      <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "89dvh", gap: 2, }}>
+        <Box sx={{ display: "flex", height: "10%" }}>
+          <Paper variant="outlined" sx={{ width: "100%", bgcolor: "#2835424e", p: 2, overflowX: "auto", overflowY: "hidden", ...scrollbarStyles }}>
+            <ClickAwayListener onClickAway={() => setHoveredUser(null)}>
+              <Box sx={{ display: "flex", gap: 2, }}>
                 {users.map((user, index) => (
-                    <div className={styles.user} key={index}
-                        onMouseEnter={() => setHoveredUser(user.userid)} onMouseLeave={() => setHoveredUser(null)}>
-                        {user.username} {index > 0 && (<div className={styles.x} onClick={() => removeSelectedUser(index)}>X</div>)}
-
-                        {hoveredUser === user.userid && (
-                            <div className={styles.userData}>
-                                {<>Περιοχή:{user.areaid === null ? " Όχι" : " Ναι"}<br /></>}
-
-                                {user.areaid !== null && (
-                                    <>
-                                        Έκταση περιοχής: {user.size}m²<br />
-                                        Ποσότητα PV ενέργειας: {user.ac}kwh<br />
-                                    </>)}<br />
-
-                                Ζήτηση και Προσφορά<br />
-
-                                {user.areasize !== null && (<>Έκταση: {user.areasize}m²<br /></>)}
-
-                                {user.energy !== null && (<>Ποσότητα PV ενέργειας: {user.energy}kwh<br /></>)}
-
-                                {user.income !== null && (<>Ποσοστό εσόδων: {user.income}<br /></>)}
-
-                                {user.money !== null && (<>Χρήματα: {user.money}<br /></>)}
-
-                                Χαρτιά: {user.papers !== null && user.papers ? "Ναι" : "Όχι"}<br />
-
-                                Άλλα: {user.other !== null && user.other ? "Ναι" : "Όχι"}<br />
-                            </div>
-                        )}
-                    </div>
+                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }} key={index}
+                    onMouseEnter={
+                      !isMobile
+                        ? (e) => {
+                          const anchor = e.currentTarget;
+                          setHoveredUser({ user, anchor })
+                        }
+                        : undefined
+                    }
+                    onMouseLeave={!isMobile ? () => setHoveredUser(null) : undefined}
+                    onClick={
+                      isMobile
+                        ? (e) => {
+                          const anchor = e.currentTarget;
+                          setHoveredUser((prev) => prev?.user.userid === user.userid
+                            ? null
+                            : { user, anchor })
+                        }
+                        : undefined
+                    }>
+                    {user.username} {index > 0 && (<IconButton sx={{ cursor: "pointer" }} onClick={() => removeSelectedUser(index)}><CancelOutlined /></IconButton>)}
+                  </Box>
                 ))}
 
-                <form className={styles.user} onSubmit={handleCreationSubmit}> <input type="submit" value="Δημιουργία" /></form>
-            </div>
+                <Popper open={Boolean(hoveredUser)} anchorEl={hoveredUser?.anchor} placement="bottom" modifiers={[{ name: "offset", options: { offset: [0, 8] } }]} sx={{ zIndex: 9999, pointerEvents: isMobile ? "auto" : "none" }} disablePortal={false}>
+                  {(hoveredUser && hoveredUser.user.userid !== users[0].userid) && (
+                    <Paper sx={{ p: 1, borderRadius: 1, minWidth: 220, bgcolor: "#222" }}>
+                      <>Περιοχή:{hoveredUser.user.areaid === null ? " Όχι" : " Ναι"}<br /></>
 
-            <div className={styles.searchArea}>
-                <div className={styles.search}>
-                    <form onSubmit={handleSearchSubmit}>
-                        <div className={styles.criteria}>
-                            <label htmlFor="size">Έκταση(km<sup>2</sup>):<br /></label>
-                            <input
-                                type="number"
-                                name="size"
-                                id="size"
-                                value={criteria.size}
-                                disabled={isSizeChecked}
-                                required={!isSizeChecked}
-                                onChange={handleChange}
-                                step="0.1" min="0" max="131.000"
-                            />
-                            <label htmlFor="chsize">Δεν θέλω</label>
-                            <input type="checkbox" checked={isSizeChecked} onChange={setMinMaxToZero} disabled={isAreaChecked} name="chsize" id="chsize" />
-                        </div>
+                      {hoveredUser.user.areaid !== null && (
+                        <>
+                          Έκταση περιοχής: {hoveredUser.user.size}m²<br />
+                          Ποσότητα PV ενέργειας: {hoveredUser.user.ac}kwy<br />
+                        </>)}<br />
 
-                        <div className={styles.criteria}>
-                            <label htmlFor="energy">Ποσότητα PV ενέργειας(kwh):<br /></label>
-                            <input
-                                type="number"
-                                name="energy"
-                                id="energy"
-                                disabled={isEnergyChecked}
-                                required={!isEnergyChecked}
-                                value={criteria.energy}
-                                onChange={handleChange}
-                                step="0.1" min="0"
-                            />
-                            <label htmlFor="chenergy">Δεν θέλω</label>
-                            <input type="checkbox" checked={isEnergyChecked} onChange={setMinMaxToZero} disabled={isAreaChecked} name="chenergy" id="chenergy" />
-                        </div>
+                      Ζήτηση και Προσφορά<br />
 
-                        <div className={styles.criteria}>
-                            <label htmlFor="income">Ποσοστό εσόδων:<br /></label>
-                            <input
-                                type="number"
-                                name="income"
-                                id="income"
-                                disabled={isIncomeChecked}
-                                required={!isIncomeChecked}
-                                value={criteria.income}
-                                onChange={handleChange}
-                                step="0.1" min="0" max="100"
-                            />
-                            <label htmlFor="chincome">Δεν θέλω</label>
-                            <input type="checkbox" checked={isIncomeChecked} onChange={setMinMaxToZero} name="chincome" id="chincome" />
-                        </div>
+                      {hoveredUser.user.areasize !== null && (<>Έκταση: {hoveredUser.user.areasize}m²<br /></>)}
 
-                        <div className={styles.criteria}>
-                            <label htmlFor="money">Αριθμός χρημάτων:<br /></label>
-                            <input
-                                type="number"
-                                name="money"
-                                id="money"
-                                disabled={isMoneyChecked}
-                                required={!isMoneyChecked}
-                                value={criteria.money}
-                                onChange={handleChange}
-                                min="0"
-                            />
-                            <label htmlFor="chmoney">Δεν θέλω</label>
-                            <input type="checkbox" checked={isMoneyChecked} onChange={setMinMaxToZero} name="chmoney" id="chmoney" />
-                        </div>
+                      {hoveredUser.user.energy !== null && (<>Ποσότητα PV ενέργειας: {hoveredUser.user.energy}kwy<br /></>)}
 
-                        <label className={styles.checkboxLabel} htmlFor="area">
-                            <input type="checkbox" name="area" id="area" disabled={!havingArea} checked={isAreaChecked} onChange={checkboxOptions} />Έκταση
-                            <select name="areaid" onChange={handleChange} disabled={!isAreaChecked} value={selectedArea} required>
-                                <option value="">Select area</option>
-                                {areas.map((item) => (
-                                    <option key={item.areaid} value={item.areaid}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+                      {hoveredUser.user.income !== null && (<>Ποσοστό εσόδων: {hoveredUser.user.income}<br /></>)}
 
-                        <div className={styles.criteria}>
-                            <label className={styles.checkboxLabel} htmlFor="papers">
-                                <input type="checkbox" name="papers" id="papers" checked={isPapersChecked} onChange={checkboxOptions} />Διαδικαστικά</label>
-                        </div>
+                      {hoveredUser.user.money !== null && (<>Χρήματα: {hoveredUser.user.money}<br /></>)}
 
-                        <div className={styles.criteria}>
-                            <label className={styles.checkboxLabel} htmlFor="other">
-                                <input type="checkbox" name="other" id="other" checked={isOtherChecked} onChange={checkboxOptions} />Άλλο</label>
-                        </div>
+                      Χαρτιά: {hoveredUser.user.papers !== null && hoveredUser.user.papers ? "Ναι" : "Όχι"}<br />
 
-                        <div className={styles.msg}>{formError}</div>
-                        <input type="submit" value="Αναζήτηση" />
-                    </form>
-                </div>
-            </div>
-            <div className={styles.match}>
-                {visibleUser && (
-                    <>
-                        <div className={styles.area}>
-                            {visibleUser.username !== null && (<>Username: {visibleUser.username}<br /><br /></>)}
+                      Άλλα: {hoveredUser.user.other !== null && hoveredUser.user.other ? "Ναι" : "Όχι"}<br />
+                    </Paper>
+                  )}
+                </Popper>
+                <Box component="form" sx={{ position: "relative", display: "flex", alignItems: "center" }} onSubmit={handleCreationSubmit}><Button type="submit" variant="contained">Δημιουργία</Button></Box>
+              </Box>
+            </ClickAwayListener>
+          </Paper>
+        </Box>
+        <Box sx={{ display: { sx: "flex", sm: "none" }, height: "3%", p: 0 }}>
+          <IconButton onClick={() => { setOpenSearch(s => !s); setOpenSearchedUsers(false); }}><SearchOutlined /></IconButton>
+          <IconButton onClick={() => { setOpenSearchedUsers(s => !s); setOpenSearch(false); }}><GroupAddOutlined /></IconButton>
+        </Box>
+        <Box sx={{ display: "flex", height: { xs: "80%", sm: "90%", md: "80%" }, }}>
+          {openSearch === true && (
+            <Box sx={{ display: { xs: "flex", sm: "none" }, width: "100%" }}>
+              <SearchCriteria submit={handleSearchSubmit} change={handleChange} wrongNumber={wrongNumber} criteria={criteria} sizeCheck={isSizeChecked} areaCheck={isAreaChecked} energyCheck={isEnergyChecked} minMax={setMinMaxToZero} incomeCheck={isIncomeChecked} moneyChecked={isMoneyChecked} checkboxOptions={checkboxOptions} havingArea={havingArea} selectedArea={selectedArea} areas={areas} papersChecked={isPapersChecked} otherChecked={isOtherChecked} formError={formError} />
+            </Box>
+          )}
+          <Box sx={{ display: { xs: "none", sm: "flex" }, width: "45%" }}>
+            <SearchCriteria submit={handleSearchSubmit} change={handleChange} wrongNumber={wrongNumber} criteria={criteria} sizeCheck={isSizeChecked} areaCheck={isAreaChecked} energyCheck={isEnergyChecked} minMax={setMinMaxToZero} incomeCheck={isIncomeChecked} moneyChecked={isMoneyChecked} checkboxOptions={checkboxOptions} havingArea={havingArea} selectedArea={selectedArea} areas={areas} papersChecked={isPapersChecked} otherChecked={isOtherChecked} formError={formError} />
+          </Box>
 
-                            {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br /></>}
+          {openSearchedUsers === true && (
+            <Box sx={{ display: { xs: "flex", sm: "none" }, width: "100%", }}>
+              <SearchedUsers visibleUser={visibleUser} nextUser={nextUser} addUser={addUser} />
+            </Box>)}
 
-                            {visibleUser.areaid !== null && (
-                                <>
-                                    Έκταση περιοχής: {visibleUser.size}m²<br />
-                                    Ποσότητα PV ενέργειας: {visibleUser.ac}kwh<br />
-                                </>)}<br />
-
-                            Ζήτηση και Προσφορά<br />
-                            {visibleUser.areasize !== null && (<>Έκταση: {visibleUser.areasize}m²<br /></>)}
-
-                            {visibleUser.energy !== null && (<>Ποσότητα PV ενέργειας: {visibleUser.energy}kwh<br /></>)}
-
-                            {visibleUser.income !== null && (<>Ποσοστό εσόδων: {visibleUser.income}<br /></>)}
-
-                            {visibleUser.money !== null && (<>Χρήματα: {visibleUser.money}<br /></>)}
-
-                            Χαρτιά: {visibleUser.papers !== null && visibleUser.papers ? "Ναι" : "Όχι"}<br />
-
-                            Άλλα: {visibleUser.other !== null && visibleUser.other ? "Ναι" : "Όχι"}<br />
-                        </div>
-
-                        <div className={styles.choices}>No <img src={xMark} className={styles.images} onClick={nextUser} /></div>
-
-                        <div className={styles.choices}>Yes<img src={checkMark} className={styles.images} onClick={() => addUser(visibleUser)} /></div>
-                    </>
-                )}
-            </div>
-        </div >
-    )
+          <Box sx={{ display: { xs: "none", sm: "flex" }, width: "55%", }}>
+            <SearchedUsers visibleUser={visibleUser} nextUser={nextUser} addUser={addUser} />
+          </Box>
+        </Box>
+      </Box>
+    </MainLayout>
+  )
 }
 
 export default Match;

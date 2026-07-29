@@ -42,6 +42,9 @@ export default function useMatch() {
     const [currentIndex, setCurrectIndex] = useState(0);
     const [username, setUsername] = useState("");
     const [hoveredUser, setHoveredUser] = useState(null);
+    const [wrongNumber, setWrongNumber] = useState({ size: "", energy: "", income: "", money: "", });
+    const [openSearch, setOpenSearch] = useState(false);
+    const [openSearchedUsers, setOpenSearchedUsers] = useState(false);
     let visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
@@ -101,13 +104,37 @@ export default function useMatch() {
     function handleChange(e) {
         const { name, value } = e.target;
 
+        setCriteria(prev => ({ ...prev, [name]: value }));
         if (name === "areaid") {
             setAreaId(value === "" ? null : value);
             setHavingArea(true)
             setUsers(prev => prev.map(u => u.username === username ? { ...u, areaid: value } : u));
         }
+        else validateField(name, value);
 
-        setCriteria(prev => ({ ...prev, [name]: value }));
+    }
+
+    function validateField(name, value) {
+        let error = "";
+        let val = value.trim();
+        let len = val.length;
+        let regex = /^[1-9]\d*(\.\d+)?$/;
+
+        if (name === "income") {
+            if (len === 0) error = "";
+
+            else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+
+            else if (Number(value) > 100) error = "Ο αριθμός δεν πρέπει να περνάει το 100%";
+            setWrongNumber(prev => ({ ...prev, [name]: error }));
+        }
+        else {
+            if (len === 0) error = "";
+
+            else if (!regex.test(value)) error = "Ο αριθμός δεν έχει συμπληρωθεί σωστά";
+            setWrongNumber(prev => ({ ...prev, [name]: error }));
+        }
+
     }
 
     function setMinMaxToZero(e) {
@@ -115,18 +142,22 @@ export default function useMatch() {
         if (name === "chsize") {
             setCriteria(prev => ({ ...prev, size: "" }));
             setIsSizeChecked(checked);
+            setWrongNumber(prev => ({ ...prev, size: "" }));
         }
         else if (name === "chenergy") {
             setCriteria(prev => ({ ...prev, energy: "" }));
             setIsEnergyChecked(checked);
+            setWrongNumber(prev => ({ ...prev, energy: "" }));
         }
         else if (name === "chincome") {
             setCriteria(prev => ({ ...prev, income: "" }));
             setIsIncomeChecked(checked);
+            setWrongNumber(prev => ({ ...prev, income: "" }));
         }
         else if (name === "chmoney") {
             setCriteria(prev => ({ ...prev, money: "" }));
             setIsMoneyChecked(checked);
+            setWrongNumber(prev => ({ ...prev, money: "" }));
         }
     }
 
@@ -204,8 +235,15 @@ export default function useMatch() {
 
     async function handleSearchSubmit(e) {
         e.preventDefault();
+
         if (isEnergyChecked && isIncomeChecked && isSizeChecked && isMoneyChecked && !isPapersChecked && !isOtherChecked && !isAreaChecked) {
             setFormError("Πρέπει να έχεις επιλέξει κάποιο από τα κριτήρια.");
+            return;
+        }
+
+        const hasErrors = Object.values(wrongNumber).some(err => err !== "");
+        if (hasErrors) {
+            setFormError("Κάποια πεδία αριθμών είναι λάθος συμπληρωμένα.");
             return;
         }
 
@@ -235,6 +273,15 @@ export default function useMatch() {
             if (res.data) {
                 setSearchedUsers(res.data);
                 setCurrectIndex(0)
+                Swal.fire({
+                    title: "There were users with that criteria. Look at them!",
+                    icon: "success",
+                    showConfirmButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Ok",
+                    didClose: () => { document.activeElement?.blur(); }
+                });
+                return;
             }
         }
         catch (err) {
@@ -309,6 +356,7 @@ export default function useMatch() {
         isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked,
         checkboxOptions, handleSearchSubmit, areas, isAreaChecked, havingArea, selectedArea,
         handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser,
-        nextUser, hoveredUser, setHoveredUser
+        nextUser, hoveredUser, setHoveredUser, wrongNumber,openSearch, setOpenSearch, openSearchedUsers, 
+        setOpenSearchedUsers,
     };
 }
