@@ -4,9 +4,11 @@ import Swal from "sweetalert2";
 import MainLayout from "../../components/mainLayout";
 import { Box, Button, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { CloseOutlined } from "@mui/icons-material";
+import { useNotifications } from "../../context/NotificationsContext";
 
 function Notifications() {
   const axiosPrivate = useAxiosPrivate();
+  const {setGlobalNotifications} = useNotifications();
   const [notifications, setNotifications] = useState([]);
   const style = notifications.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : null;
 
@@ -48,6 +50,7 @@ function Notifications() {
   }, []);
 
   async function changeToRead(id) {
+    setGlobalNotifications(prev => prev > 0 ? prev - 1 : 0);
     setNotifications(prev =>
       prev.map(notification =>
         notification.notid === id
@@ -77,6 +80,7 @@ function Notifications() {
     try {
       await axiosPrivate.delete(`/notifications/${id}`);
       setNotifications(prev => prev.filter(n => n.notid !== id));
+      setGlobalNotifications(prev => prev > 0 ? prev - 1 : 0);
     }
     catch (err) {
       Swal.fire("Error", "Something went wrong", "error");

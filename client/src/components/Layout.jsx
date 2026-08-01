@@ -5,9 +5,13 @@ import theme from "../theme/theme";
 import useAuth from "../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useNotifications } from "../context/NotificationsContext";
 
 export default function Layout({ children }) {
   const { auth } = useAuth();
+  const { globalNotifications } = useNotifications();
+  const axiosPrivate = useAxiosPrivate();
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,7 +28,7 @@ export default function Layout({ children }) {
       path: "/my_areas"
     },
     {
-      text: "My Criterias",
+      text: "My Criteria",
       icon: <DescriptionOutlined />,
       path: "/criteria"
     },
@@ -39,7 +43,7 @@ export default function Layout({ children }) {
       path: "/my_chats"
     },
     {
-      text: "Notifications",
+      text: globalNotifications > 0 ? "Notifications " + globalNotifications : "Notifications",
       icon: <NotificationsOutlined />,
       path: "/notifications"
     },
@@ -49,15 +53,14 @@ export default function Layout({ children }) {
       path: "/profile"
     }
   ];
-
   const DrawerList = (
     <Box>
       <List>
         {menuItems.map(item => (
           <ListItem key={item.text} sx={{ cursor: "pointer", background: location.pathname === item.path ? "#3c6bb2" : "" }} disablePadding>
-            <ListItemButton onClick={() => {navigate(item.path); toggleDrawer(false);}}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+            <ListItemButton onClick={() => { navigate(item.path); toggleDrawer(false); }}>
+              <ListItemIcon sx={{ color: globalNotifications > 0 && item.path === "/notifications" ? "red" : "white" }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} sx={{ color: globalNotifications > 0 && item.path === "/notifications" ? "red" : "white" }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -66,7 +69,7 @@ export default function Layout({ children }) {
   );
 
   useEffect(() => {
-    if(auth?.accessToken) setUsername(jwtDecode(auth.accessToken).username);
+    if (auth?.accessToken) setUsername(jwtDecode(auth.accessToken).username);
   }, [auth]);
 
   function toggleDrawer(newOpen) {
@@ -76,13 +79,13 @@ export default function Layout({ children }) {
   return (
     <Box style={{ display: "flex", height: "100vh", overflow: "hidden", }}>
 
-      <AppBar position="fixed" elevation={0} sx={{borderBottom: 1, borderColor: "divider", }}>
-        <Toolbar disableGutters sx={{p:{xs:0.2, sm:1}}}>
-          <IconButton onClick={() => toggleDrawer(!open)} sx={{p:0, }}>
-            <MenuOutlined/>
+      <AppBar position="fixed" elevation={0} sx={{ borderBottom: 1, borderColor: "divider", }}>
+        <Toolbar disableGutters sx={{ p: { xs: 0.2, sm: 1 } }}>
+          <IconButton onClick={() => toggleDrawer(!open)} sx={{ p: 0, }}>
+            <MenuOutlined />
           </IconButton>
-          <Typography variant="body1" sx={{ flexGrow: 1, fontSize:{xs:"1rem", sm:"1.3rem"} }}>Energy Community</Typography>
-          <Typography variant="body1" sx={{fontSize:{xs:"1rem", sm:"1.3rem"}}}>{username}</Typography>
+          <Typography variant="body1" sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1.3rem" } }}>Energy Community</Typography>
+          <Typography variant="body1" sx={{ fontSize: { xs: "1rem", sm: "1.3rem" } }}>{username}</Typography>
         </Toolbar>
       </AppBar>
 
@@ -90,8 +93,8 @@ export default function Layout({ children }) {
         {DrawerList}
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, display: "flex", flexDirection:"column", overflow:"hidden", minHeight: 0,}}>
-        <Toolbar/>
+      <Box component="main" sx={{ flexGrow: 1, display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0, }}>
+        <Toolbar />
         <Outlet />
       </Box>
     </Box>

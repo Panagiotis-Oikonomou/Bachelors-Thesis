@@ -34,7 +34,7 @@ export const SocketProvider = () => {
         if (!socket || !userid) return;
         socket.on("connect", () => {
             socket.emit("addNewUser", userid);
-            console.log("connected:", socket?.id);
+            // console.log("connected:", socket?.id);
         });
         socket.on("getOnlineUsers", (res) => { setOnlineUsers(res); });
         return () => {
@@ -42,13 +42,13 @@ export const SocketProvider = () => {
             socket.off("getNotification");
         };
     }, [socket]);
-    
+
     useEffect(() => {
-        if(!socket) return;
-        if(location.pathname.startsWith("/chatroom/")) return;
-        socket.on("getNotification", (res) => { 
-            setNotifications(prev => [res, ...prev]); 
-            setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ?{...p, message: res.message} : p));
+        if (!socket) return;
+        if (location.pathname.startsWith("/chatroom/")) return;
+        socket.on("getNotification", (res) => {
+            setNotifications(prev => [res, ...prev]);
+            setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? { ...p, message: res.message } : p));
         });
 
         return () => {
@@ -59,41 +59,16 @@ export const SocketProvider = () => {
     useEffect(() => {
         const getLatestMessages = async () => {
             try {
-                if(!userid) return;
+                if (!userid) return;
                 const res = await axiosPrivate.get(`/chats/messages/${userid}`);
-                if(res.data.length > 0) setPeakMessages(res.data);
-            } 
+                if (res.data.length > 0) setPeakMessages(res.data);
+            }
             catch (error) {
                 console.log(error);
             }
         }
         getLatestMessages();
     }, [socket, location]);
-
-    // useEffect(() => {
-    //     if(!socket) return;
-    //     if(location.pathname.startsWith("/chatroom/")) return;
-    //     socket.on("getNotification", (res) => { 
-    //         setNotifications(prev => [res, ...prev]); 
-    //         setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ?{...p, message: res.message} : p));
-    //     });
-
-    //     socket.on("removeUnsendMessage", res => {
-    //         if (chatid != res.chatid) return;
-    //         setChat(prev => {
-    //             const updated = prev.map(m => m.messageid === res.messageid ? { ...m, unsent: 1, message: "" } : m);
-                
-    //             const lastNonEmpty = [...updated].reverse().find(m => m.message.trim() !== "");
-
-    //             setPeakMessages(prev => prev.map(p => p.chatid == res.chatid ? {
-    //                 ...p, message: lastNonEmpty ? lastNonEmpty.message : "" } : p));
-    //         });
-    //     });
-
-    //     return () => {
-    //         socket.off("removeUnsendMessage");
-    //     };
-    // }, [socket, location]);
 
     return (
         <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages }}>

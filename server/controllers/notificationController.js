@@ -13,6 +13,19 @@ exports.getNotifications = async (req, res) => {
     }
 }
 
+exports.getGlobalNotifications = async (req, res) => {
+    try {
+        const sql = "SELECT COUNT(*) AS count  FROM notifications WHERE userid = ? AND is_read = 0";
+        const id = req.user.id;
+
+        const [rows] = await db.query(sql, [id]);
+        return res.json(rows[0].count);
+    }
+    catch (err) {
+        return res.sendStatus(500);
+    }
+}
+
 exports.readMessage = async (req, res) => {
     try {
         const sql = "UPDATE notifications SET is_read = TRUE WHERE userid = ? AND notid = ?";
@@ -86,9 +99,9 @@ exports.createInvitationNotification = async (req, res) => {
         const [create] = await db.query(newGroupSql);
         await db.query(alreadyAcceptSql, [create.insertId, req.user.id, 1]);
         await db.query(potentialAreaIdSql, [create.insertId, areaid]);
-        const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, is_read, type) VALUES (?, ?, ?, ?, ?)";
+        const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?, ?)";
         for(const user of usersNoUser){
-            await db.query(addNotificationSql, [user.userid, create.insertId, notification, false, "conf"]);
+            await db.query(addNotificationSql, [user.userid, create.insertId, notification, "conf"]);
         }
         res.status(201).json({groupid: create.insertId});
 
