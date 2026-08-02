@@ -82,9 +82,11 @@ exports.updateAgrees = async (req, res) => {
             const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
             const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
             const deletePotentialAreaIdSql = "DELETE FROM potential_areaid WHERE groupid = ?";
+            const addOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUES (?, ?, )";
             for (const r of result) {
                 await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
                 await db.query(createDestroySql, [chat.insertId, r.userid]);
+                await db.query(addOfflineMessagesSql, [chat.insertId, r.userid]);
             }
             await db.query(deletePotentialAreaIdSql, [gi[0].groupid]);
         }
