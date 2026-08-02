@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const crypto = require("crypto");
 
 exports.getMatchings = async (req, res) => {
     try {
@@ -33,7 +34,6 @@ exports.createMatchings = async (req, res) => {
 const noAgrement = async (res, result, groupid, username, userid) => {
     const deleteMembersGroupSql = "DELETE FROM matchings WHERE userid = ? AND groupid = ?";
     const makeDisableSql = "UPDATE notifications SET disabled = 1 WHERE groupid = ?";
-    // const deleteNotificationSql = "DELETE FROM notifications WHERE groupid = ?";
     db.query(makeDisableSql, [groupid]);
     const createInfoNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
     const message = `The user ${username} didn't want to make a group with you.`;
@@ -77,7 +77,8 @@ exports.updateAgrees = async (req, res) => {
             const chatCreationSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
             const getAreaIdSql = "SELECT areaid FROM potential_areaid WHERE groupid = ?";
             const [areaid] = await db.query(getAreaIdSql, [gi[0].groupid]);
-            const [chat] = await db.query(chatCreationSql, [gi[0].groupid, areaid[0].areaid, "new chat"]);
+            const chatName = crypto.randomUUID().slice(0, 10);
+            const [chat] = await db.query(chatCreationSql, [gi[0].groupid, areaid[0].areaid, chatName]);
             const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
             const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
             const deletePotentialAreaIdSql = "DELETE FROM potential_areaid WHERE groupid = ?";

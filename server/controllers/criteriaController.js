@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { getAllUsers } = require('../services/algorithm');
 
 exports.addCriteria = async (userid) => {
     const sql = "INSERT INTO criterias (userid) VALUES (?)";
@@ -20,6 +21,7 @@ exports.updateCriteria = async (req, res) => {
         ];
 
         await db.query(sql, values);
+        getAllUsers();
         return res.sendStatus(200);
     }
     catch(err){
