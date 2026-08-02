@@ -17,7 +17,7 @@ function ChatRoom() {
     onlineUsers, grouped, setOpenMenu, openMenu, unsendText, setText, keyPressed,
     setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
     changeWaitingDelete, chatName, showWaiting, setShowWaiting, openMap, setOpenMap,
-    coordinates
+    coordinates, offlineNotifications
   } = useChat(chatId);
 
   const mainMessageSx = { maxWidth: "50%", p: 1, mx: 1, mt: 1, mb: 2, borderRadius: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", position: "relative", };
@@ -47,14 +47,16 @@ function ChatRoom() {
                         <Typography sx={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: { md: 170, lg: 250 }, fontSize: { md: "0.9rem" }, }}>Latest message: {peakMessages.find(p => p.chatid == members[0].chatid)?.message}</Typography>
                       </Box>
                     </Box>
-                    {notifications.some(n => n.chatid == members[0].chatid && !n.isRead) && (
+                    {(notifications.some(n => n.chatid == members[0].chatid && !n.isRead) || offlineNotifications.some(n => n.chatid == members[0].chatid && n.countOffline > 0)) && (
                       <Box sx={{ position: "relative", marginLeft: "auto", display: "flex", alignItems: "center" }}>
                         <NotificationsActiveOutlined sx={{ width: 23, height: 23 }} />
                         <Typography component="span" sx={{
                           position: "absolute", top: -7, right: -7, width: 20, height: 20,
                           color: "white", display: "flex", borderRadius: "50%", backgroundColor: "#ef4444", alignItems: "center", justifyContent: "center"
                         }}>
-                          {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length}
+                          {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length
+                            + offlineNotifications.find(n => n.chatid == members[0].chatid).countOffline
+                          }
                         </Typography>
                       </Box>
                     )}

@@ -4,8 +4,13 @@ const chat = require('../controllers/chatController');
 const ver = require('../middleware/authMiddleware');
 
 router.get("/", ver.verify, chat.getChats );
+router.get("/chat/:chatid", ver.verify, chat.getMessages );
 router.post("/", ver.verify, chat.createMessage );
-router.get("/:chatid", ver.verify, chat.getMessages );
+
+router.get("/offline-notifications", ver.verify, chat.getOfflineNotifications);
+router.put("/zero/:chatid", ver.verify, chat.turnToZeroUnreadMessages);
+router.post("/notifications", ver.verify, chat.updateUnreadMessages );
+
 router.put("/:messageid", ver.verify, chat.deleteMessage );
 router.post("/online_users", ver.verify, chat.getOnlineChatUsers );
 router.get("/messages/:userid", ver.verify, chat.getLatestMessages );

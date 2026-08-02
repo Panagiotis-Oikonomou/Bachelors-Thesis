@@ -9,7 +9,11 @@ const deleteUserFunc = async (userid) => {
     const sqlChatUser = "DELETE FROM chat_users WHERE userid = ?";
     const sqlMessages = "DELETE FROM messages WHERE userid = ?";
     const sqlWaitingToDelete = "DELETE FROM waiting_deleted_chats WHERE userid = ?";
-    
+    const sqlAlgoGroupDelete = "DELETE FROM algo_group WHERE userid = ?";
+    const sqlUnreadDelete = "DELETE FROM offline_chat WHERE userid = ?";
+
+    const sqlUnreadAllDelete = "DELETE FROM offline_chat WHERE chatid = ?";
+    const sqlAlgoGroupAllDelete = "DELETE FROM algo_group WHERE groupid = ?";
     const sqlAllChatDelete = "DELETE FROM chats WHERE chatid = ?";
     const sqlAllUsersChatDelete = "DELETE FROM chat_users WHERE chatid = ?";
     const sqlNotificationToAll = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
@@ -21,45 +25,58 @@ const deleteUserFunc = async (userid) => {
 
     const sqlAllChats = "SELECT cu.chatid, cu.userid, c.chat_name FROM chats c JOIN chat_users cu ON c.chatid = cu.chatid WHERE c.chatid IN  (SELECT chatid FROM chat_users WHERE userid = ?) ORDER BY c.chatid, cu.userid";
 
-    const [rows] = await db.query(sqlAllChats, [userid]);
-    const grouped = rows.reduce((acc, item) => {
-        if (!acc[item.chatid]) acc[item.chatid] = [];
+    try {
+        await db.beginTransaction();
 
-        acc[item.chatid].push(item);
-        return acc;
-    }, {});
+        const [rows] = await db.query(sqlAllChats, [userid]);
+        const grouped = rows.reduce((acc, item) => {
+            if (!acc[item.chatid]) acc[item.chatid] = [];
 
-    await db.query(sqlNotification, [userid]);
+            acc[item.chatid].push(item);
+            return acc;
+        }, {});
 
-    if (Object.keys(grouped).length) {
-        for (const [chatId, members] of Object.entries(grouped)) {
-            const remainingUsers = members.filter(m => m.userid != userid);
-            if (remainingUsers.length < 5) {
-                const [groupid] = await db.query(sqlGetGroup, [chatId]);
-                await db.query(sqlMatchingsDelete, [groupid[0].groupid]);
-                await db.query(sqlGroupDelete, [groupid[0].groupid]);
-                await db.query(sqlWaitingAllDelete, [chatId]);
-                await db.query(sqlAllMessagesDelete, [chatId]);
-                await db.query(sqlAllUsersChatDelete, [chatId]);
-                await db.query(sqlAllChatDelete, [chatId]);
+        await db.query(sqlNotification, [userid]);
 
-                for (const member of remainingUsers) {
-                    const message = `Η ομάδα με chat όνομα ${member.chat_name} δεν έχει αρκετά μέλη οπότε διαγράφηκε.`;
+        if (Object.keys(grouped).length) {
+            for (const [chatId, members] of Object.entries(grouped)) {
+                const remainingUsers = members.filter(m => m.userid != userid);
+                if (remainingUsers.length < 5) {
+                    const [groupid] = await db.query(sqlGetGroup, [chatId]);
+                    await db.query(sqlMatchingsDelete, [groupid[0].groupid]);
+                    await db.query(sqlUnreadAllDelete, [chatId]);
+                    await db.query(sqlGroupDelete, [groupid[0].groupid]);
+                    await db.query(sqlAlgoGroupAllDelete, [groupid[0].groupid]);
+                    await db.query(sqlWaitingAllDelete, [chatId]);
+                    await db.query(sqlAllMessagesDelete, [chatId]);
+                    await db.query(sqlAllUsersChatDelete, [chatId]);
+                    await db.query(sqlAllChatDelete, [chatId]);
 
-                    await db.query(sqlNotificationToAll, [member.userid, message, "info"]);
+                    for (const member of remainingUsers) {
+                        const message = `Η ομάδα με chat όνομα ${member.chat_name} δεν έχει αρκετά μέλη οπότε διαγράφηκε.`;
+
+                        await db.query(sqlNotificationToAll, [member.userid, message, "info"]);
+                    }
                 }
             }
         }
+
+        await db.query(sqlMessages, [userid]);
+        await db.query(sqlUnreadDelete, [userid]);
+        await db.query(sqlMatchings, [userid]);
+        await db.query(sqlCriteria, [userid]);
+        await db.query(sqlAlgoGroupDelete, [userid]);
+        await db.query(sqlWaitingToDelete, [userid]);
+        await db.query(sqlChatUser, [userid]);
+
+        await db.query(sqlArea, [userid]);
+        await db.query(sql, [userid]);
+        await db.commit();
     }
-
-    await db.query(sqlMessages, [userid]);
-    await db.query(sqlMatchings, [userid]);
-    await db.query(sqlCriteria, [userid]);
-    await db.query(sqlWaitingToDelete, [userid]);
-    await db.query(sqlChatUser, [userid]);
-
-    await db.query(sqlArea, [userid]);
-    await db.query(sql, [userid]);
+    catch (err) {
+        await db.rollback();
+        throw err;
+    }
 }
 
 exports.deleteUser = async (req, res) => {

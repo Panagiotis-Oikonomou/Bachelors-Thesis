@@ -10,7 +10,7 @@ export default function useChat(chatid) {
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
-    const { onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages } = useSocket();
+    const { onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, setOfflineNotifications, offlineNotifications } = useSocket();
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
@@ -38,11 +38,11 @@ export default function useChat(chatid) {
     }, {});
 
     useEffect(() => {
-        if(!chatid) return;
+        if (!chatid) return;
         const getCoordinates = async () => {
             try {
                 const res = await axiosPrivate.get(`/areas/coordinates/${chatid}`);
-                if(res.data) setCoordinates(res.data);                
+                if (res.data) setCoordinates(res.data);
             } catch (error) {
                 console.log(error);
             }
@@ -156,20 +156,6 @@ export default function useChat(chatid) {
     }, [socket, chatid]);
 
     useEffect(() => {
-        const getChat = async () => {
-            const res = await axiosPrivate.get(`chats/${chatid}`);
-
-            if (res.data) {
-                setChat(res.data.rows);
-                setChatName(res.data.chat_name);
-            }
-        }
-        getChat();
-        const decoded = jwtDecode(auth?.accessToken);
-        setUserId(decoded.id);
-    }, [chatid]);
-
-    useEffect(() => {
         if (!socket) return;
         socket.on("getMessage", (res) => {
             if (chatid != res.chatid) return;
@@ -211,6 +197,20 @@ export default function useChat(chatid) {
     }, [socket, chatid]);
 
     useEffect(() => {
+        const getChat = async () => {
+            const res = await axiosPrivate.get(`chats/chat/${chatid}`);
+            
+            if (res.data) {
+                setChat(res.data.rows);
+                setChatName(res.data.chat_name);
+            }
+        }
+        const decoded = jwtDecode(auth?.accessToken);
+        setUserId(decoded.id);
+        getChat();
+    }, [chatid]);
+
+    useEffect(() => {
         const getDeleteChat = async () => {
             try {
                 const res = await axiosPrivate.get(`/chats/waiting_delete/${chatid}`);
@@ -222,10 +222,25 @@ export default function useChat(chatid) {
         getDeleteChat();
     }, [chatid]);
 
+    useEffect(() => {
+        if(!userId) return;
+        const zeroUnreadMessages = async () => {
+            setOfflineNotifications(prev => prev.map(u => u.userid === userId && u.chatid == chatid ? { ...u, countOffline: 0 } : u));
+            try{
+                await axiosPrivate.put(`/chats/zero/${chatid}`);
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+        zeroUnreadMessages();
+    }, [chatid, userId]);
+
     async function sendText() {
         if (!text.trim()) return;
         try {
             const res = await axiosPrivate.post('/chats', { chatid, userid: userId, message: text });
+            axiosPrivate.post("/chats/notifications", { onlineUsers, chatid }).catch(console.error);
             setChat((prev) => [...prev, res.data]);
             if (res.data) {
                 if (!socket) return;
@@ -305,6 +320,6 @@ export default function useChat(chatid) {
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
         setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
         changeWaitingDelete, chatName, showWaiting, setShowWaiting, openMap, setOpenMap,
-        coordinates
+        coordinates, offlineNotifications
     };
 }

@@ -14,6 +14,7 @@ export const SocketProvider = () => {
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
+    const [offlineNotifications, setOfflineNotifications] = useState([]);
     const [peakMessages, setPeakMessages] = useState([]);
     const userid = auth?.accessToken ? jwtDecode(auth.accessToken).id : null;
 
@@ -70,8 +71,22 @@ export const SocketProvider = () => {
         getLatestMessages();
     }, [socket, location]);
 
+    useEffect(() => {
+        const getOfflineNotifications = async () => {
+            try {
+                if (!userid) return;
+                const res = await axiosPrivate.get("/chats/offline-notifications");
+                if (res.data.length > 0) setOfflineNotifications(res.data);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        getOfflineNotifications();
+    }, []);
+
     return (
-        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages }}>
+        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, offlineNotifications, setOfflineNotifications }}>
             <Outlet />
         </SocketContext.Provider>
     );

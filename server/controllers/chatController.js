@@ -14,6 +14,49 @@ exports.getChats = async (req, res) => {
     }
 }
 
+exports.updateUnreadMessages = async (req, res) => {
+    try {
+        const { onlineUsers, chatid } = req.body;
+        const userIds = (onlineUsers ?? []).map(user => user.userId);
+        const placeholders = userIds.map(() => "?").join(",");
+
+        const sql1 = "UPDATE offline_chat SET countOffline = countOffline + 1 WHERE chatid = ?";
+        const sql2 = `UPDATE offline_chat SET countOffline = countOffline + 1 WHERE chatid = ? AND userid NOT IN (${placeholders})`;
+
+        if (userIds.length === 0) await db.query(sql1, [chatid]);
+
+        else await db.query(sql2, [chatid, ...userIds]);
+
+        return res.sendStatus(200);
+    }
+    catch (err) {
+        return res.status(500).json({ err });
+    }
+}
+
+exports.turnToZeroUnreadMessages = async (req, res) => {
+    try {
+        const sql = "UPDATE offline_chat SET countOffline = 0 WHERE chatid = ? and userid = ?";
+        await db.query(sql, [req.params.chatid, req.user.id]);
+
+        return res.sendStatus(200);
+    }
+    catch (err) {
+        return res.status(500).json({ err });
+    }
+}
+
+exports.getOfflineNotifications = async (req, res) => {
+    try {
+        const sql = "SELECT * FROM offline_chat WHERE userid = ?";
+
+        const [rows] = await db.query(sql, [req.user.id]);
+        return res.status(200).json(rows);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 exports.createMessage = async (req, res) => {
     try {
         const sql = "INSERT INTO messages (chatid, userid, message) VALUES (?, ?, ?)";
@@ -32,7 +75,7 @@ exports.getMessages = async (req, res) => {
         const chatNameSql = "SELECT chat_name FROM chats WHERE chatid = ?";
         const [rows] = await db.query(sql, [req.params.chatid]);
         const [rows2] = await db.query(chatNameSql, [req.params.chatid]);
-        return res.status(200).json({chat_name: rows2[0].chat_name, rows});
+        return res.status(200).json({ chat_name: rows2[0].chat_name, rows });
     } catch (error) {
         console.log(error);
     }
@@ -43,7 +86,7 @@ exports.getOnlineChatUsers = async (req, res) => {
         const sql = "SELECT userid FROM chat_users WHERE chatid = ? AND userid IN (?)";
         const { getRecipients, chatid } = req.body;
         const userIds = getRecipients.map(r => r.userId);
-        if(userIds.length === 0) return res.status(200).json([]);
+        if (userIds.length === 0) return res.status(200).json([]);
         const [rows] = await db.query(sql, [chatid, userIds]);
         return res.status(201).json(rows);
     } catch (error) {
@@ -102,7 +145,7 @@ exports.deleteChat = async (req, res) => {
         const deleteMatchingsSql = "DELETE FROM matchings WHERE groupid = ?";
         const deleteMessagesSql = "DELETE FROM messages WHERE chatid = ?";
         const sendNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
-        
+
         const [groupid] = await db.query(getGroupSql, [req.params.chatid]);
         const message = `Έχετε βγει από την ομάδα ${groupid[0].chat_name} μετά από συμφωνία όλων των μελών της`;
         const [users] = await db.query(getUsersSql, [req.params.chatid]);
@@ -112,8 +155,8 @@ exports.deleteChat = async (req, res) => {
         await db.query(deleteMessagesSql, [req.params.chatid]);
         await db.query(deleteGroupSql, [groupid[0].groupid]);
         await db.query(deleteMatchingsSql, [groupid[0].groupid]);
-        
-        for(const u of users){
+
+        for (const u of users) {
             await db.query(sendNotificationSql, [u.userid, message, "info"]);
         }
         return res.sendStatus(200);
