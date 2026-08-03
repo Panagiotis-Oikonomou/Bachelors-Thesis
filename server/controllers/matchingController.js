@@ -31,20 +31,21 @@ exports.createMatchings = async (req, res) => {
     }
 }
 
-const noAgrement = async (res, result, groupid, username, userid) => {
-    const deleteMembersGroupSql = "DELETE FROM matchings WHERE userid = ? AND groupid = ?";
+const noAgrement = async (result, groupid, username, userid) => {
+    const deleteMembersGroupSql = "DELETE FROM matchings WHERE groupid = ?";
     const makeDisableSql = "UPDATE notifications SET disabled = 1 WHERE groupid = ?";
     db.query(makeDisableSql, [groupid]);
     const createInfoNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
     const message = `The user ${username} didn't want to make a group with you.`;
+
+    await db.query(deleteMembersGroupSql, [groupid]);
+
     for (const r of result) {
-        await db.query(deleteMembersGroupSql, [r.userid, groupid]);
         if (r.userid === userid) continue;
         await db.query(createInfoNotificationSql, [r.userid, message, "info"]);
     }
     const deleteGroupSql = "DELETE FROM groups WHERE groupid = ?";
     await db.query(deleteGroupSql, [groupid]);
-    return res.sendStatus(201);
 }
 
 exports.updateAgrees = async (req, res) => {
@@ -57,18 +58,20 @@ exports.updateAgrees = async (req, res) => {
             return res.sendStatus(404);
         }
 
-        const sql = "UPDATE matchings SET agrees = ? WHERE userid = ? AND groupid = ?";
-        await db.query(sql, [agrees, gi[0].userid, gi[0].groupid]);
-
         const getAllMembersSql = "SELECT agrees, userid FROM matchings WHERE groupid = ?";
-        const [result] = await db.query(getAllMembersSql, [gi[0].groupid]);
+        let [result] = await db.query(getAllMembersSql, [gi[0].groupid]);
         if (!agrees) {
-            noAgrement(res, result, gi[0].groupid, gi[0].username, gi[0].userid);
+            noAgrement(result, gi[0].groupid, gi[0].username, gi[0].userid);
+            return res.sendStatus(200);
         }
 
+        const sql = "UPDATE matchings SET agrees = ? WHERE userid = ? AND groupid = ?";
+        await db.query(sql, [1, gi[0].userid, gi[0].groupid]);
+
         let allAgree = 1;
+        result = result.map(r => r.userid === gi[0].userid ? { ...r, agrees: 1 } : r);
         for (const r of result) {
-            if (!r.agrees) {
+            if (r.agrees == 0) {
                 allAgree = 0;
                 break;
             }
@@ -80,9 +83,9 @@ exports.updateAgrees = async (req, res) => {
             const chatName = crypto.randomUUID().slice(0, 10);
             const [chat] = await db.query(chatCreationSql, [gi[0].groupid, areaid[0].areaid, chatName]);
             const addUsersToChatSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
-            const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
+            const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUES (?, ?)";
             const deletePotentialAreaIdSql = "DELETE FROM potential_areaid WHERE groupid = ?";
-            const addOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUES (?, ?, )";
+            const addOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUES (?, ?)";
             for (const r of result) {
                 await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
                 await db.query(createDestroySql, [chat.insertId, r.userid]);

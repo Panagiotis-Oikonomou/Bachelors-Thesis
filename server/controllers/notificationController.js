@@ -74,7 +74,9 @@ exports.createInvitationNotification = async (req, res) => {
         notification += `Ποσότητα PV ενέργειας: ${rows[0].ac}kwh\n\n`;
 
         const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
+        const [userMoney] = await db.query(essentialsSql, [req.user.id]);
         let sum = 0;
+        if(userMoney.length > 0) sum += Number(userMoney[0].money);
         for(const user of usersNoUser){
             const [essentialsRows] = await db.query(essentialsSql, [user.userid]);
             if (essentialsRows[0]?.money !== null) sum += Number(essentialsRows[0].money);
@@ -99,7 +101,7 @@ exports.createInvitationNotification = async (req, res) => {
         const [create] = await db.query(newGroupSql);
         await db.query(alreadyAcceptSql, [create.insertId, req.user.id, 1]);
         await db.query(potentialAreaIdSql, [create.insertId, areaid]);
-        const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?, ?)";
+        const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?)";
         for(const user of usersNoUser){
             await db.query(addNotificationSql, [user.userid, create.insertId, notification, "conf"]);
         }

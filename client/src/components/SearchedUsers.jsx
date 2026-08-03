@@ -13,7 +13,7 @@ export default function SearchedUsers({ style = {}, nextUser, addUser, visibleUs
             <Stack spacing={2}>
                 {visibleUser && (
                     <>
-                        <Box>
+                        <Box sx={{minHeight:"300px"}}>
                             {visibleUser.username !== null && (<>Username: {visibleUser.username}<br /><br /></>)}
 
                             {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br /></>}
@@ -37,7 +37,7 @@ export default function SearchedUsers({ style = {}, nextUser, addUser, visibleUs
 
                             Άλλα: {visibleUser.other !== null && visibleUser.other ? "Ναι" : "Όχι"}<br />
                         </Box>
-                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf: "flex-start" }}>
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", alignSelf: "flex-start", }}>
                             Όχι<IconButton sx={{ color: "red" }} onClick={nextUser}><CancelOutlined /></IconButton>
                             Ναι<IconButton sx={{ color: "green" }} onClick={() => addUser(visibleUser)}><CheckCircleOutlined /></IconButton>
                         </Box>

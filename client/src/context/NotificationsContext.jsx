@@ -1,12 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const NotificationsContext = createContext({});
 
 export const NotificationsProvider = () => {
     const axiosPrivate = useAxiosPrivate();
     const [globalNotifications, setGlobalNotifications] = useState(0);
+    const location = useLocation();
 
     useEffect(() => {
         const getNotifications = async () => {
@@ -18,7 +19,7 @@ export const NotificationsProvider = () => {
             }
         }
         getNotifications();
-    }, []);
+    }, [location]);
 
     return (
         <NotificationsContext.Provider value={{ globalNotifications, setGlobalNotifications }}>
