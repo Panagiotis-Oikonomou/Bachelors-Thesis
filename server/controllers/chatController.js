@@ -34,6 +34,19 @@ exports.updateUnreadMessages = async (req, res) => {
     }
 }
 
+exports.updateChatName = async (req, res) => {
+    try {
+        const sql = "UPDATE chats SET chat_name = ? WHERE chatid = ?";
+        console.log(req.params, req.body);
+        await db.query(sql, [req.body.chatName, req.params.chatid]);
+
+        return res.sendStatus(200);
+    }
+    catch (err) {
+        return res.status(500).json({ err });
+    }
+}
+
 exports.turnToZeroUnreadMessages = async (req, res) => {
     try {
         const sql = "UPDATE offline_chat SET countOffline = 0 WHERE chatid = ? and userid = ?";

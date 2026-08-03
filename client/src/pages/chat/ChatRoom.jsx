@@ -4,8 +4,8 @@ import moment from 'moment';
 import EmojiPicker from 'emoji-picker-react';
 import useChat from "../../hooks/useChat";
 import MainLayout from "../../components/mainLayout";
-import { Box, Button, Icon, IconButton, Paper, TextareaAutosize, Typography } from "@mui/material";
-import { EmojiEmotionsOutlined, KeyboardBackspaceOutlined, MapOutlined, MoreHorizOutlined, NotificationsActiveOutlined, PaddingOutlined, SendOutlined } from "@mui/icons-material";
+import { Box, Button, Icon, IconButton, Paper, TextareaAutosize, TextField, Typography } from "@mui/material";
+import { EditOutlined, EmojiEmotionsOutlined, KeyboardBackspaceOutlined, MapOutlined, MoreHorizOutlined, NotificationsActiveOutlined, PaddingOutlined, SendOutlined } from "@mui/icons-material";
 import { scrollbarStyles } from "../styles/scrollbar";
 import WaitingToDelete from "../../components/WaitingToDelete";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
@@ -17,7 +17,8 @@ function ChatRoom() {
     onlineUsers, grouped, setOpenMenu, openMenu, unsendText, setText, keyPressed,
     setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
     changeWaitingDelete, chatName, showWaiting, setShowWaiting, openMap, setOpenMap,
-    coordinates, offlineNotifications
+    coordinates, offlineNotifications, openChatname, setOpenChatname, tempChatName,
+    updateChatName, checkChatName, chatNameError
   } = useChat(chatId);
 
   const mainMessageSx = { maxWidth: "50%", p: 1, mx: 1, mt: 1, mb: 2, borderRadius: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", position: "relative", };
@@ -27,7 +28,20 @@ function ChatRoom() {
     <MainLayout mxW="xl" containerSx={{ p: { xs: 0 } }} paperSx={{ overflow: "hidden", p: { xs: 0, md: 1 }, }}>
       <Box sx={{ display: "flex", }}>
         <Box sx={{ display: { xs: "none", md: "flex" }, flexDirection: "column", alignItems: "center", width: "30%", height: "89dvh", }}>
-          <Typography variant="h6">{chatName}</Typography>
+          <Box sx={{ display: "flex", position: "relative", justifyContent: "center", alignItems: "center" }}>
+            <Typography variant="h6">{chatName}</Typography>
+            <IconButton onClick={() => setOpenChatname(c => !c)}><EditOutlined /></IconButton>
+            {openChatname && (
+              <Box sx={{ position: "absolute", flexDirection: "column", zIndex: 1000, top: { xs: 33, sm: 25 }, right: { xs: -10, sm: -14 }, transform: { xs: "scale(0.90)", sm: " scale(0.80)" }, gap: 2 }}>
+                <Paper sx={{ width: "200px", height: "200px", p: 2, }}>
+                  <Box component="form" onSubmit={updateChatName}>
+                    <TextField variant="standard" value={tempChatName} onChange={(e) => checkChatName(e.target.value)} helperText={chatNameError} error={chatNameError !== ""} />
+                    <Button variant="contained" type="submit" disabled={chatNameError !== ""}>Άλλαξε</Button>
+                  </Box>
+                </Paper>
+              </Box>
+            )}
+          </Box>
 
           <Paper variant="outlined" sx={{ overflowY: "auto", overflowX: "hidden", display: { xs: "none", md: "block" }, flexDirection: "column", width: "100%", height: "100%", p: 1, ...scrollbarStyles }}>
             {Object.entries(grouped).map(([chatId, members]) => {
@@ -70,10 +84,23 @@ function ChatRoom() {
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: { xs: "100%", md: "70%" }, ml: { xs: 0, md: 1 }, gap: { xs: 0, md: 1 }, height: "89dvh" }}>
           <Box sx={{ display: { xs: "flex", md: "none" }, justifyContent: "space-between", width: "100%", position: "relative" }}>
             <Link to="/my_chats" className={styles.linkNoColor}><KeyboardBackspaceOutlined /></Link>
-            <Typography variant="h6">{chatName}</Typography>
-            <Box sx={{ display: "flex" }}>
-              <IconButton onClick={() => setOpenMap(m => !m)}><MapOutlined /></IconButton>
-              <IconButton onClick={() => setShowWaiting((w) => !w)}><PaddingOutlined /></IconButton>
+            <Box sx={{ display: "flex", position: "relative", justifyContent:"center", alignItems:"center" }}>
+              <Typography variant="h6">{chatName}</Typography>
+              <IconButton onClick={() => setOpenChatname(c => !c)} sx={{ width: {xs:"20px", sm:"30px"}, }} ><EditOutlined sx={{ height: {xs:"20px", sm:"30px"} }} /></IconButton>
+              {openChatname && (
+                <Box sx={{ position: "absolute", flexDirection: "column", zIndex: 1000, top: { xs: 20, sm: 25 }, left: { xs: -25, sm: -14 }, transform: { xs: "scale(0.80)", sm: " scale(0.80)" }, gap: 2, }}>
+                  <Paper sx={{ width: "200px", height: "200px", p: 2, }}>
+                    <Box component="form" onSubmit={updateChatName}>
+                      <TextField variant="standard" value={tempChatName} onChange={(e) => checkChatName(e.target.value)} helperText={chatNameError} error={chatNameError !== ""} />
+                      <Button variant="contained" type="submit" disabled={chatNameError !== ""}>Άλλαξε</Button>
+                    </Box>
+                  </Paper>
+                </Box>
+              )}
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <IconButton onClick={() => setOpenMap(m => !m)} sx={{ height: {xs:"20px", sm:"30px"}, width: {xs:"20px", sm:"30px"}, }}><MapOutlined sx={{ height: {xs:"20px", sm:"30px"} }} /></IconButton>
+              <IconButton onClick={() => setShowWaiting((w) => !w)} sx={{ height: {xs:"20px", sm:"30px"}, width: {xs:"20px", sm:"30px"}, }}><PaddingOutlined sx={{ height: {xs:"20px", sm:"30px"}, }} /></IconButton>
             </Box>
             {showWaiting && (
               <Box sx={{ position: "absolute", flexDirection: "column", zIndex: 1000, top: { xs: 33, sm: 25 }, right: { xs: -10, sm: -14 }, transform: { xs: "scale(0.90)", sm: " scale(0.80)" }, }}>

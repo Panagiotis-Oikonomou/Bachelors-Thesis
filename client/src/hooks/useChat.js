@@ -17,10 +17,13 @@ export default function useChat(chatid) {
     const [text, setText] = useState("");
     const [waitingDelete, setWaitingDelete] = useState([]);
     const [chatName, setChatName] = useState("");
+    const [tempChatName, setTempChatName] = useState("");
+    const [chatNameError, setChatNameError] = useState("");
 
     const [showPicker, setShowPicker] = useState(false);
     const [showWaiting, setShowWaiting] = useState(false);
     const [openMap, setOpenMap] = useState(false);
+    const [openChatname, setOpenChatname] = useState(false);
     const textareaRef = useRef(null);
     const chatRef = useRef(null);
     const bottomRef = useRef(null);
@@ -203,6 +206,7 @@ export default function useChat(chatid) {
             if (res.data) {
                 setChat(res.data.rows);
                 setChatName(res.data.chat_name);
+                setTempChatName(res.data.chat_name);
             }
         }
         const decoded = jwtDecode(auth?.accessToken);
@@ -315,11 +319,36 @@ export default function useChat(chatid) {
         }
     }
 
+    function checkChatName(chat){
+        setTempChatName(chat.trim());
+        let error = "";
+        let len = chat.trim().length;
+        if(len === 0) error = "Το όνομα πρέπει να αποτελείται από τουλάχιστον έναν χαρακτήρα.";
+        else if(len > 10) error = "Το όνομα πρέπει να αποτελείται από λιγότερο από 10 χαρακτήρες.";
+
+        setChatNameError(error);
+    }
+
+    async function updateChatName(e){
+        e.preventDefault();
+
+        if(chatNameError !== "") return;
+
+        setChatName(tempChatName);
+        setOpenChatname(false);
+        try {
+            await axiosPrivate.put(`/chats/chatname/${chatid}`, {chatName: tempChatName});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return {
         chat, userId, text, showPicker, chatRef, bottomRef, textareaRef, menuRef,
         onlineUsers, setOpenMenu, openMenu, grouped, unsendText, setText, keyPressed,
         setShowPicker, onEmojiClick, sendText, notifications, peakMessages, waitingDelete,
         changeWaitingDelete, chatName, showWaiting, setShowWaiting, openMap, setOpenMap,
-        coordinates, offlineNotifications
+        coordinates, offlineNotifications, openChatname, setOpenChatname, tempChatName,
+        updateChatName, checkChatName, chatNameError
     };
 }
