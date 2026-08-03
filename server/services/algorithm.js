@@ -8,6 +8,7 @@ const getAllUsers = async () => {
     let teams = [];
 
     const [userFields] = await db.query(getUsersWithFieldSql);
+    if(userFields.length === 0) return;
     for (const user of userFields) {
         const [userNOFields] = await db.query(getUsersWithoutFieldSql, [user.size, user.ac]);
         const team = generateTeam(userNOFields, user);
@@ -21,70 +22,64 @@ const getAllUsers = async () => {
     let index = 0;
     for (const tempTeam of tempTeams) {
         let id = 0;
+        let stringId = "";
         tempTeam.sort((a, b) => { return a.userid - b.userid });
         for (const member of tempTeam) {
             id += member.userid;
+            stringId += member.userid;
         }
-        tempIds.push({ id, index });
+        tempIds.push({ id, stringId, index });
         index++;
     }
-    console.log("teams before", teams);
-    console.log("ids", tempIds);
+
     for (let i = 0; i < tempIds.length; i++) {
-        let dublicates = tempIds.filter(t => t.id === tempIds[i].id);
+        let dublicates = tempIds.filter(t => t.id === tempIds[i].id && t.stringId === tempIds[i].stringId);
         if (dublicates.length > 1) {
-            console.log("dublicate", dublicates);
             let best = dublicates[0];
             for (const d of dublicates) {
                 const field = teams[d.index][0];
-                console.log("ac1 size1", teams[best.index][0]);
-                console.log("ac2 size2", field);
                 if (field.ac > teams[best.index][0].ac || (field.ac === teams[best.index][0].ac && field.size === teams[best.index][0].size))
                     best = d;
             }
-            tempIds = tempIds.filter(t => t.id !== best.id || t.index === best.index);
+            tempIds = tempIds.filter(t => (t.id !== best.id && t.stringId !== best.stringId) || t.index === best.index);
         }
     }
-    console.log("ids after", tempIds);
+
     teams = teams.filter(((_, index) => tempIds.some(t => t.index === index)));
-    console.log("teams after", teams);
-    console.log("len", tempIds.length);
     for (const team of teams) {
-        // console.log("teams", team[0]);
-        // tempTeams.push(team.filter(t => t !== 0));
+        let id = "";
+        let sum = 0;
+        let areaid = team[0].areaid;
+        team.sort((a, b) => { return a.userid - b.userid });
+        for (const member of team) {
+            id += member.userid;
+            sum += Number(member.userid);
+        }
 
-        // let id = "";
-        // let sum = 0;
-        // let areaid = team[0].areaid;
-        // team.sort((a, b) => { return a.userid - b.userid });
-        // for (const member of team) {
-        //     id += member.userid;
-        //     sum += Number(member.userid);
-        // }
-        // const checkIdSql = "SELECT id FROM algo_group WHERE id = ? AND sumid = ? LIMIT 1";
-        // const [rows] = await db.query(checkIdSql, [id, sum]);
-        // if (rows.length > 0) {console.log("xeiiist"); continue;}
+        const checkIdSql = "SELECT id FROM algo_group WHERE id = ? AND sumid = ? LIMIT 1";
+        const [rows] = await db.query(checkIdSql, [id, sum]);
+        if (rows.length > 0) continue; 
 
-        // const newGroupSql = "INSERT INTO groups VALUES ()";
-        // const createAlgoGroupSql = "INSERT INTO algo_group (groupid, userid, id, sumid) VALUES (?, ?, ?, ?)";
-        // const createChatGroupSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
-        // const insertChatUserSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
-        // const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
-        // const createOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUE (?, ?)";
-        // const createNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUE (?, ?, ?, ?)";
+        const newGroupSql = "INSERT INTO groups VALUES ()";
+        const createAlgoGroupSql = "INSERT INTO algo_group (groupid, userid, id, sumid) VALUES (?, ?, ?, ?)";
+        const createChatGroupSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
+        const insertChatUserSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
+        const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
+        const createOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUE (?, ?)";
+        const createNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUE (?, ?, ?, ?)";
 
-        // const [groupid] = await db.query(newGroupSql);
-        // const chatName = crypto.randomUUID().slice(0, 10);
-        // const message = `Ο αλγόριθμός μας σας ταίριαξε με άλλους χρήστες. Μπορείτε να επικοινωνήσετε μαζί τους στο chat ${chatName}`;
-        // const [chatid] = await db.query(createChatGroupSql, [groupid.insertId, areaid, chatName]);
+        const [groupid] = await db.query(newGroupSql);
+        const chatName = crypto.randomUUID().slice(0, 10);
+        const message = `Ο αλγόριθμός μας σας ταίριαξε με άλλους χρήστες. Μπορείτε να επικοινωνήσετε μαζί τους στο chat ${chatName}`;
+        const [chatid] = await db.query(createChatGroupSql, [groupid.insertId, areaid, chatName]);
 
-        // for (const member of team) {
-        //     await db.query(createAlgoGroupSql, [groupid.insertId, member.userid, id, sum]);
-        //     await db.query(insertChatUserSql, [chatid.insertId, member.userid]);
-        //     await db.query(createDestroySql, [chatid.insertId, member.userid]);
-        //     await db.query(createOfflineMessagesSql, [chatid.insertId, member.userid]);
-        //     await db.query(createNotificationSql, [member.userid, groupid.insertId, message, "info"]);
-        // }
+        for (const member of team) {
+            await db.query(createAlgoGroupSql, [groupid.insertId, member.userid, id, sum]);
+            await db.query(insertChatUserSql, [chatid.insertId, member.userid]);
+            await db.query(createDestroySql, [chatid.insertId, member.userid]);
+            await db.query(createOfflineMessagesSql, [chatid.insertId, member.userid]);
+            await db.query(createNotificationSql, [member.userid, groupid.insertId, message, "info"]);
+        }
     }
     return;
 }
@@ -99,7 +94,6 @@ function generateTeam(users, userWithArea) {
     const needed = { money: userWithArea.money !== null, papers: userWithArea.papers === 1, other: userWithArea.other === 1 };
 
     while (true) {
-        // console.log("totalIncome", totalIncome);
         if (isValidTeam(team, totalIncome, needed)) break;
 
         let bestUser = null;
