@@ -11,7 +11,7 @@ router.get("/offline-notifications", ver.verify, chat.getOfflineNotifications);
 router.put("/zero/:chatid", ver.verify, chat.turnToZeroUnreadMessages);
 router.post("/notifications", ver.verify, chat.updateUnreadMessages );
 
-router.get("/messages/:userid", ver.verify, chat.getLatestMessages );
+router.get("/messages", ver.verify, chat.getLatestMessages );
 router.get("/waiting_delete/:chatid", ver.verify, chat.getWatingDelete );
 router.post("/online_users", ver.verify, chat.getOnlineChatUsers );
 router.put("/:messageid", ver.verify, chat.deleteMessage );

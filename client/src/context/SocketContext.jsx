@@ -62,7 +62,7 @@ export const SocketProvider = () => {
         const getLatestMessages = async () => {
             try {
                 if (!userid) return;
-                const res = await axiosPrivate.get(`/chats/messages/${userid}`);
+                const res = await axiosPrivate.get("/chats/messages");
                 if (res.data.length > 0) setPeakMessages(res.data);
             }
             catch (error) {

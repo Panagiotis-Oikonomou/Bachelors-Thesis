@@ -37,7 +37,6 @@ exports.updateUnreadMessages = async (req, res) => {
 exports.updateChatName = async (req, res) => {
     try {
         const sql = "UPDATE chats SET chat_name = ? WHERE chatid = ?";
-        console.log(req.params, req.body);
         await db.query(sql, [req.body.chatName, req.params.chatid]);
 
         return res.sendStatus(200);
@@ -74,10 +73,10 @@ exports.createMessage = async (req, res) => {
     try {
         const sqlMessage = "INSERT INTO messages (chatid, userid, message) VALUES (?, ?, ?)";
         const sqlInfo = "INSERT INTO messages (chatid, userid, message, info) VALUES (?, ?, ?, ?)";
-        const { chatid, message } = req.body;
+        const { chatid, message, userId } = req.body;
 
         if (req.body?.info === true) {
-            const [rows] = await db.query(sqlInfo, [chatid, 0, message, 1]);
+            const [rows] = await db.query(sqlInfo, [chatid, userId, message, 1]);
             const [messageRow] = await db.query("SELECT * FROM messages WHERE messageid = ?", [rows.insertId]);
             return res.status(201).json(messageRow[0]);
         }
@@ -128,8 +127,8 @@ exports.deleteMessage = async (req, res) => {
 
 exports.getLatestMessages = async (req, res) => {
     try {
-        const getChatsSql = "SELECT cu.chatid, m.message FROM chat_users cu LEFT JOIN messages m ON m.messageid = (SELECT messageid FROM messages WHERE chatid = cu.chatid AND unsent = 0 ORDER BY messageid DESC LIMIT 1) WHERE cu.userid = ?";
-        const [rows] = await db.query(getChatsSql, [req.params.userid]);
+        const getChatsSql = "SELECT cu.chatid, m.message FROM chat_users cu LEFT JOIN messages m ON m.messageid = (SELECT messageid FROM messages WHERE chatid = cu.chatid AND unsent = 0 AND info <> 1 ORDER BY messageid DESC LIMIT 1) WHERE cu.userid = ?";
+        const [rows] = await db.query(getChatsSql, [req.user.id]);
         return res.status(200).json(rows);
     } catch (error) {
         console.log(error);

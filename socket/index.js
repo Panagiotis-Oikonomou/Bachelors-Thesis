@@ -37,7 +37,8 @@ function initSocket(server) {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
             if(users){
                 for(const u of users){
-                    io.to(u.socketId).emit("getUpdateChatName", {chatid: text.chatid, chatName: text.chatName});
+                    io.to(u.socketId).emit("getUpdateChatName", {chatid: text.message.chatid, chatName: text.chatName});
+                    io.to(u.socketId).emit("getChangeChatNameInfo", {message: text.message});
                 }
             }
         });
@@ -85,5 +86,4 @@ function initSocket(server) {
 
     return io;
 }
-
 module.exports = initSocket;

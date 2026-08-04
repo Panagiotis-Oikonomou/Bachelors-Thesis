@@ -169,16 +169,23 @@ export default function useChat(chatid) {
             socket.off("getNotification");
         };
     }, [socket, chatid]);
-
+    
     useEffect(() => {
         if (!socket) return;
         socket.on("getUpdateChatName", (res) => {
             if (chatid != res.chatid) return;
             setChatName(p => ({...p, name: res.chatName}));
+            setChatNames(prev => prev.map(p => p.chatid == chatid ? { ...p, chat_name: res.chatName } : p));
+        });
+
+        socket.on("getChangeChatNameInfo", (res) => {
+            if (chatid != res.message.chatid) return;
+            setChat((prev) => [...prev, res.message]);
         });
 
         return () => {
             socket.off("getUpdateChatName");
+            socket.off("getChangeChatNameInfo");
         };
     }, [socket, chatid]);
 
@@ -245,6 +252,7 @@ export default function useChat(chatid) {
             const res = await axiosPrivate.post('/chats', { chatid, userid: userId, message: text });
             axiosPrivate.post("/chats/notifications", { onlineUsers, chatid }).catch(console.error);
             setChat((prev) => [...prev, res.data]);
+            setPeakMessages(prev => prev.map(p => p.chatid == chatid ? {...p, message: text} : p));
             if (res.data) {
                 if (!socket) return;
                 const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
@@ -340,11 +348,12 @@ export default function useChat(chatid) {
         try {
             await axiosPrivate.put(`/chats/chatname/${chatid}`, { chatName: tempChatName });
             const message = `Ο χρήστης ${userName} άλλαξε το όνομα του chat σε ${tempChatName}`;
-            const resId = await axiosPrivate.post('/chats', { chatid, message, info: true });
+            const resId = await axiosPrivate.post('/chats', { chatid, userId, message, info: true });
+            setChat((prev) => [...prev, resId.data]);
             if (!socket) return;
             const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
             const res = await axiosPrivate.post("/chats/online_users", { getRecipients, chatid });
-            if (res.data) socket.emit("updateChatName", { chatName: tempChatName, chatid, recipients: res.data });
+            if (res.data) socket.emit("updateChatName", { chatName: tempChatName, recipients: res.data, message: resId.data });
         } catch (error) {
             console.log(error);
         }

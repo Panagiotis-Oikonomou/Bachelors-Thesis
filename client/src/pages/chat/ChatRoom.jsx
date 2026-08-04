@@ -20,9 +20,10 @@ function ChatRoom() {
     coordinates, offlineNotifications, openChatname, setOpenChatname, tempChatName,
     updateChatName, checkChatName, chatNameError
   } = useChat(chatId);
-
+  
   const mainMessageSx = { maxWidth: "50%", p: 1, mx: 1, mt: 1, mb: 2, borderRadius: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", position: "relative", };
   const mainDeletedSx = { bgcolor: "#e0e0e0", color: "#777", fontStyle: "italic" };
+  const infoSx = {maxWidth:"100%",  p: 0, mx: 1, mt: 1, mb: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", alignSelf: "center", fontSize: "x-small"};
 
   return (
     <MainLayout mxW="xl" containerSx={{ p: { xs: 0 } }} paperSx={{ overflow: "hidden", p: { xs: 0, md: 1 }, }}>
@@ -128,14 +129,14 @@ function ChatRoom() {
           {openMap === false && (
             <Paper variant="outlined" sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", overflowX: "hidden", overflowY: "auto", ...scrollbarStyles }} ref={chatRef}>
               {chat.map((item) => (
-                <Box sx={item.unsent == 1 ? (userId === item.userid ? { alignSelf: "flex-end", ...mainMessageSx, ...mainDeletedSx } : { alignSelf: "flex-start", ...mainMessageSx, ...mainDeletedSx }) : (userId === item.userid ? { alignSelf: "flex-end", bgcolor: "#0084ff", ...mainMessageSx } : { alignSelf: "flex-start", bgcolor: "#acc847", color: "black", ...mainMessageSx })}
+                <Box sx={item.info == 1 ? {...infoSx} : (item.unsent == 1 ? (userId === item.userid ? { alignSelf: "flex-end", ...mainMessageSx, ...mainDeletedSx } : { alignSelf: "flex-start", ...mainMessageSx, ...mainDeletedSx }) : (userId === item.userid ? { alignSelf: "flex-end", bgcolor: "#0084ff", ...mainMessageSx } : { alignSelf: "flex-start", bgcolor: "#acc847", color: "black", ...mainMessageSx }))}
                   key={item.messageid}>
 
-                  {(userId !== item.userid && onlineUsers.some(o => o.userId == item.userid)) && (
+                  {(userId !== item.userid && item.info != 1 && onlineUsers.some(o => o.userId == item.userid)) && (
                     <Box sx={{ position: "absolute", top: "3px", left: "6px", width: "10px", height: "10px", borderRadius: "50%", bgcolor: "#16833e" }}></Box>
                   )}
 
-                  {userId !== item.userid && (
+                  {userId !== item.userid && item.info != 1 && (
                     <Box sx={{ fontSize: "medium" }}>
                       {item.username}
                     </Box>
@@ -151,7 +152,7 @@ function ChatRoom() {
                     {moment(item.createdat).calendar()}
                   </Box>
 
-                  {userId === item.userid && item.unsent !== 1 && (
+                  {userId === item.userid && item.unsent !== 1 && item.info != 1 && (
                     <Box sx={{ display: "flex", justifyContent: "flex-end", position: "relative" }}>
                       <IconButton sx={{ display: "flex", justifyContent: "center", alignItems: "center", background: "none", border: "none", cursor: "pointer", p: { xs: 0 }, }}
                         onClick={() => setOpenMenu(openMenu === item.messageid ? null : item.messageid)}>
