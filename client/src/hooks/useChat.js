@@ -10,13 +10,13 @@ export default function useChat(chatid) {
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
-    const { onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, setOfflineNotifications, offlineNotifications } = useSocket();
+    const { onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, setOfflineNotifications, offlineNotifications, chatNames, setChatNames } = useSocket();
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
     const [text, setText] = useState("");
     const [waitingDelete, setWaitingDelete] = useState([]);
-    const [chatName, setChatName] = useState("");
+    const [chatName, setChatName] = useState({name: "", chatid});
     const [tempChatName, setTempChatName] = useState("");
     const [chatNameError, setChatNameError] = useState("");
 
@@ -33,7 +33,7 @@ export default function useChat(chatid) {
     const [openMenu, setOpenMenu] = useState(null);
     const [coordinates, setCoordinates] = useState([]);
 
-    const grouped = chats.reduce((acc, item) => {
+    const grouped = chatNames.reduce((acc, item) => {
         if (!acc[item.chatid]) acc[item.chatid] = [];
 
         acc[item.chatid].push(item);
@@ -120,20 +120,20 @@ export default function useChat(chatid) {
         firstLoad.current = true;
     }, [chatid]);
 
-    useEffect(() => {
-        const getChats = async () => {
-            try {
-                const res = await axiosPrivate.get('/chats');
-                if (!res.data.some(r => r.chatid == chatid)) navigate("/my_chats");
+    // useEffect(() => {
+    //     const getChats = async () => {
+    //         try {
+    //             const res = await axiosPrivate.get('/chats');
+    //             if (!res.data.some(r => r.chatid == chatid)) navigate("/my_chats");
 
-                if (res.data) setChats(res.data);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        }
-        getChats();
-    }, []);
+    //             if (res.data) setChats(res.data);
+    //         }
+    //         catch (err) {
+    //             console.log(err);
+    //         }
+    //     }
+    //     getChats();
+    // }, []);
 
     useEffect(() => {
         if (!socket) return;
@@ -183,6 +183,18 @@ export default function useChat(chatid) {
 
     useEffect(() => {
         if (!socket) return;
+        socket.on("getUpdateChatName", (res) => {
+            if (chatid != res.chatid) return;
+            setChatName(p => ({...p, name: res.chatName}));
+        });
+
+        return () => {
+            socket.off("getUpdateChatName");
+        };
+    }, [socket, chatid]);
+
+    useEffect(() => {
+        if (!socket) return;
         socket.on("removeUnsendMessage", res => {
             if (chatid != res.chatid) return;
             setChat(prev => {
@@ -202,10 +214,10 @@ export default function useChat(chatid) {
     useEffect(() => {
         const getChat = async () => {
             const res = await axiosPrivate.get(`chats/chat/${chatid}`);
-            
+
             if (res.data) {
                 setChat(res.data.rows);
-                setChatName(res.data.chat_name);
+                setChatName(p => ({...p, name:res.data.chat_name}));
                 setTempChatName(res.data.chat_name);
             }
         }
@@ -227,13 +239,13 @@ export default function useChat(chatid) {
     }, [chatid]);
 
     useEffect(() => {
-        if(!userId) return;
+        if (!userId) return;
         const zeroUnreadMessages = async () => {
             setOfflineNotifications(prev => prev.map(u => u.userid === userId && u.chatid == chatid ? { ...u, countOffline: 0 } : u));
-            try{
+            try {
                 await axiosPrivate.put(`/chats/zero/${chatid}`);
             }
-            catch(err){
+            catch (err) {
                 console.log(err);
             }
         }
@@ -319,25 +331,31 @@ export default function useChat(chatid) {
         }
     }
 
-    function checkChatName(chat){
+    function checkChatName(chat) {
         setTempChatName(chat.trim());
         let error = "";
         let len = chat.trim().length;
-        if(len === 0) error = "Το όνομα πρέπει να αποτελείται από τουλάχιστον έναν χαρακτήρα.";
-        else if(len > 10) error = "Το όνομα πρέπει να αποτελείται από λιγότερο από 10 χαρακτήρες.";
+        if (len === 0) error = "Το όνομα πρέπει να αποτελείται από τουλάχιστον έναν χαρακτήρα.";
+        else if (len > 10) error = "Το όνομα πρέπει να αποτελείται από λιγότερο από 10 χαρακτήρες.";
 
         setChatNameError(error);
     }
 
-    async function updateChatName(e){
+    async function updateChatName(e) {
         e.preventDefault();
 
-        if(chatNameError !== "") return;
+        if (chatNameError !== "") return;
 
-        setChatName(tempChatName);
+        setChatName(p => ({...p, name: tempChatName}));
+        setChatNames(prev => prev.map(p => p.chatid == chatid ? { ...p, chat_name: tempChatName } : p));
         setOpenChatname(false);
+
         try {
-            await axiosPrivate.put(`/chats/chatname/${chatid}`, {chatName: tempChatName});
+            await axiosPrivate.put(`/chats/chatname/${chatid}`, { chatName: tempChatName });
+            if (!socket) return;
+            const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
+            const res = await axiosPrivate.post("/chats/online_users", { getRecipients, chatid });
+            if (res.data) socket.emit("updateChatName", { chatName: tempChatName, chatid, recipients: res.data });
         } catch (error) {
             console.log(error);
         }

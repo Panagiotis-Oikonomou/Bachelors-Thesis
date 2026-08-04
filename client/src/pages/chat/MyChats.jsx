@@ -12,11 +12,11 @@ import { NotificationsActiveOutlined } from "@mui/icons-material";
 
 function MyChats() {
   const { auth } = useAuth();
-  const { onlineUsers, notifications, peakMessages, offlineNotifications } = useSocket();
+  const { onlineUsers, notifications, peakMessages, offlineNotifications, chatNames } = useSocket();
   const axiosPrivate = useAxiosPrivate();
   const [chats, setChats] = useState([]);
   const [userId, setUserId] = useState("");
-  const grouped = chats.reduce((acc, item) => {
+  const grouped = chatNames.reduce((acc, item) => {
     if (!acc[item.chatid]) acc[item.chatid] = [];
 
     acc[item.chatid].push(item);
@@ -24,26 +24,13 @@ function MyChats() {
   }, {});
 
   useEffect(() => {
-    const getChats = async () => {
-      try {
-        const res = await axiosPrivate.get('/chats');
-        if (res.data) setChats(res.data);
-      }
-      catch (err) {
-        console.log(err);
-      }
-    }
-    getChats();
     setUserId(jwtDecode(auth?.accessToken).id);
-  }, []);
-
-  useEffect(() => {
     document.title = "MyChats";
   }, []);
 
   return (
     <MainLayout mxW="sm" paperSx={{ p: { xs: 0, sm: 2 } }}>
-      {chats.length === 0 && <Typography sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>Δεν έχεις κάποιο chat.</Typography>}
+      {chatNames.length === 0 && <Typography sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>Δεν έχεις κάποιο chat.</Typography>}
       {Object.entries(grouped).map(([chatId, members]) => {
         const onlineCount = onlineUsers.filter(online =>
           online.userId !== userId &&
@@ -68,8 +55,8 @@ function MyChats() {
                     position: "absolute", top: { xs: -4, sm: -7 }, right: { xs: -4, sm: -7 }, width: { xs: 0.7, sm: 20 }, height: { xs: 0.7, sm: 20 },
                     color: "white", display: "flex", borderRadius: "50%", backgroundColor: "#ef4444", alignItems: "center", justifyContent: "center"
                   }}>
-                    {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length 
-                    + offlineNotifications.find(n => n.chatid == members[0].chatid).countOffline
+                    {notifications.filter(n => n.chatid == members[0].chatid && !n.isRead).length
+                      + offlineNotifications.find(n => n.chatid == members[0].chatid).countOffline
                     }
                   </Typography>
                 </Box>

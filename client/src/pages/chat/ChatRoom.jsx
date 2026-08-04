@@ -29,13 +29,13 @@ function ChatRoom() {
       <Box sx={{ display: "flex", }}>
         <Box sx={{ display: { xs: "none", md: "flex" }, flexDirection: "column", alignItems: "center", width: "30%", height: "89dvh", }}>
           <Box sx={{ display: "flex", position: "relative", justifyContent: "center", alignItems: "center" }}>
-            <Typography variant="h6">{chatName}</Typography>
+            <Typography variant="h6">{chatName.name}</Typography>
             <IconButton onClick={() => setOpenChatname(c => !c)}><EditOutlined /></IconButton>
             {openChatname && (
               <Box sx={{ position: "absolute", flexDirection: "column", zIndex: 1000, top: { xs: 33, sm: 25 }, right: { xs: -10, sm: -14 }, transform: { xs: "scale(0.90)", sm: " scale(0.80)" }, gap: 2 }}>
                 <Paper sx={{ width: "200px", height: "200px", p: 2, }}>
                   <Box component="form" onSubmit={updateChatName}>
-                    <TextField variant="standard" value={tempChatName} onChange={(e) => checkChatName(e.target.value)} helperText={chatNameError} error={chatNameError !== ""} />
+                    <TextField variant="standard" value={tempChatName} autoFocus={true} onChange={(e) => checkChatName(e.target.value)} helperText={chatNameError} error={chatNameError !== ""} />
                     <Button variant="contained" type="submit" disabled={chatNameError !== ""}>Άλλαξε</Button>
                   </Box>
                 </Paper>
@@ -85,13 +85,13 @@ function ChatRoom() {
           <Box sx={{ display: { xs: "flex", md: "none" }, justifyContent: "space-between", width: "100%", position: "relative" }}>
             <Link to="/my_chats" className={styles.linkNoColor}><KeyboardBackspaceOutlined /></Link>
             <Box sx={{ display: "flex", position: "relative", justifyContent:"center", alignItems:"center" }}>
-              <Typography variant="h6">{chatName}</Typography>
+              <Typography variant="h6">{chatName.name}</Typography>
               <IconButton onClick={() => setOpenChatname(c => !c)} sx={{ width: {xs:"20px", sm:"30px"}, }} ><EditOutlined sx={{ height: {xs:"20px", sm:"30px"} }} /></IconButton>
               {openChatname && (
                 <Box sx={{ position: "absolute", flexDirection: "column", zIndex: 1000, top: { xs: 20, sm: 25 }, left: { xs: -25, sm: -14 }, transform: { xs: "scale(0.80)", sm: " scale(0.80)" }, gap: 2, }}>
                   <Paper sx={{ width: "200px", height: "200px", p: 2, }}>
                     <Box component="form" onSubmit={updateChatName}>
-                      <TextField variant="standard" value={tempChatName} onChange={(e) => checkChatName(e.target.value)} helperText={chatNameError} error={chatNameError !== ""} />
+                      <TextField variant="standard" value={tempChatName} autoFocus={true} onChange={(e) => checkChatName(e.target.value)} helperText={chatNameError} error={chatNameError !== ""} />
                       <Button variant="contained" type="submit" disabled={chatNameError !== ""}>Άλλαξε</Button>
                     </Box>
                   </Paper>

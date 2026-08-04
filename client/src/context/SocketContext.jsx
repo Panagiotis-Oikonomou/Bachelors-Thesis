@@ -17,7 +17,8 @@ export const SocketProvider = () => {
     const [offlineNotifications, setOfflineNotifications] = useState([]);
     const [peakMessages, setPeakMessages] = useState([]);
     const userid = auth?.accessToken ? jwtDecode(auth.accessToken).id : null;
-
+    const [chatNames, setChatNames] = useState([]);
+ 
     useEffect(() => {
         const newSocket = io("http://localhost:5000", {
             reconnection: true,
@@ -72,6 +73,17 @@ export const SocketProvider = () => {
     }, [socket, location]);
 
     useEffect(() => {
+        if (!socket) return;
+        socket.on("getUpdateChatName", (res) => {
+            setChatNames(prev => prev.map(p => p.chatid == res.chatid ? { ...p, chat_name: res.chatName } : p));
+        });
+
+        return () => {
+            socket.off("getUpdateChatName");
+        };
+    }, [socket, location]);
+
+    useEffect(() => {
         const getOfflineNotifications = async () => {
             try {
                 if (!userid) return;
@@ -85,8 +97,22 @@ export const SocketProvider = () => {
         getOfflineNotifications();
     }, []);
 
+    useEffect(() => {
+        const getChatNames = async () => {
+            try {
+                if (!userid) return;
+                const res = await axiosPrivate.get("/chats");
+                if (res.data) setChatNames(res.data);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        getChatNames();
+    }, []);
+
     return (
-        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, offlineNotifications, setOfflineNotifications }}>
+        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, offlineNotifications, setOfflineNotifications, chatNames, setChatNames }}>
             <Outlet />
         </SocketContext.Provider>
     );

@@ -33,6 +33,15 @@ function initSocket(server) {
             }
         });
 
+        socket.on("updateChatName", (text) => {
+            const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
+            if(users){
+                for(const u of users){
+                    io.to(u.socketId).emit("getUpdateChatName", {chatid: text.chatid, chatName: text.chatName});
+                }
+            }
+        });
+
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 
