@@ -72,11 +72,20 @@ exports.getOfflineNotifications = async (req, res) => {
 
 exports.createMessage = async (req, res) => {
     try {
-        const sql = "INSERT INTO messages (chatid, userid, message) VALUES (?, ?, ?)";
-        const { chatid, userid, message } = req.body;
-        const [rows] = await db.query(sql, [chatid, userid, message]);
-        const [messageRow] = await db.query("SELECT m.*, u.username FROM messages m JOIN users u ON m.userid = u.userid WHERE messageid = ?", [rows.insertId]);
-        return res.status(201).json(messageRow[0]);
+        const sqlMessage = "INSERT INTO messages (chatid, userid, message) VALUES (?, ?, ?)";
+        const sqlInfo = "INSERT INTO messages (chatid, userid, message, info) VALUES (?, ?, ?, ?)";
+        const { chatid, message } = req.body;
+
+        if (req.body?.info === true) {
+            const [rows] = await db.query(sqlInfo, [chatid, 0, message, 1]);
+            const [messageRow] = await db.query("SELECT * FROM messages WHERE messageid = ?", [rows.insertId]);
+            return res.status(201).json(messageRow[0]);
+        }
+        else {
+            const [rows] = await db.query(sqlMessage, [chatid, req.body?.userid, message]);
+            const [messageRow] = await db.query("SELECT m.*, u.username FROM messages m JOIN users u ON m.userid = u.userid WHERE messageid = ?", [rows.insertId]);
+            return res.status(201).json(messageRow[0]);
+        }
     } catch (error) {
         console.log(error);
     }

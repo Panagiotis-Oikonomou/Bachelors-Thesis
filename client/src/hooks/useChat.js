@@ -14,6 +14,7 @@ export default function useChat(chatid) {
     const [chats, setChats] = useState([]);
     const [chat, setChat] = useState([]);
     const [userId, setUserId] = useState(null);
+    const [userName, setUserName] = useState(null);
     const [text, setText] = useState("");
     const [waitingDelete, setWaitingDelete] = useState([]);
     const [chatName, setChatName] = useState({name: "", chatid});
@@ -54,6 +55,9 @@ export default function useChat(chatid) {
     }, []);
 
     useEffect(() => {
+        const decoded = jwtDecode(auth?.accessToken);
+        setUserId(decoded.id);
+        setUserName(decoded.username);
         document.title = "Chatroom";
     }, []);
 
@@ -119,21 +123,6 @@ export default function useChat(chatid) {
     useEffect(() => {
         firstLoad.current = true;
     }, [chatid]);
-
-    // useEffect(() => {
-    //     const getChats = async () => {
-    //         try {
-    //             const res = await axiosPrivate.get('/chats');
-    //             if (!res.data.some(r => r.chatid == chatid)) navigate("/my_chats");
-
-    //             if (res.data) setChats(res.data);
-    //         }
-    //         catch (err) {
-    //             console.log(err);
-    //         }
-    //     }
-    //     getChats();
-    // }, []);
 
     useEffect(() => {
         if (!socket) return;
@@ -221,8 +210,6 @@ export default function useChat(chatid) {
                 setTempChatName(res.data.chat_name);
             }
         }
-        const decoded = jwtDecode(auth?.accessToken);
-        setUserId(decoded.id);
         getChat();
     }, [chatid]);
 
@@ -352,6 +339,8 @@ export default function useChat(chatid) {
 
         try {
             await axiosPrivate.put(`/chats/chatname/${chatid}`, { chatName: tempChatName });
+            const message = `Ο χρήστης ${userName} άλλαξε το όνομα του chat σε ${tempChatName}`;
+            const resId = await axiosPrivate.post('/chats', { chatid, message, info: true });
             if (!socket) return;
             const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
             const res = await axiosPrivate.post("/chats/online_users", { getRecipients, chatid });
