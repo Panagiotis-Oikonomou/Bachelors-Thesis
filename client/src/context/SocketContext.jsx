@@ -110,7 +110,7 @@ export const SocketProvider = () => {
             }
         }
         getChatNames();
-    }, []);
+    }, [location]);
 
     useEffect(() => {
     const getMatchings = async () => {

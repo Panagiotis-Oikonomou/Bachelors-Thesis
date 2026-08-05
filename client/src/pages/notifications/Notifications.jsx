@@ -8,6 +8,8 @@ import { useNotifications } from "../../context/NotificationsContext";
 import { useSocket } from "../../context/SocketContext";
 import useAuth from "../../hooks/useAuth";
 import { jwtDecode } from 'jwt-decode';
+import { Link } from "react-router-dom";
+import styles from "../../assets/css/links.module.css";
 
 function Notifications() {
   const axiosPrivate = useAxiosPrivate();
@@ -145,7 +147,11 @@ function Notifications() {
           return (
             <Paper key={item.notid} sx={{ mb: 3, border: 1, borderColor: item.is_read ? 'white' : 'red' }} onClick={() => changeToRead(item.notid)}>
               <Box sx={{ ...commonSx }}>
-                <Typography sx={{ whiteSpace: item.expanded ? "pre-wrap" : "normal", ...extraMessageSx, ...(!item.expanded && messageOpenSx), }}>{item.message}</Typography>
+                <Typography sx={{ whiteSpace: item.expanded ? "pre-wrap" : "normal", ...extraMessageSx, ...(!item.expanded && messageOpenSx), }}>{item.message}
+                  {item.chatid != null && (
+                    <Link to={`/chatroom/${item.chatid}`} className={styles.link} > Πήγαινε.</Link>
+                  )}
+                </Typography>
 
                 <IconButton onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}><CloseOutlined /></IconButton>
               </Box>

@@ -96,6 +96,7 @@ exports.updateAgrees = async (req, res) => {
         }
         if (allAgree) {
             const chatCreationSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
+            const notificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?)";
             const getAreaIdSql = "SELECT areaid FROM potential_areaid WHERE groupid = ?";
             const [areaid] = await db.query(getAreaIdSql, [gi[0].groupid]);
             const chatName = crypto.randomUUID().slice(0, 10);
@@ -104,10 +105,12 @@ exports.updateAgrees = async (req, res) => {
             const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUES (?, ?)";
             const deletePotentialAreaIdSql = "DELETE FROM potential_areaid WHERE groupid = ?";
             const addOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUES (?, ?)";
+            const message = `Η συνομιλία δημιουργήθηκε με το όνομα «${chatName}», αφού συμφώνησαν και τα υπόλοιπα μέλη`;
             for (const r of result) {
                 await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
                 await db.query(createDestroySql, [chat.insertId, r.userid]);
                 await db.query(addOfflineMessagesSql, [chat.insertId, r.userid]);
+                await db.query(notificationSql, [r.userid, gi[0].groupid, message, "info"]);
             }
             await db.query(deletePotentialAreaIdSql, [gi[0].groupid]);
         }

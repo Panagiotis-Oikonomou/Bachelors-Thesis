@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 exports.getNotifications = async (req, res) => {
     try {
-        const sql = "SELECT * FROM notifications WHERE userid = ? ORDER BY notid DESC";
+        const sql = "SELECT n.*, c.chatid FROM notifications n LEFT JOIN chats c ON n.groupid = c.groupid WHERE n.userid = ? ORDER BY n.notid DESC";
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
