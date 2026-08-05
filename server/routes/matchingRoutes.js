@@ -4,6 +4,7 @@ const matching = require('../controllers/matchingController');
 const ver = require('../middleware/authMiddleware');
 
 router.get("/", ver.verify, matching.getMatchings );
+router.post("/online_users", ver.verify, matching.getOnlineGroupUsers );
 router.post("/", ver.verify, matching.createMatchings );
 router.put("/", ver.verify, matching.updateAgrees );
 

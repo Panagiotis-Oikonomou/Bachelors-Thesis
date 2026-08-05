@@ -3,10 +3,11 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import MainLayout from "../../components/mainLayout";
 import { Box, Paper, Typography } from "@mui/material";
 import { CheckCircleOutlined } from "@mui/icons-material";
+import { useSocket } from "../../context/SocketContext";
 
 function Matchings() {
   const axiosPrivate = useAxiosPrivate();
-  const [myMatchings, setMyMatchings] = useState([]);
+  const { myMatchings, socket, setMyMatchings } = useSocket();
   const style = myMatchings.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : null;
   const grouped = myMatchings.reduce((acc, item) => {
     if (!acc[item.groupid]) acc[item.groupid] = [];
@@ -15,22 +16,33 @@ function Matchings() {
     return acc;
   }, {});
 
-  useEffect(() => {
-    const getMatchings = async () => {
-      try {
-        const res = await axiosPrivate.get('/matchings');
-        if (res.data) setMyMatchings(res.data);
-      }
-      catch (err) {
-        console.log(err);
-      }
-    }
-    getMatchings();
-  }, []);
+  // useEffect(() => {
+  //   const getMatchings = async () => {
+  //     try {
+  //       const res = await axiosPrivate.get('/matchings');
+  //       if (res.data) setMyMatchings(res.data);
+  //     }
+  //     catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   getMatchings();
+  // }, []);
 
   useEffect(() => {
     document.title = "MyMatchings";
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("getUpdateMatchings", (res) => {
+      setMyMatchings(prev => prev.map(p => p.groupid == res.groupid && p.userid == res.userid ? { ...p, agrees: 1 } : p));
+    });
+
+    return () => {
+      socket.off("getUpdateMatchings");
+    };
+  }, [socket]);
 
   return (
     <MainLayout mxW="md" paperSx={{ p: 0.8, ...style }}>

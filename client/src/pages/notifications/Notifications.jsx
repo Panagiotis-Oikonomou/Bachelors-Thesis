@@ -5,11 +5,17 @@ import MainLayout from "../../components/mainLayout";
 import { Box, Button, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { CloseOutlined } from "@mui/icons-material";
 import { useNotifications } from "../../context/NotificationsContext";
+import { useSocket } from "../../context/SocketContext";
+import useAuth from "../../hooks/useAuth";
+import { jwtDecode } from 'jwt-decode';
 
 function Notifications() {
   const axiosPrivate = useAxiosPrivate();
-  const {setGlobalNotifications} = useNotifications();
+  const { auth } = useAuth();
+  const { setGlobalNotifications } = useNotifications();
   const [notifications, setNotifications] = useState([]);
+  const { socket, onlineUsers } = useSocket();
+  const [userId, setUserId] = useState(null);
   const style = notifications.length === 0 ? { display: "flex", justifyContent: "center", alignItems: "center" } : null;
 
   const commonSx = {
@@ -46,6 +52,8 @@ function Notifications() {
         console.log(err);
       }
     }
+    const decoded = jwtDecode(auth?.accessToken);
+    setUserId(decoded.id);
     getNotifications();
   }, []);
 
@@ -102,7 +110,11 @@ function Notifications() {
 
     try {
       await axiosPrivate.put(`/notifications/disabled/${id}`);
-      await axiosPrivate.put('/matchings', { notid: id, agrees: 1 });
+      const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
+      const res = await axiosPrivate.put('/matchings', { notid: id, agrees: 1 });
+      if(!res.data) return; 
+      const res2 = await axiosPrivate.post("/matchings/online_users", { getRecipients, groupid: res.data.groupid });
+      if (res2.data) socket.emit("updateMatchings", { groupid: res.data.groupid, recipients: res2.data, userId});
     }
     catch (err) {
       console.log(err);

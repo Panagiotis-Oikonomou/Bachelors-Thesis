@@ -43,6 +43,15 @@ function initSocket(server) {
             }
         });
 
+        socket.on("updateMatchings", (text) => {
+            const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
+            if(users){
+                for(const u of users){
+                    io.to(u.socketId).emit("getUpdateMatchings", {groupid: text.groupid, userid: text.userId});
+                }
+            }
+        });
+
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 

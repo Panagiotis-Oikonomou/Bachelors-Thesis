@@ -3,12 +3,28 @@ const crypto = require("crypto");
 
 exports.getMatchings = async (req, res) => {
     try {
-        const sql = "SELECT m.groupid, m.agrees, u.username, m.rowid FROM matchings m JOIN users u ON u.userid = m.userid JOIN  (SELECT DISTINCT groupid FROM matchings WHERE userid = ?) g ON g.groupid = m.groupid";
+        const sql = "SELECT m.groupid, m.agrees, u.username, m.rowid, m.userid FROM matchings m JOIN users u ON u.userid = m.userid JOIN  (SELECT DISTINCT groupid FROM matchings WHERE userid = ?) g ON g.groupid = m.groupid";
 
         const id = req.user.id;
 
         const [rows] = await db.query(sql, [id]);
         res.json(rows);
+    }
+    catch (err) {
+        return res.status(500).json({ err });
+    }
+}
+
+exports.getOnlineGroupUsers = async (req, res) => {
+    try {
+        const sql = "SELECT * FROM matchings WHERE groupid = ? AND agrees = 1 AND userid IN (?)";
+        const getRecipients = req.body.getRecipients || [];
+        const groupid = req.body.groupid;
+        const userIds = getRecipients.map(r => r.userId);
+        if (userIds.length === 0) return res.status(200).json([]);
+
+        const [result] = await db.query(sql, [groupid, userIds])
+        return res.status(201).json(result);
     }
     catch (err) {
         return res.status(500).json({ err });
@@ -33,12 +49,14 @@ exports.createMatchings = async (req, res) => {
 
 const noAgrement = async (result, groupid, username, userid) => {
     const deleteMembersGroupSql = "DELETE FROM matchings WHERE groupid = ?";
+    const deletePotentialSql = "DELETE FROM potential_areaid WHERE groupid = ?";
     const makeDisableSql = "UPDATE notifications SET disabled = 1 WHERE groupid = ?";
     db.query(makeDisableSql, [groupid]);
     const createInfoNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
     const message = `The user ${username} didn't want to make a group with you.`;
 
     await db.query(deleteMembersGroupSql, [groupid]);
+    await db.query(deletePotentialSql, [groupid]);
 
     for (const r of result) {
         if (r.userid === userid) continue;
@@ -66,7 +84,7 @@ exports.updateAgrees = async (req, res) => {
         }
 
         const sql = "UPDATE matchings SET agrees = ? WHERE userid = ? AND groupid = ?";
-        await db.query(sql, [1, gi[0].userid, gi[0].groupid]);
+        const [updateResult] = await db.query(sql, [1, gi[0].userid, gi[0].groupid]);
 
         let allAgree = 1;
         result = result.map(r => r.userid === gi[0].userid ? { ...r, agrees: 1 } : r);
@@ -93,7 +111,7 @@ exports.updateAgrees = async (req, res) => {
             }
             await db.query(deletePotentialAreaIdSql, [gi[0].groupid]);
         }
-        return res.sendStatus(201);
+        return res.status(201).json({groupid: gi[0].groupid});
     }
     catch (err) {
         return res.status(500).json({ err });

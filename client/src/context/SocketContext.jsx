@@ -16,6 +16,7 @@ export const SocketProvider = () => {
     const [notifications, setNotifications] = useState([]);
     const [offlineNotifications, setOfflineNotifications] = useState([]);
     const [peakMessages, setPeakMessages] = useState([]);
+    const [myMatchings, setMyMatchings] = useState([]);
     const userid = auth?.accessToken ? jwtDecode(auth.accessToken).id : null;
     const [chatNames, setChatNames] = useState([]);
  
@@ -111,8 +112,21 @@ export const SocketProvider = () => {
         getChatNames();
     }, []);
 
+    useEffect(() => {
+    const getMatchings = async () => {
+      try {
+        const res = await axiosPrivate.get('/matchings');
+        if (res.data) setMyMatchings(res.data);
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+    getMatchings();
+  }, [location]);
+
     return (
-        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, offlineNotifications, setOfflineNotifications, chatNames, setChatNames }}>
+        <SocketContext.Provider value={{ onlineUsers, socket, notifications, setNotifications, peakMessages, setPeakMessages, offlineNotifications, setOfflineNotifications, chatNames, setChatNames, myMatchings, setMyMatchings }}>
             <Outlet />
         </SocketContext.Provider>
     );
