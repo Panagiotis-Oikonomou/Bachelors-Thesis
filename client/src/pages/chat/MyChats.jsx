@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useSocket } from "../../context/SocketContext";
 import styles from '../../assets/css/links.module.css';
-import { BsBell } from 'react-icons/bs';
 import useAuth from "../../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 import MainLayout from "../../components/mainLayout";
