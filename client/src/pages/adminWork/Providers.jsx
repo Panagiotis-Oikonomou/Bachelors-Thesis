@@ -59,7 +59,10 @@ function Providers() {
       return;
     }
 
-    if (providername.length < 2) return;
+    if (len < 3 || len > 20) {
+      setProviderError("Το όνομα πρέπει να είναι από 3 μέχρι 20 χαρακτήρες");
+      return;
+    }
 
     try {
       const res = await axiosPrivate.get(`/validate/provider_name/${encodeURIComponent(providername)}`);
@@ -74,7 +77,7 @@ function Providers() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (provider.length === 0) return;
+    if (provider.trim().length === 0) return;
 
     if (providerError.trim() === "") {
       try {
