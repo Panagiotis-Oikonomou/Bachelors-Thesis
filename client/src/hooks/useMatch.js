@@ -4,10 +4,12 @@ import useAxiosPrivate from './useAxiosPrivate.js';
 import Swal from "sweetalert2";
 import useAuth from "./useAuth.js";
 import { jwtDecode } from "jwt-decode";
+import { useSocket } from "../context/SocketContext.jsx";
 
 export default function useMatch() {
     const axiosPrivate = useAxiosPrivate();
     const { auth } = useAuth();
+    const { socket, onlineUsers } = useSocket();
     const [criteria, setCriteria] = useState({
         size: "",
         energy: "",
@@ -24,6 +26,7 @@ export default function useMatch() {
         papers: false,
         other: false
     });
+    const [userId, setUserId] = useState(null);
     const [isSizeChecked, setIsSizeChecked] = useState(false);
     const [isEnergyChecked, setIsEnergyChecked] = useState(false);
     const [isIncomeChecked, setIsIncomeChecked] = useState(false);
@@ -62,7 +65,8 @@ export default function useMatch() {
                 console.log(err);
             }
         }
-
+        const decoded = jwtDecode(auth?.accessToken);
+        setUserId(decoded.id);
         getAreas();
     }, []);
 
@@ -315,8 +319,12 @@ export default function useMatch() {
         }
 
         try {
-            const res = await axiosPrivate.post('/notifications', users);
-            if (res.data) await axiosPrivate.post('/matchings', { users, groupid: res.data.groupid });
+            const recipients = onlineUsers.filter(o => users.some(u => o.userId == u.userid) && o.userId != userId);
+            const res = await axiosPrivate.post('/notifications', {users, recipients});
+            if (res.data) {
+                socket.emit("sendInvitationMessage", res.data.returnNot);
+                await axiosPrivate.post('/matchings', { users, groupid: res.data.groupid });
+            }
 
             Swal.fire({
                 title: "A invitation has been send to the other users",
@@ -356,7 +364,7 @@ export default function useMatch() {
         isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked,
         checkboxOptions, handleSearchSubmit, areas, isAreaChecked, havingArea, selectedArea,
         handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser,
-        nextUser, hoveredUser, setHoveredUser, wrongNumber,openSearch, setOpenSearch, openSearchedUsers, 
+        nextUser, hoveredUser, setHoveredUser, wrongNumber, openSearch, setOpenSearch, openSearchedUsers,
         setOpenSearchedUsers,
     };
 }

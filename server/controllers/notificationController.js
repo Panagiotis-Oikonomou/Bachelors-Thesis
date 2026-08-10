@@ -56,7 +56,7 @@ exports.deleteMessage = async (req, res) => {
 }
 
 exports.createInvitationNotification = async (req, res) => {
-    const users = req.body;
+    const {users, recipients} = req.body;
     const usersNoUser = users.filter(u => u.userid != req.user.id);
     const areaid = users.find(u => u.areaid !== null && u.areaid !== '')?.areaid;
 
@@ -102,10 +102,23 @@ exports.createInvitationNotification = async (req, res) => {
         await db.query(alreadyAcceptSql, [create.insertId, req.user.id, 1]);
         await db.query(potentialAreaIdSql, [create.insertId, areaid]);
         const addNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?)";
+        const returnNot = [];
         for(const user of usersNoUser){
-            await db.query(addNotificationSql, [user.userid, create.insertId, notification, "conf"]);
+            const [notId] = await db.query(addNotificationSql, [user.userid, create.insertId, notification, "conf"]);
+
+            if(recipients.some(r => r.userId == user.userid)){
+                returnNot.push({
+                    notid: notId.insertId,
+                    userid: user.userid,
+                    groupid: create.insertId,
+                    message: notification,
+                    type: "conf",
+                    is_read: 0,
+                    disabled: 0
+                })
+            }
         }
-        res.status(201).json({groupid: create.insertId});
+        res.status(201).json({groupid: create.insertId, returnNot});
 
     } catch (err) {
         console.log(err);

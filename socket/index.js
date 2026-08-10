@@ -17,7 +17,7 @@ function initSocket(server) {
         socket.emit("getOnlineUsers", onlineUsers);
 
         socket.on("addNewUser", (userId) => {
-            if(!onlineUsers.some(user => user.userId === userId)) onlineUsers.push({ userId, socketId: socket.id });
+            if (!onlineUsers.some(user => user.userId === userId)) onlineUsers.push({ userId, socketId: socket.id });
             console.log("onlineUsers", onlineUsers);
             io.emit("getOnlineUsers", onlineUsers);
         });
@@ -25,29 +25,29 @@ function initSocket(server) {
         socket.on("sendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 
-            if(users){
-                for(const u of users){
+            if (users.length > 0) {
+                for (const u of users) {
                     io.to(u.socketId).emit("getMessage", text.message);
-                    io.to(u.socketId).emit("getNotification", {chatid: text.message.chatid, isRead: false, message: text.message.message});
+                    io.to(u.socketId).emit("getNotification", { chatid: text.message.chatid, isRead: false, message: text.message.message });
                 }
             }
         });
 
         socket.on("updateChatName", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
-            if(users){
-                for(const u of users){
-                    io.to(u.socketId).emit("getUpdateChatName", {chatid: text.message.chatid, chatName: text.chatName});
-                    io.to(u.socketId).emit("getChangeChatNameInfo", {message: text.message});
+            if (users.length > 0) {
+                for (const u of users) {
+                    io.to(u.socketId).emit("getUpdateChatName", { chatid: text.message.chatid, chatName: text.chatName });
+                    io.to(u.socketId).emit("getChangeChatNameInfo", { message: text.message });
                 }
             }
         });
 
         socket.on("updateMatchings", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
-            if(users){
-                for(const u of users){
-                    io.to(u.socketId).emit("getUpdateMatchings", {groupid: text.groupid, userid: text.userId});
+            if (users.length > 0) {
+                for (const u of users) {
+                    io.to(u.socketId).emit("getUpdateMatchings", { groupid: text.groupid, userid: text.userId });
                 }
             }
         });
@@ -55,19 +55,27 @@ function initSocket(server) {
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 
-            if(users){
-                for(const u of users){
+            if (users.length > 0) {
+                for (const u of users) {
                     io.to(u.socketId).emit("removeUnsendMessage", text.message);
                 }
+            }
+        });
+
+        socket.on("sendInvitationMessage", (text) => {
+            for (const u of onlineUsers) {
+                const notifications = text.filter(r => r.userid === u.userId);
+
+                if (notifications.length > 0) io.to(u.socketId).emit("getInvitationMessage", notifications);
             }
         });
 
         socket.on("setChatDeleteStatus", (t) => {
             const users = onlineUsers.filter((u) => t.recipients.some(r => r.userid == u.userId));
 
-            if(users){
-                for(const u of users){
-                    io.to(u.socketId).emit("getWaitingDelete", {userid: t.userId, del: t.del});
+            if (users.length > 0) {
+                for (const u of users) {
+                    io.to(u.socketId).emit("getWaitingDelete", { userid: t.userId, del: t.del });
                 }
             }
         });
@@ -75,8 +83,8 @@ function initSocket(server) {
         socket.on("chatDeleted", (t) => {
             const users = onlineUsers.filter((u) => t.recipients.some(r => r.userid == u.userId));
 
-            if(users){
-                for(const u of users){
+            if (users.length > 0) {
+                for (const u of users) {
                     io.to(u.socketId).emit("chatDeleted");
                 }
             }

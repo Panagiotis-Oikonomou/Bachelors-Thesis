@@ -59,6 +59,18 @@ function Notifications() {
     getNotifications();
   }, []);
 
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("getInvitationMessage", (newNotifications) => {
+      setNotifications(prev => [...newNotifications, ...prev]);
+      setGlobalNotifications(prev => prev + 1);
+    });
+
+    return () => {
+      socket.off("getInvitationMessage");
+    };
+  }, [socket]);
+
   async function changeToRead(id) {
     setGlobalNotifications(prev => prev > 0 ? prev - 1 : 0);
     setNotifications(prev =>
@@ -114,9 +126,9 @@ function Notifications() {
       await axiosPrivate.put(`/notifications/disabled/${id}`);
       const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
       const res = await axiosPrivate.put('/matchings', { notid: id, agrees: 1 });
-      if(!res.data) return; 
+      if (!res.data) return;
       const res2 = await axiosPrivate.post("/matchings/online_users", { getRecipients, groupid: res.data.groupid });
-      if (res2.data) socket.emit("updateMatchings", { groupid: res.data.groupid, recipients: res2.data, userId});
+      if (res2.data) socket.emit("updateMatchings", { groupid: res.data.groupid, recipients: res2.data, userId });
     }
     catch (err) {
       console.log(err);
@@ -162,7 +174,7 @@ function Notifications() {
             <Paper key={item.notid} sx={{ mb: 3, border: 1, borderColor: item.is_read ? 'white' : 'red' }} onClick={() => changeToRead(item.notid)}>
               <Box sx={{ ...commonSx }}>
                 <Typography sx={{ whiteSpace: item.expanded ? "pre-wrap" : "normal", ...extraMessageSx, ...(!item.expanded && messageOpenSx), }}>{item.message}</Typography>
-                <IconButton onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }}><CloseOutlined /></IconButton>
+                <IconButton onClick={(e) => { e.stopPropagation(); deleteNotification(item.notid) }} disabled={item.disabled == 0}><CloseOutlined /></IconButton>
               </Box>
               <Box sx={{ p: 2, }}>
                 <Button sx={{ bgcolor: "#4be675", mr: 1, width: { xs: "30%", sm: "20%" } }} variant="contained" disabled={item.disabled == 1} onClick={() => accept(item.notid)}>Accept</Button>
