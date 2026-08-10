@@ -66,8 +66,14 @@ function Notifications() {
       setGlobalNotifications(prev => prev + 1);
     });
 
+    socket.on("getMatchDeleteMessage", (res) => {
+      setNotifications(prev => [...res.notifications, ...prev.map(p => p.groupid == res.groupid && p.type === "conf" ? {...p, disabled: 1} : p)]);
+      setGlobalNotifications(prev => prev + 1);
+    });
+
     return () => {
       socket.off("getInvitationMessage");
+      socket.off("getMatchDeleteMessage");
     };
   }, [socket]);
 
@@ -127,7 +133,7 @@ function Notifications() {
       const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
       const res = await axiosPrivate.put('/matchings', { notid: id, agrees: 1 });
       if (!res.data) return;
-      const res2 = await axiosPrivate.post("/matchings/online_users", { getRecipients, groupid: res.data.groupid });
+      const res2 = await axiosPrivate.post("/matchings/online_users", { getRecipients, groupid: res.data.groupid, choice: 0 });
       if (res2.data) socket.emit("updateMatchings", { groupid: res.data.groupid, recipients: res2.data, userId });
     }
     catch (err) {
@@ -135,12 +141,16 @@ function Notifications() {
     }
   }
 
-  async function decline(id) {
-    setDisabled(id);
+  async function decline(item) {
+    setDisabled(item.notid);
 
     try {
-      await axiosPrivate.put(`/notifications/disabled/${id}`);
-      await axiosPrivate.put('/matchings', { notid: id, agrees: 0 });
+      await axiosPrivate.put(`/notifications/disabled/${item.notid}`);
+      const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
+      const res2 = await axiosPrivate.post("/matchings/online_users", { getRecipients, groupid: item.groupid, choice: 1 });
+      const res = await axiosPrivate.put('/matchings', { notid: item.notid, agrees: 0 });
+      if (!res.data) return;
+      if (res2.data) socket.emit("declineMatch", { groupid: res.data.groupid, recipients: res2.data, not: res.data.not });
     }
     catch (err) {
       console.log(err);
@@ -178,7 +188,7 @@ function Notifications() {
               </Box>
               <Box sx={{ p: 2, }}>
                 <Button sx={{ bgcolor: "#4be675", mr: 1, width: { xs: "30%", sm: "20%" } }} variant="contained" disabled={item.disabled == 1} onClick={() => accept(item.notid)}>Accept</Button>
-                <Button sx={{ bgcolor: "#c42828", width: { xs: "30%", sm: "20%" } }} variant="contained" disabled={item.disabled == 1} onClick={() => decline(item.notid)}>Decline</Button>
+                <Button sx={{ bgcolor: "#c42828", width: { xs: "30%", sm: "20%" } }} variant="contained" disabled={item.disabled == 1} onClick={() => decline(item)}>Decline</Button>
               </Box>
             </Paper>)
         }

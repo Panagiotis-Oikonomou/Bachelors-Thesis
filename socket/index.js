@@ -52,6 +52,16 @@ function initSocket(server) {
             }
         });
 
+        socket.on("declineMatch", (match) => {
+            for (const u of onlineUsers) {
+                const notifications = match.not.filter(r => r.userid === u.userId);
+                if (notifications.length > 0) {
+                    io.to(u.socketId).emit("getMatchDeleteMessage", { notifications, groupid: match.groupid });
+                    io.to(u.socketId).emit("getDeleteMatching", { groupid: match.groupid });
+                }
+            }
+        });
+
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 

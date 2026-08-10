@@ -16,19 +16,6 @@ function Matchings() {
     return acc;
   }, {});
 
-  // useEffect(() => {
-  //   const getMatchings = async () => {
-  //     try {
-  //       const res = await axiosPrivate.get('/matchings');
-  //       if (res.data) setMyMatchings(res.data);
-  //     }
-  //     catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   getMatchings();
-  // }, []);
-
   useEffect(() => {
     document.title = "MyMatchings";
   }, []);
@@ -39,8 +26,13 @@ function Matchings() {
       setMyMatchings(prev => prev.map(p => p.groupid == res.groupid && p.userid == res.userid ? { ...p, agrees: 1 } : p));
     });
 
+    socket.on("getDeleteMatching", ({groupid}) => {
+      setMyMatchings(prev => prev.filter(p => p.groupid != groupid));
+    });
+
     return () => {
       socket.off("getUpdateMatchings");
+      socket.off("getDeleteMatching");
     };
   }, [socket]);
 
