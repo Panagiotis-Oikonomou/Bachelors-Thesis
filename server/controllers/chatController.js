@@ -165,6 +165,7 @@ exports.deleteChat = async (req, res) => {
         const deleteGroupSql = "DELETE FROM groups WHERE groupid = ?";
         const deleteMatchingsSql = "DELETE FROM matchings WHERE groupid = ?";
         const deleteMessagesSql = "DELETE FROM messages WHERE chatid = ?";
+        const deleteOfflineChatSql = "DELETE FROM offline_chat WHERE chatid = ?";
         const sendNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
 
         const [groupid] = await db.query(getGroupSql, [req.params.chatid]);
@@ -174,13 +175,25 @@ exports.deleteChat = async (req, res) => {
         await db.query(deleteChatUsersSql, [req.params.chatid]);
         await db.query(deleteChatSql, [req.params.chatid]);
         await db.query(deleteMessagesSql, [req.params.chatid]);
+        await db.query(deleteOfflineChatSql, [req.params.chatid]);
         await db.query(deleteGroupSql, [groupid[0].groupid]);
         await db.query(deleteMatchingsSql, [groupid[0].groupid]);
 
+        const returnNot = [];
         for (const u of users) {
-            await db.query(sendNotificationSql, [u.userid, message, "info"]);
+            const [id] = await db.query(sendNotificationSql, [u.userid, message, "info"]);
+            returnNot.push({
+                notid: id.insertId,
+                userid: u.userid,
+                groupid: 0,
+                message: message,
+                type: "info",
+                is_read: 0,
+                disabled: 0,
+                expanded: 0
+            })
         }
-        return res.sendStatus(200);
+        return res.status(201).json({ returnNot });
     } catch (error) {
         console.log(error);
     }

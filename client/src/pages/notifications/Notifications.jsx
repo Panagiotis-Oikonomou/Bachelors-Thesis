@@ -76,10 +76,16 @@ function Notifications() {
       setGlobalNotifications(prev => prev + 1);
     });
 
+    socket.on("getChatDeletedInfo", (notification) => {
+      setNotifications(prev => [...notification, ...prev]);
+      setGlobalNotifications(prev => prev + 1);
+    });
+
     return () => {
       socket.off("getInvitationMessage");
       socket.off("getMatchDeleteMessage");
       socket.off("getChatCreation");
+      socket.off("getChatDeletedInfo");
     };
   }, [socket]);
 

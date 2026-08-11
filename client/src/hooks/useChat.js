@@ -49,6 +49,7 @@ export default function useChat(chatid) {
                 if (res.data) setCoordinates(res.data);
             } catch (error) {
                 console.log(error);
+                navigate("/my_chats");
             }
         }
         getCoordinates();
@@ -317,7 +318,8 @@ export default function useChat(chatid) {
             const allAgree = updated.every(w => w.destroy == 1);
 
             if (allAgree) {
-                await axiosPrivate.delete(`/chats/${chatid}`);
+                const res2 = await axiosPrivate.delete(`/chats/${chatid}`);
+                if(res2.data) socket.emit("sendChatDeletedInfo", { notifications: res2.data.returnNot });
                 socket.emit("chatDeleted", { recipients: res.data });
                 return navigate("/my_chats");
             }
