@@ -67,13 +67,19 @@ function Notifications() {
     });
 
     socket.on("getMatchDeleteMessage", (res) => {
-      setNotifications(prev => [...res.notifications, ...prev.map(p => p.groupid == res.groupid && p.type === "conf" ? {...p, disabled: 1} : p)]);
+      setNotifications(prev => [...res.notifications, ...prev.map(p => p.groupid == res.groupid && p.type === "conf" ? { ...p, disabled: 1 } : p)]);
+      setGlobalNotifications(prev => prev + 1);
+    });
+
+    socket.on("getChatCreation", (notification) => {
+      setNotifications(prev => [...notification, ...prev]);
       setGlobalNotifications(prev => prev + 1);
     });
 
     return () => {
       socket.off("getInvitationMessage");
       socket.off("getMatchDeleteMessage");
+      socket.off("getChatCreation");
     };
   }, [socket]);
 
@@ -134,7 +140,10 @@ function Notifications() {
       const res = await axiosPrivate.put('/matchings', { notid: id, agrees: 1 });
       if (!res.data) return;
       const res2 = await axiosPrivate.post("/matchings/online_users", { getRecipients, groupid: res.data.groupid, choice: 0 });
-      if (res2.data) socket.emit("updateMatchings", { groupid: res.data.groupid, recipients: res2.data, userId });
+      if (res2.data) {
+        socket.emit("updateMatchings", { groupid: res.data.groupid, recipients: res2.data, userId });
+        if (res.data.returnNot.length > 0) socket.emit("sendChatCreation", { groupid: res.data.groupid, recipients: res2.data, userId, notifications: res.data.returnNot });
+      }
     }
     catch (err) {
       console.log(err);

@@ -75,8 +75,9 @@ const noAgrement = async (result, groupid, username, userid) => {
             message: message,
             type: "info",
             disabled: 0,
-            is_read: 0
-        })
+            is_read: 0,
+            expanded: false
+        });
     }
     const deleteGroupSql = "DELETE FROM groups WHERE groupid = ?";
     await db.query(deleteGroupSql, [groupid]);
@@ -97,7 +98,6 @@ exports.updateAgrees = async (req, res) => {
         let [result] = await db.query(getAllMembersSql, [gi[0].groupid]);
         if (!agrees) {
             const not = await noAgrement(result, gi[0].groupid, gi[0].username, gi[0].userid);
-            // console.log("not ", not);
             return res.status(201).json({ groupid: gi[0].groupid, not });
         }
 
@@ -112,6 +112,7 @@ exports.updateAgrees = async (req, res) => {
                 break;
             }
         }
+        const returnNot = [];
         if (allAgree) {
             const chatCreationSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
             const notificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?)";
@@ -128,11 +129,22 @@ exports.updateAgrees = async (req, res) => {
                 await db.query(addUsersToChatSql, [chat.insertId, r.userid]);
                 await db.query(createDestroySql, [chat.insertId, r.userid]);
                 await db.query(addOfflineMessagesSql, [chat.insertId, r.userid]);
-                await db.query(notificationSql, [r.userid, gi[0].groupid, message, "info"]);
+                const [id] = await db.query(notificationSql, [r.userid, gi[0].groupid, message, "info"]);
+                returnNot.push({
+                    notid: id.insertId,
+                    chatid: chat.insertId,
+                    userid: r.userid,
+                    groupid: gi[0].groupid,
+                    message: message,
+                    type: "info",
+                    disabled: 0,
+                    is_read: 0,
+                    expanded: false
+                });
             }
             await db.query(deletePotentialAreaIdSql, [gi[0].groupid]);
         }
-        return res.status(201).json({ groupid: gi[0].groupid });
+        return res.status(201).json({ groupid: gi[0].groupid, returnNot });
     }
     catch (err) {
         return res.status(500).json({ err });

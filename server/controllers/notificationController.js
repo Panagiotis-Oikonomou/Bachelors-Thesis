@@ -114,7 +114,8 @@ exports.createInvitationNotification = async (req, res) => {
                     message: notification,
                     type: "conf",
                     is_read: 0,
-                    disabled: 0
+                    disabled: 0,
+                    expanded: false
                 })
             }
         }

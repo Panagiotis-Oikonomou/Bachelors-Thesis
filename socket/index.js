@@ -62,6 +62,13 @@ function initSocket(server) {
             }
         });
 
+        socket.on("sendChatCreation", (chat) => {
+            for (const u of onlineUsers) {
+                const notification = chat.notifications.filter(r => r.userid === u.userId);
+                if (notification.length > 0) io.to(u.socketId).emit("getChatCreation", notification);
+            }
+        });
+
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 
