@@ -10,19 +10,19 @@ exports.updateCriteria = async (req, res) => {
     try{
         const sql = "UPDATE criterias SET areaid = ?, areasize = ?, energy = ?, income = ?, money = ?, papers = ?, other = ? WHERE userid = ?";
         const values = [
-            req.body.areaid,
-            req.body.size,
-            req.body.energy,
-            req.body.income,
-            req.body.money,
-            req.body.papers,
-            req.body.other,
+            req.body.send.areaid,
+            req.body.send.size,
+            req.body.send.energy,
+            req.body.send.income,
+            req.body.send.money,
+            req.body.send.papers,
+            req.body.send.other,
             req.user.id
         ];
-
+        const {onlineUsers} = req.body;
         await db.query(sql, values);
-        getAllUsers();
-        return res.sendStatus(200);
+        const not = await getAllUsers(onlineUsers);
+        return res.status(200).json(not);
     }
     catch(err){
         console.log(err);

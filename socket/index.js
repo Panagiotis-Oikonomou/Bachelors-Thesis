@@ -76,6 +76,13 @@ function initSocket(server) {
             }
         });
 
+        socket.on("sendChatAlgoInfo", (criteria) => {
+            for (const u of onlineUsers) {
+                const nots = criteria.notifications.filter(r => r.userid === u.userId);
+                if (nots.length > 0) io.to(u.socketId).emit("getChatAlgoInfo", nots);
+            }
+        });
+
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 

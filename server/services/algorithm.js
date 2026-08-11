@@ -1,18 +1,18 @@
 const db = require('../config/db');
 const uuid = require("crypto");
 
-const getAllUsers = async () => {
+const getAllUsers = async (onlineUsers) => {
     const getUsersWithFieldSql = "SELECT c.*, a.size, a.ac FROM criterias c JOIN areas a ON c.areaid = a.areaid WHERE c.areaid IS NOT NULL AND c.income IS NOT NULL";
     const getUsersWithoutFieldSql = "SELECT * FROM criterias WHERE areaid IS NULL AND (areasize IS NOT NULL OR energy IS NOT NULL OR income IS NOT NULL OR money IS NOT NULL OR papers IS NOT NULL OR other IS NOT NULL ) AND (areasize IS NULL OR areasize <= ?) AND (energy IS NULL OR energy <= ?)";
 
     let teams = [];
 
     const [userFields] = await db.query(getUsersWithFieldSql);
-    if(userFields.length === 0) return;
+    if(userFields.length === 0) return [];
     for (const user of userFields) {
         const [userNOFields] = await db.query(getUsersWithoutFieldSql, [user.size, user.ac]);
         const team = generateTeam(userNOFields, user);
-        if (team.length >= 5) {
+        if (team && team.length >= 5) {
             teams.push(team);
         }
     }
@@ -46,6 +46,7 @@ const getAllUsers = async () => {
     }
 
     teams = teams.filter(((_, index) => tempIds.some(t => t.index === index)));
+    const not = [];
     for (const team of teams) {
         let id = "";
         let sum = 0;
@@ -78,10 +79,22 @@ const getAllUsers = async () => {
             await db.query(insertChatUserSql, [chatid.insertId, member.userid]);
             await db.query(createDestroySql, [chatid.insertId, member.userid]);
             await db.query(createOfflineMessagesSql, [chatid.insertId, member.userid]);
-            await db.query(createNotificationSql, [member.userid, groupid.insertId, message, "info"]);
+            const [notResult] = await db.query(createNotificationSql, [member.userid, groupid.insertId, message, "info"]);
+            if(onlineUsers.some(o => o.userId === member.userid)){
+                not.push({
+                    notid: notResult.insertId,
+                    userid: member.userid,
+                    groupid: groupid.insertId,
+                    message: message,
+                    type: "info",
+                    is_read: 0,
+                    disabled: 0,
+                    chatid: chatid.insertId
+                });
+            }
         }
     }
-    return;
+    return not;
 }
 
 function generateTeam(users, userWithArea) {

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import resetTimer from "../utils/resetTimer.js";
 import useAxiosPrivate from './useAxiosPrivate.js';
+import { useSocket } from "../context/SocketContext.jsx";
 
 export default function useCriteria() {
     const axiosPrivate = useAxiosPrivate();
+    const { onlineUsers, socket } = useSocket();
     const [criteria, setCriteria] = useState({ size: "", energy: "", income: "", money: "", areaid: "", papers: false, other: false });
     const [isSizeChecked, setIsSizeChecked] = useState(false);
     const [isEnergyChecked, setIsEnergyChecked] = useState(false);
@@ -170,7 +172,8 @@ export default function useCriteria() {
         }
 
         try {
-            await axiosPrivate.put('/criteria', send);
+            const res = await axiosPrivate.put('/criteria', {send, onlineUsers});
+            if(res.data) socket.emit("sendChatAlgoInfo", {notifications: res.data});
             setFormSuccess("Οι αλλαγές αποθυκεύτικαν με επιτυχία");
         }
         catch (err) {
