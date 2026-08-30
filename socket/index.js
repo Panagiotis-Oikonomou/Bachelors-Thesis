@@ -76,10 +76,10 @@ function initSocket(server) {
             }
         });
 
-        socket.on("sendChatAlgoInfo", (criteria) => {
+        socket.on("sendAlgoInfo", (criteria) => {
             for (const u of onlineUsers) {
                 const nots = criteria.notifications.filter(r => r.userid === u.userId);
-                if (nots.length > 0) io.to(u.socketId).emit("getChatAlgoInfo", nots);
+                if (nots.length > 0) io.to(u.socketId).emit("getAlgoInfo", nots);
             }
         });
 

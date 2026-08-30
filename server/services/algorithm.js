@@ -1,14 +1,13 @@
 const db = require('../config/db');
-const uuid = require("crypto");
 
 const getAllUsers = async (onlineUsers) => {
-    const getUsersWithFieldSql = "SELECT c.*, a.size, a.ac FROM criterias c JOIN areas a ON c.areaid = a.areaid WHERE c.areaid IS NOT NULL AND c.income IS NOT NULL";
-    const getUsersWithoutFieldSql = "SELECT * FROM criterias WHERE areaid IS NULL AND (areasize IS NOT NULL OR energy IS NOT NULL OR income IS NOT NULL OR money IS NOT NULL OR papers IS NOT NULL OR other IS NOT NULL ) AND (areasize IS NULL OR areasize <= ?) AND (energy IS NULL OR energy <= ?)";
+    const getUsersWithFieldSql = "SELECT c.*, a.size, a.ac, u.username FROM criterias c JOIN areas a ON c.areaid = a.areaid JOIN users u ON u.userid = a.userid WHERE c.areaid IS NOT NULL AND c.income IS NOT NULL";
+    const getUsersWithoutFieldSql = "SELECT c.*, u.username FROM criterias c JOIN users u ON c.userid = u.userid WHERE c.areaid IS NULL AND (c.areasize IS NOT NULL OR c.energy IS NOT NULL OR c.income IS NOT NULL OR c.money IS NOT NULL OR c.papers IS NOT NULL OR c.other IS NOT NULL) AND (c.areasize IS NULL OR c.areasize <= ?) AND (c.energy IS NULL OR c.energy <= ?)";
 
     let teams = [];
 
     const [userFields] = await db.query(getUsersWithFieldSql);
-    if(userFields.length === 0) return [];
+    if (userFields.length === 0) return [];
     for (const user of userFields) {
         const [userNOFields] = await db.query(getUsersWithoutFieldSql, [user.size, user.ac]);
         const team = generateTeam(userNOFields, user);
@@ -48,9 +47,39 @@ const getAllUsers = async (onlineUsers) => {
     teams = teams.filter(((_, index) => tempIds.some(t => t.index === index)));
     const not = [];
     for (const team of teams) {
+        let areaid = team[0].areaid;
+        const areaDataSql = "SELECT name, size, lat, lng, ac FROM areas WHERE areaid = ?";
+        const [area] = await db.query(areaDataSql, [areaid]);
+        let message = "Ο αλγόριθμός μας σας ταίριαξε με άλλους χρήστες με τα εξής προνόμοια:\n\n";
+        message += `Χαρακτηριστικά περιοχής:\n`;
+        message += `Όνομα: ${area[0].name}\n`;
+        message += `Μέγεθος έκτασης: ${area[0].size}m²\n`;
+        message += `Latitude: ${area[0].lat}\n`;
+        message += `Longtitude: ${area[0].lng}\n`;
+        message += `Ποσότητα ηλεκτρικής ενέργειας: ${area[0].ac}kwy\n\n`;
+
+        const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
+        let money = 0;
+        for (const user of team) {
+            const [essentialsRows] = await db.query(essentialsSql, [user.userid]);
+            if (essentialsRows[0]?.money !== null) money += Number(essentialsRows[0].money);
+        }
+
+        message += `Προσφέρονται συνολικά ${money}€ μαζί με κάποιον για τα διαδικαστικά ή και άλλες ενέργειες.\n\n`;
+        message += "Τι ζητάει ο κάθε χρήστης:\n";
+
+        const userCriteriaSql = "SELECT areasize, energy, income FROM criterias WHERE userid = ?";
+        for (const user of team) {
+            const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
+            message += `${user.username}\n`;
+            if (userCriteriaRows[0]?.areasize !== null) message += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}km²\n`;
+            if (userCriteriaRows[0]?.energy !== null) message += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}kwy\n`;
+            if (userCriteriaRows[0]?.income !== null) message += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
+            message += '\n';
+        }
+
         let id = "";
         let sum = 0;
-        let areaid = team[0].areaid;
         team.sort((a, b) => { return a.userid - b.userid });
         for (const member of team) {
             id += member.userid;
@@ -59,37 +88,30 @@ const getAllUsers = async (onlineUsers) => {
 
         const checkIdSql = "SELECT id FROM algo_group WHERE id = ? AND sumid = ? LIMIT 1";
         const [rows] = await db.query(checkIdSql, [id, sum]);
-        if (rows.length > 0) continue; 
+        if (rows.length > 0) continue;
 
         const newGroupSql = "INSERT INTO groups VALUES ()";
-        const createAlgoGroupSql = "INSERT INTO algo_group (groupid, userid, id, sumid) VALUES (?, ?, ?, ?)";
-        const createChatGroupSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
-        const insertChatUserSql = "INSERT INTO chat_users (chatid, userid) VALUES (?, ?)";
-        const createDestroySql = "INSERT INTO waiting_deleted_chats (chatid, userid) VALUE (?, ?)";
-        const createOfflineMessagesSql = "INSERT INTO offline_chat (chatid, userid) VALUE (?, ?)";
+        const potentialAreaIdSql = "INSERT INTO potential_areaid (groupid, areaid) VALUES (?, ?)";
+        const createMatchings = "INSERT INTO matchings (groupid, userid) VALUES (?, ?)";
+        const createAlgoGroupSql = "INSERT INTO algo_group (groupid, id, sumid) VALUES (?, ?, ?)";
         const createNotificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUE (?, ?, ?, ?)";
 
         const [groupid] = await db.query(newGroupSql);
-        const chatName = crypto.randomUUID().slice(0, 10);
-        const message = `Ο αλγόριθμός μας σας ταίριαξε με άλλους χρήστες. Μπορείτε να επικοινωνήσετε μαζί τους στο chat ${chatName}`;
-        const [chatid] = await db.query(createChatGroupSql, [groupid.insertId, areaid, chatName]);
-
+        await db.query(createAlgoGroupSql, [groupid.insertId, id, sum]);
+        await db.query(potentialAreaIdSql, [groupid.insertId, areaid]);
         for (const member of team) {
-            await db.query(createAlgoGroupSql, [groupid.insertId, member.userid, id, sum]);
-            await db.query(insertChatUserSql, [chatid.insertId, member.userid]);
-            await db.query(createDestroySql, [chatid.insertId, member.userid]);
-            await db.query(createOfflineMessagesSql, [chatid.insertId, member.userid]);
-            const [notResult] = await db.query(createNotificationSql, [member.userid, groupid.insertId, message, "info"]);
-            if(onlineUsers.some(o => o.userId === member.userid)){
+            await db.query(createMatchings, [groupid.insertId, member.userid]);
+            const [notResult] = await db.query(createNotificationSql, [member.userid, groupid.insertId, message, "conf"]);
+            if (onlineUsers.some(o => o.userId === member.userid)) {
                 not.push({
                     notid: notResult.insertId,
                     userid: member.userid,
                     groupid: groupid.insertId,
                     message: message,
-                    type: "info",
+                    type: "conf",
                     is_read: 0,
                     disabled: 0,
-                    chatid: chatid.insertId
+                    expanded: false
                 });
             }
         }

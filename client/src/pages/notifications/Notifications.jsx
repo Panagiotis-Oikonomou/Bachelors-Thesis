@@ -81,7 +81,7 @@ function Notifications() {
       setGlobalNotifications(prev => prev + 1);
     });
 
-    socket.on("getChatAlgoInfo", (nots) => {
+    socket.on("getAlgoInfo", (nots) => {
       setNotifications(prev => [...nots, ...prev]);
       setGlobalNotifications(prev => prev + nots.length);
     });
@@ -91,7 +91,7 @@ function Notifications() {
       socket.off("getMatchDeleteMessage");
       socket.off("getChatCreation");
       socket.off("getChatDeletedInfo");
-      socket.off("getChatAlgoInfo");
+      socket.off("getAlgoInfo");
     };
   }, [socket]);
 

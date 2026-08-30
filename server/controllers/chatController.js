@@ -164,6 +164,7 @@ exports.deleteChat = async (req, res) => {
         const deleteChatSql = "DELETE FROM chats WHERE chatid = ?";
         const deleteGroupSql = "DELETE FROM groups WHERE groupid = ?";
         const deleteMatchingsSql = "DELETE FROM matchings WHERE groupid = ?";
+        const deleteAlgoGroupSql = "DELETE FROM algo_group WHERE groupid = ?";
         const deleteMessagesSql = "DELETE FROM messages WHERE chatid = ?";
         const deleteOfflineChatSql = "DELETE FROM offline_chat WHERE chatid = ?";
         const sendNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
@@ -178,6 +179,7 @@ exports.deleteChat = async (req, res) => {
         await db.query(deleteOfflineChatSql, [req.params.chatid]);
         await db.query(deleteGroupSql, [groupid[0].groupid]);
         await db.query(deleteMatchingsSql, [groupid[0].groupid]);
+        await db.query(deleteAlgoGroupSql, [groupid[0].groupid]);
 
         const returnNot = [];
         for (const u of users) {

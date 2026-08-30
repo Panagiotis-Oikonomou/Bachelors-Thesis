@@ -56,13 +56,15 @@ exports.createMatchings = async (req, res) => {
 
 const noAgrement = async (result, groupid, username, userid) => {
     const deleteMembersGroupSql = "DELETE FROM matchings WHERE groupid = ?";
+    const deleteAlgoGroupSql = "DELETE FROM algo_group WHERE groupid = ?";
     const deletePotentialSql = "DELETE FROM potential_areaid WHERE groupid = ?";
     const makeDisableSql = "UPDATE notifications SET disabled = 1 WHERE groupid = ?";
     db.query(makeDisableSql, [groupid]);
     const createInfoNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
-    const message = `The user ${username} didn't want to make a group with you.`;
+    const message = `Ο χρήστης ${username} δεν ήθελε να είναι στην ομάδα σας.`;
 
     await db.query(deleteMembersGroupSql, [groupid]);
+    await db.query(deleteAlgoGroupSql, [groupid]);
     await db.query(deletePotentialSql, [groupid]);
     const not = [];
     for (const r of result) {

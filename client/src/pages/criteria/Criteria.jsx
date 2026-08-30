@@ -26,7 +26,7 @@ function Criteria() {
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chsize" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
           </FormGroup>
 
-          <TextField sx={{ ...style }} size="small" label="Ποσότητα PV ενέργειας(kwy)" name="energy" value={criteria.energy} onChange={handleChange} error={wrongNumber.energy !== ""} helperText={wrongNumber.energy} disabled={isEnergyChecked} required={!isEnergyChecked} />
+          <TextField sx={{ ...style }} size="small" label="Ποσότητα ηλεκτρικής ενέργειας(kwy)" name="energy" value={criteria.energy} onChange={handleChange} error={wrongNumber.energy !== ""} helperText={wrongNumber.energy} disabled={isEnergyChecked} required={!isEnergyChecked} />
           <FormGroup>
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chenergy" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
           </FormGroup>

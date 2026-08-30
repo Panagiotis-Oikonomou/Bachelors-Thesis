@@ -173,7 +173,7 @@ export default function useCriteria() {
 
         try {
             const res = await axiosPrivate.put('/criteria', {send, onlineUsers});
-            if(res.data) socket.emit("sendChatAlgoInfo", {notifications: res.data});
+            if(res.data) socket.emit("sendAlgoInfo", {notifications: res.data});
             setFormSuccess("Οι αλλαγές αποθυκεύτικαν με επιτυχία");
         }
         catch (err) {

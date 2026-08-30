@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import MainLayout from "../../components/mainLayout";
 import { Box, Paper, Typography } from "@mui/material";

@@ -61,17 +61,17 @@ exports.createInvitationNotification = async (req, res) => {
     const areaid = users.find(u => u.areaid !== null && u.areaid !== '')?.areaid;
 
     try {
-        const areaDaraSql = "SELECT name, size, lat, lng, ac FROM areas WHERE areaid = ?";
-        const [rows] = await db.query(areaDaraSql, [areaid]);
+        const areaDataSql = "SELECT name, size, lat, lng, ac FROM areas WHERE areaid = ?";
+        const [rows] = await db.query(areaDataSql, [areaid]);
 
         let notification = `Ο χρήστης ${users[0]?.username} σας έχει προσκαλέσει στην ομάδα του με τα εξής προνόμοια:\n\n`;
 
         notification += `Χαρακτηριστικά περιοχής:\n`;
         notification += `Όνομα: ${rows[0].name}\n`;
-        notification += `Μέγεθος έκτασης: ${rows[0].size}km²\n`;
+        notification += `Μέγεθος έκτασης: ${rows[0].size}m²\n`;
         notification += `Latitude: ${rows[0].lat}\n`;
         notification += `Longtitude: ${rows[0].lng}\n`;
-        notification += `Ποσότητα PV ενέργειας: ${rows[0].ac}kwh\n\n`;
+        notification += `Ποσότητα ηλεκτρικής ενέργειας: ${rows[0].ac}kwy\n\n`;
 
         const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
         const [userMoney] = await db.query(essentialsSql, [req.user.id]);
@@ -89,8 +89,8 @@ exports.createInvitationNotification = async (req, res) => {
         for(const user of users){
             const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
             notification += `${user.username}\n`;
-            if (userCriteriaRows[0]?.areasize !== null) notification += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}km²\n`;
-            if (userCriteriaRows[0]?.energy !== null) notification += `Ελάχιστη ποσότητα PV ενέργειας: ${userCriteriaRows[0].energy}kwh\n`;
+            if (userCriteriaRows[0]?.areasize !== null) notification += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
+            if (userCriteriaRows[0]?.energy !== null) notification += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}kwy\n`;
             if (userCriteriaRows[0]?.income !== null) notification += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
             notification += '\n';
         }
