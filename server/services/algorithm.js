@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 const getAllUsers = async (onlineUsers) => {
-    const getUsersWithFieldSql = "SELECT c.*, a.size, a.ac, u.username FROM criterias c JOIN areas a ON c.areaid = a.areaid JOIN users u ON u.userid = a.userid WHERE c.areaid IS NOT NULL AND c.income IS NOT NULL";
+    const getUsersWithFieldSql = "SELECT c.*, a.size, a.ac, u.username FROM criterias c JOIN areas a ON c.areaid = a.areaid JOIN users u ON u.userid = a.userid WHERE c.areaid IS NOT NULL AND c.income IS NOT NULL AND NOT EXISTS (SELECT 1 FROM chat_users cu WHERE c.userid = cu.userid)";
     const getUsersWithoutFieldSql = "SELECT c.*, u.username FROM criterias c JOIN users u ON c.userid = u.userid WHERE c.areaid IS NULL AND (c.areasize IS NOT NULL OR c.energy IS NOT NULL OR c.income IS NOT NULL OR c.money IS NOT NULL OR c.papers IS NOT NULL OR c.other IS NOT NULL) AND (c.areasize IS NULL OR c.areasize <= ?) AND (c.energy IS NULL OR c.energy <= ?)";
 
     let teams = [];
@@ -72,7 +72,7 @@ const getAllUsers = async (onlineUsers) => {
         for (const user of team) {
             const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
             message += `${user.username}\n`;
-            if (userCriteriaRows[0]?.areasize !== null) message += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}km²\n`;
+            if (userCriteriaRows[0]?.areasize !== null) message += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
             if (userCriteriaRows[0]?.energy !== null) message += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}kwy\n`;
             if (userCriteriaRows[0]?.income !== null) message += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
             message += '\n';
