@@ -115,6 +115,7 @@ exports.updateAgrees = async (req, res) => {
             }
         }
         const returnNot = [];
+        let lastUser = false;
         if (allAgree) {
             const chatCreationSql = "INSERT INTO chats (groupid, areaid, chat_name) VALUES (?, ?, ?)";
             const notificationSql = "INSERT INTO notifications (userid, groupid, message, type) VALUES (?, ?, ?, ?)";
@@ -145,8 +146,9 @@ exports.updateAgrees = async (req, res) => {
                 });
             }
             await db.query(deletePotentialAreaIdSql, [gi[0].groupid]);
+            lastUser = true;
         }
-        return res.status(201).json({ groupid: gi[0].groupid, returnNot });
+        return res.status(201).json({ groupid: gi[0].groupid, returnNot, lastUser });
     }
     catch (err) {
         return res.status(500).json({ err });

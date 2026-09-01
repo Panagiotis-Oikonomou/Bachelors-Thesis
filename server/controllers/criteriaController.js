@@ -53,3 +53,15 @@ exports.getMyOffers = async (req, res) => {
         return res.sendStatus(500);
     }
 }
+
+exports.getField = async (req, res) => {
+    try{
+        const sql = "SELECT areaid FROM criterias WHERE userid = ?";
+        const [rows] = await db.query(sql, [req.user.id]);
+        return res.json(rows[0].areaid);
+    }
+    catch(err){
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}

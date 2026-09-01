@@ -6,5 +6,6 @@ const ver = require('../middleware/authMiddleware');
 router.put("/", ver.verify, criteria.updateCriteria);
 router.get("/", ver.verify, criteria.getCriteria);
 router.get("/my_offers", ver.verify, criteria.getMyOffers);
+router.get("/field", ver.verify, criteria.getField);
 
 module.exports = router;

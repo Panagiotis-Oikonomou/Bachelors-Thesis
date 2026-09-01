@@ -83,6 +83,13 @@ function initSocket(server) {
             }
         });
 
+        socket.on("updateDisabled", (disabled) => {
+            const users = onlineUsers.filter(f => f.userId != disabled.userId);
+            for (const u of users) {
+                io.to(u.socketId).emit("getUpdateDisabled", disabled.groupidids);
+            }
+        });
+
         socket.on("unsendMessage", (text) => {
             const users = onlineUsers.filter((u) => text.recipients.some(r => r.userid === u.userId));
 
