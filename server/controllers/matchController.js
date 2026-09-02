@@ -3,7 +3,7 @@ const db = require('../config/db');
 exports.getMatches = async (req, res) => {
     try {
         const { size, energy, income, money, papers, other } = req.body;
-        let sql = "SELECT c.*, u.username, a.size, a.ac FROM users u JOIN criterias c ON u.userid = c.userid LEFT JOIN areas a ON u.userid = a.userid WHERE u.userid != ? ";
+        let sql = "SELECT c.*, u.username, a.size, a.ac FROM users u JOIN criterias c ON u.userid = c.userid LEFT JOIN areas a ON u.userid = a.userid WHERE u.userid != ? AND NOT EXISTS (SELECT 1 FROM chat_users cu WHERE cu.userid = c.userid AND c.areaid IS NOT NULL) ";
         const values = [req.user.id];
 
         if (size !== false) {
