@@ -64,7 +64,7 @@ export default function useNotification() {
         });
 
         socket.on("getUpdateDisabled", (dis) => {
-            setNotifications(prev => prev.map(p => dis.includes(p.groupid) ? {...p, disabled: 1} : p));
+            setNotifications(prev => prev.map(p => dis.includes(p.groupid) ? {...p, disabled: true} : p));
         });
 
         return () => {
@@ -134,10 +134,10 @@ export default function useNotification() {
             const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
             const res = await axiosPrivate.put('/matchings', { notid: item.notid, agrees: 1 });
             if (!res.data) return;
-            if (hasField != null && res.data.lastUser === true) {
+            if (res.data.lastUser === true) {
                 setNotifications(prev => prev.map(n => n.type == "conf" ? { ...n, disabled: true } : n));
                 try {
-                    const r = await axiosPrivate.put("/notifications/disable", {groupid: item.groupid, getRecipients});
+                    const r = await axiosPrivate.put("/notifications/disable", {groupid: item.groupid, getRecipients: hasField != null ? getRecipients : onlineUsers});
                     if(r.data) socket.emit("updateDisabled", {groupids: r.data.groupids, userId, not: r.data.not});
 
                 } catch (error) {
