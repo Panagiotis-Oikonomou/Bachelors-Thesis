@@ -58,6 +58,11 @@ export default function useNotification() {
             setGlobalNotifications(prev => prev + nots.length);
         });
 
+        socket.on("getNotMatchMessage", (nots) => {
+            setNotifications(prev => [...nots, ...prev]);
+            setGlobalNotifications(prev => prev + nots.length);
+        });
+
         socket.on("getUpdateDisabled", (dis) => {
             setNotifications(prev => prev.map(p => dis.includes(p.groupid) ? {...p, disabled: 1} : p));
         });
@@ -68,6 +73,7 @@ export default function useNotification() {
             socket.off("getChatCreation");
             socket.off("getChatDeletedInfo");
             socket.off("getAlgoInfo");
+            socket.off("getNotMatchMessage");
             socket.off("getUpdateDisabled");
         };
     }, [socket]);
@@ -120,19 +126,19 @@ export default function useNotification() {
         );
     }
 
-    async function accept(id) {
-        setDisabled(id);
-
+    async function accept(item) {
+        setDisabled(item.notid);
+        
         try {
-            await axiosPrivate.put(`/notifications/disabled/${id}`);
+            await axiosPrivate.put(`/notifications/disabled/${item.notid}`);
             const getRecipients = onlineUsers?.filter((u) => u.userId !== userId);
-            const res = await axiosPrivate.put('/matchings', { notid: id, agrees: 1 });
+            const res = await axiosPrivate.put('/matchings', { notid: item.notid, agrees: 1 });
             if (!res.data) return;
             if (hasField != null && res.data.lastUser === true) {
-                setNotifications(prev => prev.map(n => n.info === "conf" ? { ...n, disabled: 1 } : n));
+                setNotifications(prev => prev.map(n => n.type == "conf" ? { ...n, disabled: true } : n));
                 try {
-                    const r = await axiosPrivate.put("notifications/disable");
-                    if(r.data.length > 0) socket.emit("updateDisabled", {groupids: r.data, userId});
+                    const r = await axiosPrivate.put("/notifications/disable", {groupid: item.groupid, getRecipients});
+                    if(r.data) socket.emit("updateDisabled", {groupids: r.data.groupids, userId, not: r.data.not});
 
                 } catch (error) {
                     console.log(error);

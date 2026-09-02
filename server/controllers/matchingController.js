@@ -104,7 +104,7 @@ exports.updateAgrees = async (req, res) => {
         }
 
         const sql = "UPDATE matchings SET agrees = ? WHERE userid = ? AND groupid = ?";
-        const [updateResult] = await db.query(sql, [1, gi[0].userid, gi[0].groupid]);
+        await db.query(sql, [1, gi[0].userid, gi[0].groupid]);
 
         let allAgree = 1;
         result = result.map(r => r.userid === gi[0].userid ? { ...r, agrees: 1 } : r);

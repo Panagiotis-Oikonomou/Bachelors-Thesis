@@ -30,9 +30,14 @@ function Matchings() {
       setMyMatchings(prev => prev.filter(p => p.groupid != groupid));
     });
 
+    socket.on("getMatchingsDisabled", (groupids) => {
+      setMyMatchings(prev => prev.filter(p => !groupids.includes(p.groupid)));
+    });
+
     return () => {
       socket.off("getUpdateMatchings");
       socket.off("getDeleteMatching");
+      socket.off("getMatchingsDisabled");
     };
   }, [socket]);
 

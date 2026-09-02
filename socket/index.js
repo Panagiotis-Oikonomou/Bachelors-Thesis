@@ -86,7 +86,12 @@ function initSocket(server) {
         socket.on("updateDisabled", (disabled) => {
             const users = onlineUsers.filter(f => f.userId != disabled.userId);
             for (const u of users) {
-                io.to(u.socketId).emit("getUpdateDisabled", disabled.groupidids);
+                io.to(u.socketId).emit("getUpdateDisabled", disabled.groupids);
+                io.to(u.socketId).emit("getMatchingsDisabled", disabled.groupids);
+                if (disabled.not.length > 0) {
+                    const nots = disabled.not.filter(r => r.userid == u.userId);
+                    if (nots.length > 0) io.to(u.socketId).emit("getNotMatchMessage", nots);
+                }
             }
         });
 

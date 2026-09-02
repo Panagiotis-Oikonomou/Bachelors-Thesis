@@ -139,18 +139,19 @@ exports.updateDisabled = async (req, res) => {
 
 exports.updateAllDisabled = async (req, res) => {
     try {
-        // const nameSql = "SELECT username FROM users WHERE userid = ?";
-        // const [name] = await db.query(nameSql, [req.user.id]);
-        // const message = `Η ομάδες που ήσασταν με τον χρήστη ${name} που είχε οικόπεδο διαγράγηκαν διότι μπήκε σε κάποια ομάδα`;
+        const { groupid, getRecipients } = req.body;
+        const nameSql = "SELECT u.username, u.userid FROM users u JOIN matchings m ON u.userid = m.userid JOIN criterias c ON u.userid = c.userid WHERE m.groupid = ? AND c.areaid IS NOT NULL";
+        const [name] = await db.query(nameSql, [groupid]);
+        const message = `Η ομάδα/ες που ήσασταν με τον χρήστη ${name[0].username}, που είχε οικόπεδο διαγράγηκαν, διότι μπήκε σε ομάδα`;
 
-        const sql = "UPDATE notifications SET disabled=true WHERE userid = ? and info = ?";
-        await db.query(sql, [req.user.id, "conf"]);
+        const sql = "UPDATE notifications SET disabled=true WHERE userid = ? AND type = ?";
+        await db.query(sql, [name[0].userid, "conf"]);
 
-        const getGroupIdsSql = "SELECT groupid FROM matchings WHERE userid = ?";
-        const [rows] = await db.query(getGroupIdsSql, [req.user.id]);
+        const getGroupIdsSql = "SELECT groupid FROM matchings WHERE userid = ? AND groupid <> ?";
+        const [rows] = await db.query(getGroupIdsSql, [name[0].userid, groupid]);
 
         const groupids = rows.map(row => row.groupid);
-
+        let not = []
         if (groupids.length > 0) {
             const placeholders = groupids.map(() => "?").join(",");
 
@@ -159,15 +160,37 @@ exports.updateAllDisabled = async (req, res) => {
             const deleteMatchingsSql = `DELETE FROM matchings WHERE groupid IN (${placeholders})`;
             const deleteAlgoGroupSql = `DELETE FROM algo_group WHERE groupid IN (${placeholders})`;
             const deleteGroupSql = `DELETE FROM groups WHERE groupid IN (${placeholders})`;
-
+            const getUsersSql = `SELECT DISTINCT userid FROM matchings WHERE groupid IN (${placeholders}) AND userid <> ?`;
+            
+            const [rowUsers] = await db.query(getUsersSql, [...groupids, name[0].userid]);
             await db.query(updateAllDisabledSql, groupids);
             await db.query(deletePotentialSql, groupids);
             await db.query(deleteMatchingsSql, groupids);
             await db.query(deleteAlgoGroupSql, groupids);
             await db.query(deleteGroupSql, groupids);
+
+
+            const insertNotificationSql = "INSERT INTO notifications (userid, message, type) VALUES (?, ?, ?)";
+            
+            const onlineUserIds = new Set(getRecipients.map(o => Number(o.userId)));
+            for (const user of rowUsers) {
+
+                const [result] = await db.query(insertNotificationSql, [user.userid, message, "info"]);
+                if (onlineUserIds.has(Number(user.userid))) {
+                    not.push({
+                        notid: result.insertId,
+                        userid: user.userid,
+                        message: message,
+                        type: "info",
+                        disabled: 0,
+                        is_read: 0,
+                        expanded: false
+                    });
+                }
+            }
         }
 
-        res.status(200).json(groupids);
+        res.status(200).json({groupids, not});
     }
     catch (err) {
         return res.status(500).json({ err });
