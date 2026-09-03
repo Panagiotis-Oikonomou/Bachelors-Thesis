@@ -69,9 +69,9 @@ exports.createInvitationNotification = async (req, res) => {
         notification += `Χαρακτηριστικά περιοχής:\n`;
         notification += `Όνομα: ${rows[0].name}\n`;
         notification += `Μέγεθος έκτασης: ${rows[0].size}m²\n`;
-        notification += `Latitude: ${rows[0].lat}\n`;
-        notification += `Longtitude: ${rows[0].lng}\n`;
-        notification += `Ποσότητα ηλεκτρικής ενέργειας: ${rows[0].ac}kwy\n\n`;
+        notification += `Γεωγραφικό πλάτος: ${rows[0].lat}\n`;
+        notification += `Γεωγραφικό μήκος: ${rows[0].lng}\n`;
+        notification += `Ποσότητα ηλεκτρικής ενέργειας: ${rows[0].ac}(kWh/year)\n\n`;
 
         const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
         const [userMoney] = await db.query(essentialsSql, [req.user.id]);
@@ -90,7 +90,7 @@ exports.createInvitationNotification = async (req, res) => {
             const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
             notification += `${user.username}\n`;
             if (userCriteriaRows[0]?.areasize !== null) notification += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
-            if (userCriteriaRows[0]?.energy !== null) notification += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}kwy\n`;
+            if (userCriteriaRows[0]?.energy !== null) notification += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}(kWh/year)\n`;
             if (userCriteriaRows[0]?.income !== null) notification += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
             notification += '\n';
         }

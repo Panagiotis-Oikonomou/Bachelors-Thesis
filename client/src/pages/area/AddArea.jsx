@@ -3,14 +3,12 @@ import MyComponent from "../../components/maps/MyComponent";
 import useAddArea from "../../hooks/useAddArea";
 import theme from "../../theme/theme";
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useGetEnergy from "../../hooks/useGetEnergy";
 import MainLayout from "../../components/mainLayout";
 import { Alert, Box, Button, IconButton, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import { MapOutlined } from "@mui/icons-material";
 
 function AddArea() {
-  const axiosPrivate = useAxiosPrivate();
   const [location, setLocation] = useState(null);
   const { areaData, setAreaData, nameError, formError, handleChange, handleSubmit, numberError, setFormError } = useAddArea();
   const [open, setOpen] = useState(false);
@@ -40,12 +38,12 @@ function AddArea() {
             <Typography variant="h5">Δημιουργία καινούργιας περιοχής</Typography>
             <TextField size={isMobile ? "small" : "medium"} fullWidth label="Όνομα περιοχής" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
 
-            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Έκταση περιοχής(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
+            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Μέγεθος έκτασης(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
 
-            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Coordinates(lat, lng)" name="coordinates" value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""} slotProps={{ input: { readOnly: true } }} required />
+            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Συστεταγμένες(lat, lng)" name="coordinates" value={location ? `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}` : ""} slotProps={{ input: { readOnly: true } }} required />
             <IconButton sx={{ alignSelf: "start" }} onClick={() => setOpen(!open)}><MapOutlined /></IconButton>
 
-            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Ετήσια παραγωγή PV ενέργειας(kWy)" name="ac" value={areaData.ac} slotProps={{ input: { readOnly: true } }} required />
+            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Ετήσια παραγωγή ηλεκτρικής ενέργειας(kWh/year)" name="ac" value={areaData.ac} slotProps={{ input: { readOnly: true } }} required />
 
             {formError && (<Alert severity="error">{formError}</Alert>)}
             <Button type="submit" size={isMobile ? "small" : "medium"} fullWidth variant="contained">Δημιουργία</Button>

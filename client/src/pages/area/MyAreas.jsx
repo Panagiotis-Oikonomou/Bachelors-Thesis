@@ -82,13 +82,13 @@ function MyAreas() {
               <Link to={`/manage_area/${id.areaid}`} className={styles.linkNoColor}>
                 <Typography>Όνομα περιοχής: {id.name}</Typography>
 
-                <Typography>Έκταση περιοχής: {id.size} m²</Typography>
+                <Typography>Μέγεθος έκτασης: {id.size}m²</Typography>
 
                 <Typography>Γεωγραφικό πλάτος: {id.lat}</Typography>
 
                 <Typography>Γεωγραφικό μήκος: {id.lng}</Typography>
 
-                <Typography>Ηλεκτρική ενέργεια: {id.ac} kwy</Typography>
+                <Typography>Ποσότητα ηλεκτρικής ενέργειας: {id.ac} kWh/year</Typography>
               </Link>
               <Button sx={{ mt: 1, bgcolor: "#ca2d2d", ":hover": { bgcolor: "#d35252" } }} variant="contained" onClick={() => deleteArea(id.areaid)}>Διαγραφή</Button>
             </Paper>

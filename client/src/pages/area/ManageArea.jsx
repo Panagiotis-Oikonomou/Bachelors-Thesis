@@ -18,11 +18,11 @@ function ManageArea() {
         <Stack spacing={3}>
           <TextField label="Όνομα περιοχής" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
 
-          <TextField label="Έκταση περιοχής(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
+          <TextField label="Μέγεθος έκτασης(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
 
-          <TextField label="Coordinates(lat, lng)" value={`${Number(areaData.lat).toFixed(4)}, ${Number(areaData.lng).toFixed(4)}`} slotProps={{ input: { readOnly: true } }} required />
+          <TextField label="Συστεταγμένες(lat, lng)" value={`${Number(areaData.lat).toFixed(4)}, ${Number(areaData.lng).toFixed(4)}`} slotProps={{ input: { readOnly: true } }} required />
 
-          <TextField label="Ετήσια παραγωγή PV ενέργειας(kWy)" name="ac" value={areaData.ac} slotProps={{ input: { readOnly: true } }} required />
+          <TextField label="Ετήσια παραγωγή ηλεκτρικής ενέργειας(kWh/year)" name="ac" value={areaData.ac} slotProps={{ input: { readOnly: true } }} required />
 
           {formError && (<Alert severity="error">{formError}</Alert>)}
           {areaUpdated && (<Alert severity="success">{areaUpdated}</Alert>)}

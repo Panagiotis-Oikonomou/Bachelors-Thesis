@@ -10,10 +10,10 @@ export default function useGetEnergy(setAreaData, size, lat, lng, setError) {
             if (!lat || !lng || !size) return;
             
             try {
-                const res = await axiosPrivate.get(`/pv?lat=${lat}&lon=${lng}`);
+                const peakpower = Number(size) * 0.2;
+                const res = await axiosPrivate.get(`/pv?lat=${lat}&lon=${lng}&peakpower=${peakpower}`);
                 if(res.data) {
-                    const energy = Number(res.data) * Number(size) * 0.2;
-                    setAreaData((prev) => ({ ...prev, ac: energy.toFixed(3),}));
+                    setAreaData((prev) => ({ ...prev, ac: res.data.toFixed(3),}));
                 }
             } catch (error) {
                 console.log(error);

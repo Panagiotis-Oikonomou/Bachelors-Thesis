@@ -54,9 +54,9 @@ const getAllUsers = async (onlineUsers) => {
         message += `Χαρακτηριστικά περιοχής:\n`;
         message += `Όνομα: ${area[0].name}\n`;
         message += `Μέγεθος έκτασης: ${area[0].size}m²\n`;
-        message += `Latitude: ${area[0].lat}\n`;
-        message += `Longtitude: ${area[0].lng}\n`;
-        message += `Ποσότητα ηλεκτρικής ενέργειας: ${area[0].ac}kwy\n\n`;
+        message += `Γεωγραφικό πλάτος: ${area[0].lat}\n`;
+        message += `Γεωγραφικό μήκος: ${area[0].lng}\n`;
+        message += `Ποσότητα ηλεκτρικής ενέργειας: ${area[0].ac}(kWh/year)\n\n`;
 
         const essentialsSql = "SELECT money FROM criterias WHERE userid = ?";
         let money = 0;
