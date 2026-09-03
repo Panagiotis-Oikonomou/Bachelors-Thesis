@@ -1,6 +1,5 @@
-import { Box, Button, IconButton, Paper, Typography, Stack, TextField, FormGroup, FormControlLabel, FormControl, Checkbox, Select, InputLabel, MenuItem, Alert } from "@mui/material";
+import { Box, Button, Paper, Typography, Stack, TextField, FormGroup, FormControlLabel, FormControl, Checkbox, Select, InputLabel, MenuItem, Alert } from "@mui/material";
 import { scrollbarStyles } from "../pages/styles/scrollbar";
-import { CancelOutlined, CheckCircleOutlined } from "@mui/icons-material";
 
 export default function SearchCriteria({ style = {}, submit, change, wrongNumber, criteria, sizeCheck, areaCheck, energyCheck, minMax, incomeCheck, moneyChecked, checkboxOptions, havingArea, selectedArea, areas, papersChecked, otherChecked, formError }) {
     return (

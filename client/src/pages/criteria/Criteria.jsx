@@ -1,12 +1,11 @@
-import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import MainLayout from "../../components/mainLayout";
 import useCriteria from "../../hooks/useCriteria";
 import { useEffect } from "react";
 
 function Criteria() {
-  const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
-    isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
-    isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
+  const { criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, isEnergyChecked,
+    isIncomeChecked, isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
     havingArea, formSuccess, checkboxOptions, handleSubmit, wrongNumber, areaValue
   } = useCriteria();
 
@@ -21,12 +20,12 @@ function Criteria() {
       <Typography variant="h6" sx={{ fontSize: { xs: "0.875rem", sm: "1.2rem" }, mb: 2 }}>Βάλε από ένα εύρος τιμών για το τι θέλεις</Typography>
       <form onSubmit={handleSubmit}>
         <Stack spacing={2} sx={{ alignItems: "center" }}>
-          <TextField sx={{ ...style }} size="small" label="Έκταση περιοχής(m²)" name="size" value={criteria.size} onChange={handleChange} error={wrongNumber.size !== ""} helperText={wrongNumber.size} disabled={isSizeChecked} required={!isSizeChecked} />
+          <TextField sx={{ ...style }} size="small" label="Μέγεθος έκτασης(m²)" name="size" value={criteria.size} onChange={handleChange} error={wrongNumber.size !== ""} helperText={wrongNumber.size} disabled={isSizeChecked} required={!isSizeChecked} />
           <FormGroup>
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chsize" checked={isSizeChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
           </FormGroup>
 
-          <TextField sx={{ ...style }} size="small" label="Ποσότητα ηλεκτρικής ενέργειας(kwy)" name="energy" value={criteria.energy} onChange={handleChange} error={wrongNumber.energy !== ""} helperText={wrongNumber.energy} disabled={isEnergyChecked} required={!isEnergyChecked} />
+          <TextField sx={{ ...style }} size="small" label="Ποσότητα ηλεκτρικής ενέργειας(kWh/year)" name="energy" value={criteria.energy} onChange={handleChange} error={wrongNumber.energy !== ""} helperText={wrongNumber.energy} disabled={isEnergyChecked} required={!isEnergyChecked} />
           <FormGroup>
             <FormControlLabel sx={{ mt: -2 }} control={<Checkbox size="small" name="chenergy" checked={isEnergyChecked} disabled={isAreaChecked} onChange={setMinMaxToZero} />} label="Δεν θέλω" />
           </FormGroup>

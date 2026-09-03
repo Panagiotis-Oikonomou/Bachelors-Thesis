@@ -363,7 +363,7 @@ export default function useMatch() {
         criteria, formError, handleChange, setMinMaxToZero, isSizeChecked,
         isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked, isOtherChecked,
         checkboxOptions, handleSearchSubmit, areas, isAreaChecked, havingArea, selectedArea,
-        handleCreationSubmit, users, removeSelectedUser, addUser, searchedUsers, visibleUser,
+        handleCreationSubmit, users, removeSelectedUser, addUser, visibleUser,
         nextUser, hoveredUser, setHoveredUser, wrongNumber, openSearch, setOpenSearch, openSearchedUsers,
         setOpenSearchedUsers,
     };

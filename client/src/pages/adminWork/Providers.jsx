@@ -3,7 +3,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useGetProvider from "../../hooks/useGetProviders";
 import axios from "../../api/axios";
 import Swal from "sweetalert2";
-import { Box, Container, Paper, Stack, TextField, Typography, Button, IconButton } from "@mui/material";
+import { Box, Paper, Stack, TextField, Typography, Button, IconButton } from "@mui/material";
 import { scrollbarStyles } from "../styles/scrollbar";
 import { DeleteForever } from "@mui/icons-material";
 import MainLayout from "../../components/mainLayout";

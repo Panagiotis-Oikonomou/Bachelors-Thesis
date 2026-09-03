@@ -1,4 +1,3 @@
-import { scrollbarStyles } from "../styles/scrollbar";
 import useAdminProfile from "../../hooks/useAdminProfile";
 import { Alert, Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField } from "@mui/material";
 import MainLayout from "../../components/mainLayout";

@@ -1,17 +1,14 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Box, Drawer, Typography, List, ListItem, ListItemIcon, ListItemText, menuItemClasses, ListItemButton, AppBar, Toolbar, Avatar, IconButton } from "@mui/material";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Box, Drawer, Typography, List, ListItem, ListItemIcon, ListItemText, ListItemButton, AppBar, Toolbar, Avatar, IconButton } from "@mui/material";
 import { AccountCircleOutlined, AreaChartOutlined, ChatOutlined, DescriptionOutlined, Groups2Outlined, JoinInnerOutlined, MenuOutlined, NotificationsOutlined } from "@mui/icons-material";
-import theme from "../theme/theme";
 import useAuth from "../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNotifications } from "../context/NotificationsContext";
 
-export default function Layout({ children }) {
+export default function Layout() {
   const { auth } = useAuth();
   const { globalNotifications } = useNotifications();
-  const axiosPrivate = useAxiosPrivate();
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
   const location = useLocation();

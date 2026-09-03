@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Paper, Typography, Stack, TextField, FormGroup, FormControlLabel, FormControl, Checkbox, Select, InputLabel, MenuItem, Alert } from "@mui/material";
+import { Box, IconButton, Paper, Typography, Stack} from "@mui/material";
 import { scrollbarStyles } from "../pages/styles/scrollbar";
 import { CancelOutlined, CheckCircleOutlined } from "@mui/icons-material";
 
@@ -20,14 +20,14 @@ export default function SearchedUsers({ style = {}, nextUser, addUser, visibleUs
 
                             {visibleUser.areaid !== null && (
                                 <>
-                                    Έκταση περιοχής: {visibleUser.size}m²<br />
-                                    Ποσότητα PV ενέργειας: {visibleUser.ac}kwy<br />
+                                    Μέγεθος έκτασης: {visibleUser.size}m²<br />
+                                    Ποσότητα ηλεκτρικής ενέργειας: {visibleUser.ac}(kWh/year)<br />
                                 </>)}<br />
 
                             Ζήτηση και Προσφορά<br />
-                            {visibleUser.areasize !== null && (<>Έκταση: {visibleUser.areasize}m²<br /></>)}
+                            {visibleUser.areasize !== null && (<>Μέγεθος έκτασης: {visibleUser.areasize}m²<br /></>)}
 
-                            {visibleUser.energy !== null && (<>Ποσότητα PV ενέργειας: {visibleUser.energy}kwy<br /></>)}
+                            {visibleUser.energy !== null && (<>Ποσότητα ηλεκτρικής ενέργειας: {visibleUser.energy}(kWh/year)<br /></>)}
 
                             {visibleUser.income !== null && (<>Ποσοστό εσόδων: {visibleUser.income}%<br /></>)}
 

@@ -182,9 +182,8 @@ export default function useCriteria() {
     }
 
     return {
-        criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, setIsSizeChecked,
-        isEnergyChecked, setIsEnergyChecked, isIncomeChecked, setIsIncomeChecked,
-        isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
+        criteria, formError, handleChange, setMinMaxToZero, isSizeChecked, isEnergyChecked, 
+        isIncomeChecked, isAreaChecked, isMoneyChecked, isPapersChecked, isOtherChecked, areas,
         havingArea, formSuccess, checkboxOptions, handleSubmit, wrongNumber, areaValue
     };
 }

@@ -1,8 +1,7 @@
-import { useState } from "react";
 import useMatch from "../../hooks/useMatch";
 import MainLayout from "../../components/mainLayout";
-import { Alert, Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputLabel, MenuItem, Paper, Select, Stack, TextField, Typography, Popper, useTheme, useMediaQuery, ClickAwayListener } from "@mui/material";
-import { CancelOutlined, CheckCircleOutlined, GroupAddOutlined, SearchOutlined } from "@mui/icons-material";
+import { Box, Button, IconButton, Paper, Popper, useTheme, useMediaQuery, ClickAwayListener } from "@mui/material";
+import { CancelOutlined, GroupAddOutlined, SearchOutlined } from "@mui/icons-material";
 import { scrollbarStyles } from "../styles/scrollbar";
 import SearchCriteria from "../../components/SearchCriteria";
 import SearchedUsers from "../../components/SearchedUsers";
@@ -11,10 +10,9 @@ function Match() {
   const { criteria, isSizeChecked, isEnergyChecked, isIncomeChecked, isMoneyChecked, isPapersChecked,
     isOtherChecked, checkboxOptions, formError, handleChange, handleSearchSubmit, setMinMaxToZero,
     isAreaChecked, havingArea, areas, selectedArea, handleCreationSubmit, users, removeSelectedUser,
-    addUser, searchedUsers, visibleUser, nextUser, hoveredUser, setHoveredUser, wrongNumber, openSearch,
+    addUser, visibleUser, nextUser, hoveredUser, setHoveredUser, wrongNumber, openSearch,
     setOpenSearch, openSearchedUsers, setOpenSearchedUsers, } = useMatch();
 
-  const style = { "& .MuiOutlinedInput-input": { py: 0.30, }, };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   return (
@@ -56,15 +54,15 @@ function Match() {
 
                       {hoveredUser.user.areaid !== null && (
                         <>
-                          Έκταση περιοχής: {hoveredUser.user.size}m²<br />
-                          Ποσότητα PV ενέργειας: {hoveredUser.user.ac}kwy<br />
+                          Μέγεθος έκτασης: {hoveredUser.user.size}m²<br />
+                          Ποσότητα ηλεκτρικής ενέργειας: {hoveredUser.user.ac}(kWh/year)<br />
                         </>)}<br />
 
                       Ζήτηση και Προσφορά<br />
 
-                      {hoveredUser.user.areasize !== null && (<>Έκταση: {hoveredUser.user.areasize}m²<br /></>)}
+                      {hoveredUser.user.areasize !== null && (<>Μέγεθος έκτασης: {hoveredUser.user.areasize}m²<br /></>)}
 
-                      {hoveredUser.user.energy !== null && (<>Ποσότητα PV ενέργειας: {hoveredUser.user.energy}kwy<br /></>)}
+                      {hoveredUser.user.energy !== null && (<>Ποσότητα ηλεκτρικής ενέργειας: {hoveredUser.user.energy}(kWh/year)<br /></>)}
 
                       {hoveredUser.user.income !== null && (<>Ποσοστό εσόδων: {hoveredUser.user.income}<br /></>)}
 

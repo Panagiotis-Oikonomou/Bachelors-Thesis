@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { checkEmailAdmin as checkEmailApi, checkUsernameAdmin as checkUsernameApi } from "../api/profileApiChecks";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate.js";
 import useLogout from "./useLogout.js";
 import dataValidation from "../utils/dataValidation.js";
@@ -10,7 +10,6 @@ import resetTimer from "../utils/resetTimer.js";
 
 export default function useAdminProfile() {
     const navigate = useNavigate();
-    const location = useLocation();
     const axiosPrivate = useAxiosPrivate();
     const logout = useLogout();
 

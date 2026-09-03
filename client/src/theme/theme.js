@@ -44,8 +44,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     color: "white",
-
-                    fontSize: "0.6rem",
+                    fontSize: "1rem",
 
                     "&.Mui-focused": {
                         color: "#90caf9",

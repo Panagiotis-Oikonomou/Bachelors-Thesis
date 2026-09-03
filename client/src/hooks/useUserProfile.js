@@ -1,18 +1,16 @@
 import { useState, useEffect, useMemo } from "react";
 import { checkEmail as checkEmailApi, checkClock as checkClockApi, checkUsername as checkUsernameApi } from "../api/profileApiChecks";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "./useAxiosPrivate.js";
 import useLogout from "./useLogout.js";
 import useGetProvider from "./useGetProviders.js";
 import dataValidation from "../utils/dataValidation.js";
 import passwordChecking from "../utils/passwordChecking.js";
-import { getProviders } from "../api/getProviders.js";
 import resetTimer from "../utils/resetTimer.js";
 import Swal from "sweetalert2";
 
 export default function useUserProfile() {
     const navigate = useNavigate();
-    const location = useLocation();
     const axiosPrivate = useAxiosPrivate();
     const logout = useLogout();
     const providers = useGetProvider();
