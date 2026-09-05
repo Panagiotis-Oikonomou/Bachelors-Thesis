@@ -7,7 +7,7 @@ export default function SearchCriteria({ style = {}, submit, change, wrongNumber
             <Stack spacing={3}>
                 <Typography variant="h6">Κριτήρια</Typography>
                 <form onSubmit={submit}>
-                    <TextField sx={{ ...style }} size="small" label="Έκταση περιοχής(m²)" name="size" value={criteria.size} onChange={change} error={wrongNumber.size !== ""} helperText={wrongNumber.size} disabled={sizeCheck} required={!sizeCheck} />
+                    <TextField sx={{ ...style }} size="small" label="Μέγεθος οικοπέδου(m²)" name="size" value={criteria.size} onChange={change} error={wrongNumber.size !== ""} helperText={wrongNumber.size} disabled={sizeCheck} required={!sizeCheck} />
                     <FormGroup>
                         <FormControlLabel control={<Checkbox size="small" name="chsize" checked={sizeCheck} disabled={areaCheck} onChange={minMax} />} label="Δεν θέλω" />
                     </FormGroup>

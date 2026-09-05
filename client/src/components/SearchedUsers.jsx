@@ -16,16 +16,16 @@ export default function SearchedUsers({ style = {}, nextUser, addUser, visibleUs
                         <Box sx={{minHeight:"300px"}}>
                             {visibleUser.username !== null && (<>Username: {visibleUser.username}<br /><br /></>)}
 
-                            {<>Περιοχή:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br /></>}
+                            {<>Οικόπεδο:{visibleUser.areaid === null ? " Όχι" : " Ναι"}<br /></>}
 
                             {visibleUser.areaid !== null && (
                                 <>
-                                    Μέγεθος έκτασης: {visibleUser.size}m²<br />
+                                    Μέγεθος οικοπέδου: {visibleUser.size}m²<br />
                                     Ποσότητα ηλεκτρικής ενέργειας: {visibleUser.ac}(kWh/year)<br />
                                 </>)}<br />
 
                             Ζήτηση και Προσφορά<br />
-                            {visibleUser.areasize !== null && (<>Μέγεθος έκτασης: {visibleUser.areasize}m²<br /></>)}
+                            {visibleUser.areasize !== null && (<>Μέγεθος οικοπέδου: {visibleUser.areasize}m²<br /></>)}
 
                             {visibleUser.energy !== null && (<>Ποσότητα ηλεκτρικής ενέργειας: {visibleUser.energy}(kWh/year)<br /></>)}
 

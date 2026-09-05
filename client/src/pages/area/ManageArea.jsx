@@ -16,7 +16,7 @@ function ManageArea() {
     <MainLayout mxW="xs" paperSx={{ p: { xs: 2, sm: 3 }, alignContent: { xs: "start", sm: "center" } }} boxSx={{ pb: { xs: 0, sm: 24 }, pt: { xs: 0, sm: 10 } }}>
       <form onSubmit={handleSubmit}>
         <Stack spacing={3}>
-          <TextField label="Όνομα περιοχής" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
+          <TextField label="Όνομα οικοπέδου" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
 
           <TextField label="Μέγεθος έκτασης(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
 

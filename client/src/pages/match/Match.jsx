@@ -50,17 +50,17 @@ function Match() {
                 <Popper open={Boolean(hoveredUser)} anchorEl={hoveredUser?.anchor} placement="bottom" modifiers={[{ name: "offset", options: { offset: [0, 8] } }]} sx={{ zIndex: 9999, pointerEvents: isMobile ? "auto" : "none" }} disablePortal={false}>
                   {(hoveredUser && hoveredUser.user.userid !== users[0].userid) && (
                     <Paper sx={{ p: 1, borderRadius: 1, minWidth: 220, bgcolor: "#222" }}>
-                      <>Περιοχή:{hoveredUser.user.areaid === null ? " Όχι" : " Ναι"}<br /></>
+                      <>Οικόπεδο:{hoveredUser.user.areaid === null ? " Όχι" : " Ναι"}<br /></>
 
                       {hoveredUser.user.areaid !== null && (
                         <>
-                          Μέγεθος έκτασης: {hoveredUser.user.size}m²<br />
+                          Μέγεθος οικοπέδου: {hoveredUser.user.size}m²<br />
                           Ποσότητα ηλεκτρικής ενέργειας: {hoveredUser.user.ac}(kWh/year)<br />
                         </>)}<br />
 
                       Ζήτηση και Προσφορά<br />
 
-                      {hoveredUser.user.areasize !== null && (<>Μέγεθος έκτασης: {hoveredUser.user.areasize}m²<br /></>)}
+                      {hoveredUser.user.areasize !== null && (<>Μέγεθος οικοπέδου: {hoveredUser.user.areasize}m²<br /></>)}
 
                       {hoveredUser.user.energy !== null && (<>Ποσότητα ηλεκτρικής ενέργειας: {hoveredUser.user.energy}(kWh/year)<br /></>)}
 

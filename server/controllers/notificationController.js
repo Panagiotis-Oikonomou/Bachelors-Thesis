@@ -66,9 +66,9 @@ exports.createInvitationNotification = async (req, res) => {
 
         let notification = `Ο χρήστης ${users[0]?.username} σας έχει προσκαλέσει στην ομάδα του με τα εξής προνόμοια:\n\n`;
 
-        notification += `Χαρακτηριστικά περιοχής:\n`;
+        notification += `Χαρακτηριστικά οικοπέδου:\n`;
         notification += `Όνομα: ${rows[0].name}\n`;
-        notification += `Μέγεθος έκτασης: ${rows[0].size}m²\n`;
+        notification += `Μέγεθος οικοπέδου: ${rows[0].size}m²\n`;
         notification += `Γεωγραφικό πλάτος: ${rows[0].lat}\n`;
         notification += `Γεωγραφικό μήκος: ${rows[0].lng}\n`;
         notification += `Ποσότητα ηλεκτρικής ενέργειας: ${rows[0].ac}(kWh/year)\n\n`;
@@ -89,9 +89,9 @@ exports.createInvitationNotification = async (req, res) => {
         for (const user of users) {
             const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
             notification += `${user.username}\n`;
-            if (userCriteriaRows[0]?.areasize !== null) notification += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
+            if (userCriteriaRows[0]?.areasize !== null) notification += `Ελάχιστο μέγεθος οικοπέδου: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
             if (userCriteriaRows[0]?.energy !== null) notification += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}(kWh/year)\n`;
-            if (userCriteriaRows[0]?.income !== null) notification += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
+            if (userCriteriaRows[0]?.income !== null) notification += `Ελάχιστο ποσοστό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
             notification += '\n';
         }
         const newGroupSql = "INSERT INTO groups VALUES ()";

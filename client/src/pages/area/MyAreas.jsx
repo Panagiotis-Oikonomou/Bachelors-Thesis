@@ -80,9 +80,9 @@ function MyAreas() {
           {filteredAreas.map((id) => (
             <Paper key={id.areaid} sx={{ mb: 2, p: 2, width: "100%", }}>
               <Link to={`/manage_area/${id.areaid}`} className={styles.linkNoColor}>
-                <Typography>Όνομα περιοχής: {id.name}</Typography>
+                <Typography>Όνομα οικοπέδου: {id.name}</Typography>
 
-                <Typography>Μέγεθος έκτασης: {id.size}m²</Typography>
+                <Typography>Μέγεθος οικοπέδου: {id.size}m²</Typography>
 
                 <Typography>Γεωγραφικό πλάτος: {id.lat}</Typography>
 

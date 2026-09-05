@@ -34,9 +34,9 @@ export default function useAddArea() {
             let regex = /\d/;
             if (len === 0) error = "";
 
-            else if (len < 4 || len > 20) error = "Το όνομά περιοχής πρέπει να αποτελείται από 4 μέχρι 20 γράμματα";
+            else if (len < 4 || len > 20) error = "Το όνομά οικοπέδου πρέπει να αποτελείται από 4 μέχρι 20 γράμματα";
 
-            else if (regex.test(value)) error = "Το όνομά περιοχής δεν επιτρέπεται να περιέχει ψηφία";
+            else if (regex.test(value)) error = "Το όνομά οικοπέδου δεν επιτρέπεται να περιέχει ψηφία";
             setNameError(error);
         }
         else if (name === "size") {

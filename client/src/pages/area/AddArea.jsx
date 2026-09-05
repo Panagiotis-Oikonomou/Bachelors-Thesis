@@ -35,8 +35,8 @@ function AddArea() {
       <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, height: { xs: "99dvh", sm: "58dvh", md: "69dvh" }, width: "100%" }}>
         <Box component="form" autoComplete="off" onSubmit={handleSubmit} sx={{ width: { xs: "100%", sm: "40%" } }}>
           <Stack spacing={{ xs: 2, sm: 3, md: 4 }}>
-            <Typography variant="h5">Δημιουργία καινούργιας περιοχής</Typography>
-            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Όνομα περιοχής" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
+            <Typography variant="h5">Δημιουργία καινούργιου οικοπέδου</Typography>
+            <TextField size={isMobile ? "small" : "medium"} fullWidth label="Όνομα οικοπέδου" name="name" value={areaData.name} onChange={handleChange} error={nameError !== ""} helperText={nameError} required />
 
             <TextField size={isMobile ? "small" : "medium"} fullWidth label="Μέγεθος έκτασης(m²)" name="size" value={areaData.size} onChange={handleChange} error={numberError !== ""} helperText={numberError} required />
 

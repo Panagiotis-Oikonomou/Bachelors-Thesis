@@ -51,9 +51,9 @@ const getAllUsers = async (onlineUsers) => {
         const areaDataSql = "SELECT name, size, lat, lng, ac FROM areas WHERE areaid = ?";
         const [area] = await db.query(areaDataSql, [areaid]);
         let message = "Ο αλγόριθμός μας σας ταίριαξε με άλλους χρήστες με τα εξής προνόμοια:\n\n";
-        message += `Χαρακτηριστικά περιοχής:\n`;
+        message += `Χαρακτηριστικά οικοπέδου:\n`;
         message += `Όνομα: ${area[0].name}\n`;
-        message += `Μέγεθος έκτασης: ${area[0].size}m²\n`;
+        message += `Μέγεθος οικοπέδου: ${area[0].size}m²\n`;
         message += `Γεωγραφικό πλάτος: ${area[0].lat}\n`;
         message += `Γεωγραφικό μήκος: ${area[0].lng}\n`;
         message += `Ποσότητα ηλεκτρικής ενέργειας: ${area[0].ac}(kWh/year)\n\n`;
@@ -72,9 +72,9 @@ const getAllUsers = async (onlineUsers) => {
         for (const user of team) {
             const [userCriteriaRows] = await db.query(userCriteriaSql, [user.userid]);
             message += `${user.username}\n`;
-            if (userCriteriaRows[0]?.areasize !== null) message += `Ελάχιστη έκταση περιοχής: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
+            if (userCriteriaRows[0]?.areasize !== null) message += `Ελάχιστο μέγεθος οικοπέδου: ${Math.round(userCriteriaRows[0].areasize)}m²\n`;
             if (userCriteriaRows[0]?.energy !== null) message += `Ελάχιστη ποσότητα ηλεκτρικής ενέργειας: ${userCriteriaRows[0].energy}kwy\n`;
-            if (userCriteriaRows[0]?.income !== null) message += `Ελάχιστο ποσό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
+            if (userCriteriaRows[0]?.income !== null) message += `Ελάχιστο ποσοστό εσόδων: ${Math.round(userCriteriaRows[0].income)}%\n`;
             message += '\n';
         }
 
