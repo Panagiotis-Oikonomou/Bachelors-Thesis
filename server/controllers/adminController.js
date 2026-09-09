@@ -1,5 +1,4 @@
 const db = require('../config/db');
-const bcrypt = require("bcrypt");
 
 exports.getProfile = async (req, res) => {
     try {
