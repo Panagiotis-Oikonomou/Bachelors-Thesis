@@ -83,7 +83,7 @@ function Match() {
           <IconButton onClick={() => { setOpenSearch(s => !s); setOpenSearchedUsers(false); }}><SearchOutlined /></IconButton>
           <IconButton onClick={() => { setOpenSearchedUsers(s => !s); setOpenSearch(false); }}><GroupAddOutlined /></IconButton>
         </Box>
-        <Box sx={{ display: "flex", height: { xs: "80%", sm: "90%", md: "80%" }, }}>
+        <Box sx={{ display: "flex", height: { xs: "80%", sm: "90%", md: "90%" }, }}>
           {openSearch === true && (
             <Box sx={{ display: { xs: "flex", sm: "none" }, width: "100%" }}>
               <SearchCriteria submit={handleSearchSubmit} change={handleChange} wrongNumber={wrongNumber} criteria={criteria} sizeCheck={isSizeChecked} areaCheck={isAreaChecked} energyCheck={isEnergyChecked} minMax={setMinMaxToZero} incomeCheck={isIncomeChecked} moneyChecked={isMoneyChecked} checkboxOptions={checkboxOptions} havingArea={havingArea} selectedArea={selectedArea} areas={areas} papersChecked={isPapersChecked} otherChecked={isOtherChecked} formError={formError} />

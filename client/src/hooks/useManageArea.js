@@ -89,7 +89,7 @@ export default function useManageArea(id) {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        if (nameError) {
+        if (nameError || numberError) {
             setFormError("Υπάρχουν κάποια λάθοι ή λείπουν στοιχεία από την φόρμα");
             setAreaUpdated("");
             return;
