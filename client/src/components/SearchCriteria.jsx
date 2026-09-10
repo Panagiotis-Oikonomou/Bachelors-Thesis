@@ -4,7 +4,6 @@ import { scrollbarStyles } from "../pages/styles/scrollbar";
 export default function SearchCriteria({ style = {}, submit, change, wrongNumber, criteria, sizeCheck, areaCheck, energyCheck, minMax, incomeCheck, moneyChecked, checkboxOptions, havingArea, selectedArea, areas, papersChecked, otherChecked, formError }) {
     return (
         <Paper variant="outlined" sx={{ width: { xs: "100%", sm: "90%", md: "70%" }, p: 1, bgcolor: "#2835424e", height: "100%", overflowX: "hidden", overflowY: "auto", ...scrollbarStyles }}>
-            {/* <Stack spacing={3}> */}
                 <Typography variant="h6">Κριτήρια</Typography>
                 <Box component="form" onSubmit={submit} sx={{ display:"flex", flexDirection:"column", gap:1}}>
                     <TextField sx={{ ...style }} size="small" label="Μέγεθος οικοπέδου(m²)" name="size" value={criteria.size} onChange={change} error={wrongNumber.size !== ""} helperText={wrongNumber.size} disabled={sizeCheck} required={!sizeCheck} />
@@ -58,9 +57,7 @@ export default function SearchCriteria({ style = {}, submit, change, wrongNumber
 
                     {formError && <Alert severity="error">{formError}</Alert>}
                     <Button fullWidth type="submit" variant="contained">Αναζήτηση</Button>
-
                 </Box>
-            {/* </Stack> */}
         </Paper>
     );
 }

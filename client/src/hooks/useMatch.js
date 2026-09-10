@@ -51,6 +51,10 @@ export default function useMatch() {
     let visibleUser = searchedUsers[currentIndex];
 
     useEffect(() => {
+        document.title = "Match";
+    }, []);
+
+    useEffect(() => {
         resetTimer(formError, setFormError);
     }, [formError]);
 
