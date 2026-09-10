@@ -257,7 +257,8 @@ export default function useMatch() {
             income: criteria.income === "" ? false : Number(criteria.income),
             money: criteria.money === "" ? false : Number(criteria.money),
             papers: criteria.papers,
-            other: criteria.other
+            other: criteria.other,
+            areaid: criteria.areaid === ""
         };
 
         try {

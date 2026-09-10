@@ -23,7 +23,7 @@ function ChatRoom() {
   
   const mainMessageSx = { maxWidth: "50%", p: 1, mx: 1, mt: 1, mb: 2, borderRadius: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", position: "relative", };
   const mainDeletedSx = { bgcolor: "#e0e0e0", color: "#777", fontStyle: "italic" };
-  const infoSx = {maxWidth:"100%",  p: 0, mx: 1, mt: 1, mb: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", alignSelf: "center", fontSize: "x-small"};
+  const infoSx = {maxWidth:"100%",  p: 0, mx: 1, mt: 2, mb: 2, wordBreak: "break-word", whiteSpace: "pre-wrap", display: "flex", flexDirection: "column", alignSelf: "center", fontSize: "small"};
 
   return (
     <MainLayout mxW="xl" containerSx={{ p: { xs: 0 } }} paperSx={{ overflow: "hidden", p: { xs: 0, md: 1 }, }}>
