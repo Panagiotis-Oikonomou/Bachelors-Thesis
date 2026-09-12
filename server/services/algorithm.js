@@ -10,6 +10,9 @@ const getAllUsers = async (onlineUsers) => {
     if (userFields.length === 0) return [];
     for (const user of userFields) {
         const [userNOFields] = await db.query(getUsersWithoutFieldSql, [user.size, user.ac]);
+
+        if(userNOFields.length < 4) continue;
+        
         const team = generateTeam(userNOFields, user);
         if (team && team.length >= 5) {
             teams.push(team);
